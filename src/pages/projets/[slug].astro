@@ -1,0 +1,169 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import ProjectCover from '../../components/ProjectCover.astro';
+
+export async function getStaticPaths() {
+  const allProjects = await getCollection('projets', ({ data }) => !data.brouillon);
+  const projects = allProjects.sort((a, b) => a.data.ordre - b.data.ordre);
+
+  return projects.map((project, index) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      prev: projects[index - 1] ?? null,
+      next: projects[index + 1] ?? null,
+    },
+  }));
+}
+
+const { project, prev, next } = Astro.props;
+const { Content } = await render(project);
+
+const title = `${project.data.titre} — Projets — Germain Camara`;
+---
+
+<Base title={title} description={project.data.description}>
+  <article class="reveal-section py-24 md:py-32">
+    <div class="mx-auto max-w-3xl px-6">
+      <a
+        href="/projets"
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wide text-text-muted transition-colors hover:text-accent"
+      >
+        <Icon name="arrow-left" size={14} />
+        Tous les projets
+      </a>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <span class="statut-badge rounded-pill border px-3 py-1 font-mono text-xs uppercase tracking-wide">
+          {project.data.statut}
+        </span>
+        <span class="font-mono text-xs text-text-muted">{project.data.annee}</span>
+      </div>
+
+      <h1 class="mt-4 font-display text-[clamp(2rem,5vw,3.25rem)] font-bold leading-tight text-text">
+        {project.data.titre}
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-text-muted">{project.data.description}</p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {project.data.stack.map((tech) => (
+          <span class="rounded-pill border border-surface-2 px-3 py-1 font-mono text-xs text-text-muted">
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      {project.data.lien && (
+        <a
+          href={project.data.lien}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-pill mt-8 inline-flex items-center gap-2 rounded-pill bg-accent px-6 py-3 font-mono text-sm text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] transition-all duration-300 hover:shadow-[0_0_48px_rgba(0,229,255,0.45)] hover:-translate-y-0.5"
+        >
+          Voir le projet en ligne
+          <Icon name="external-link" size={15} />
+        </a>
+      )}
+
+      <div class="mt-10 overflow-hidden rounded-card border border-surface-2">
+        <div class="aspect-[16/9]">
+          {project.data.couverture ? (
+            <img
+              src={project.data.couverture}
+              alt={`Couverture du projet ${project.data.titre}`}
+              class="h-full w-full object-cover"
+            />
+          ) : (
+            <ProjectCover titre={project.data.titre} slug={project.id} />
+          )}
+        </div>
+      </div>
+
+      <div class="project-content mt-12">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  <nav class="border-t border-surface-2 py-12" aria-label="Navigation entre projets">
+    <div class="mx-auto grid max-w-3xl gap-4 px-6 sm:grid-cols-2">
+      {prev ? (
+        <a
+          href={`/projets/${prev.id}`}
+          class="rounded-card border border-surface-2 bg-surface p-5 transition-colors duration-300 hover:border-accent/40"
+        >
+          <span class="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide text-text-muted">
+            <Icon name="arrow-left" size={12} /> Projet précédent
+          </span>
+          <span class="mt-2 block font-display text-base font-medium text-text">{prev.data.titre}</span>
+        </a>
+      ) : <div aria-hidden="true" />}
+      {next ? (
+        <a
+          href={`/projets/${next.id}`}
+          class="rounded-card border border-surface-2 bg-surface p-5 text-right transition-colors duration-300 hover:border-accent/40"
+        >
+          <span class="flex items-center justify-end gap-1.5 font-mono text-xs uppercase tracking-wide text-text-muted">
+            Projet suivant <Icon name="arrow-right" size={12} />
+          </span>
+          <span class="mt-2 block font-display text-base font-medium text-text">{next.data.titre}</span>
+        </a>
+      ) : <div aria-hidden="true" />}
+    </div>
+  </nav>
+</Base>
+
+<style>
+  .statut-badge {
+    border-color: var(--surface-2);
+    color: var(--text-muted);
+  }
+
+  .project-content :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .project-content :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .project-content :global(p) {
+    margin-top: 1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+  .project-content :global(ul) {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .project-content :global(li) {
+    position: relative;
+    padding-left: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .project-content :global(li::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  .project-content :global(strong) {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .project-content :global(em) {
+    color: var(--text-muted);
+  }
+</style>
