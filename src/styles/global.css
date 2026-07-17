@@ -44,7 +44,9 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Le défilement fluide est piloté par Lenis (scripts/motion.ts) plutôt
+       que par cette propriété CSS, pour éviter que les deux ne se battent
+       sur les mêmes ancres. */
     color-scheme: dark;
   }
 

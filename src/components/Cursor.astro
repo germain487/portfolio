@@ -1,0 +1,48 @@
+<div data-cursor-dot class="cursor-dot" aria-hidden="true"></div>
+<div data-cursor-ring class="cursor-ring" aria-hidden="true"></div>
+
+<style is:global>
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-radius: 9999px;
+    opacity: 0;
+    z-index: 200;
+    will-change: transform;
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+  }
+
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--accent);
+    transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease;
+  }
+
+  .cursor-ring.is-active {
+    width: 54px;
+    height: 54px;
+    background: rgba(0, 229, 255, 0.08);
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none;
+    }
+  }
+
+  .has-custom-cursor,
+  .has-custom-cursor a,
+  .has-custom-cursor button {
+    cursor: none;
+  }
+</style>

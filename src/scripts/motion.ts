@@ -1,7 +1,15 @@
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const pointerIsFine = () => window.matchMedia('(pointer: fine)').matches;
+
+let lenis: Lenis | null = null;
 
 const PRELOADER_KEY = 'portfolio-preloader-shown';
 
@@ -137,7 +145,7 @@ export function initHeroIntro() {
 
 /** Léger tilt 3D au mouvement de la souris (desktop uniquement) — portrait, cartes projets… */
 export function initCardTilt(selector: string, max = 8) {
-  if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches) return;
+  if (prefersReducedMotion() || !pointerIsFine()) return;
 
   document.querySelectorAll<HTMLElement>(selector).forEach((wrap) => {
     const onMove = (e: MouseEvent) => {
@@ -375,4 +383,116 @@ export function initNavbar() {
     });
     mobileMenu.querySelectorAll('[data-nav-link]').forEach((l) => l.addEventListener('click', close));
   }
+}
+
+/** Défilement fluide global (Lenis), synchronisé avec ScrollTrigger. Bascule sur le scroll natif en reduced-motion. */
+export function initSmoothScroll() {
+  if (prefersReducedMotion()) return;
+
+  lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+
+  gsap.ticker.add((time) => {
+    lenis?.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
+
+  lenis.on('scroll', ScrollTrigger.update);
+}
+
+/** Ancres de nav/CTA : défilement fluide via Lenis (ou natif en reduced-motion), en tenant compte de la navbar fixe. */
+export function initAnchorScroll() {
+  const NAVBAR_OFFSET = 84;
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const hash = link.getAttribute('href');
+      if (!hash || hash === '#') return;
+      const target = document.querySelector<HTMLElement>(hash);
+      if (!target) return;
+
+      e.preventDefault();
+      history.pushState(null, '', hash);
+
+      if (lenis) {
+        lenis.scrollTo(target, { offset: -NAVBAR_OFFSET });
+      } else {
+        const top = target.getBoundingClientRect().top + window.scrollY - NAVBAR_OFFSET;
+        window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      }
+    });
+  });
+}
+
+/** Reveals au scroll : y:32→0 + fade, stagger léger, une fois par section. */
+export function initScrollReveals() {
+  if (prefersReducedMotion()) return;
+
+  document.querySelectorAll<HTMLElement>('.reveal-section').forEach((section) => {
+    const items = Array.from(section.querySelectorAll<HTMLElement>(':scope > div > *'));
+    if (!items.length) return;
+
+    gsap.set(items, { y: 32, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 82%',
+      once: true,
+      onEnter: () => {
+        gsap.to(items, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out' });
+      },
+    });
+  });
+}
+
+/** Curseur personnalisé (point + anneau) — desktop uniquement, jamais en reduced-motion ni tactile. */
+export function initCustomCursor() {
+  if (prefersReducedMotion() || !pointerIsFine()) return;
+
+  const dot = document.querySelector<HTMLElement>('[data-cursor-dot]');
+  const ring = document.querySelector<HTMLElement>('[data-cursor-ring]');
+  if (!dot || !ring) return;
+
+  document.documentElement.classList.add('has-custom-cursor');
+  gsap.set([dot, ring], { xPercent: -50, yPercent: -50, opacity: 1 });
+
+  const ringX = gsap.quickTo(ring, 'x', { duration: 0.35, ease: 'power3.out' });
+  const ringY = gsap.quickTo(ring, 'y', { duration: 0.35, ease: 'power3.out' });
+  const dotX = gsap.quickTo(dot, 'x', { duration: 0.08, ease: 'power3.out' });
+  const dotY = gsap.quickTo(dot, 'y', { duration: 0.08, ease: 'power3.out' });
+
+  window.addEventListener('mousemove', (e) => {
+    ringX(e.clientX);
+    ringY(e.clientY);
+    dotX(e.clientX);
+    dotY(e.clientY);
+  });
+
+  const interactiveSelector = 'a, button, input, textarea, select, [data-magnetic]';
+  document.addEventListener('mouseover', (e) => {
+    if ((e.target as HTMLElement).closest?.(interactiveSelector)) ring.classList.add('is-active');
+  });
+  document.addEventListener('mouseout', (e) => {
+    if ((e.target as HTMLElement).closest?.(interactiveSelector)) ring.classList.remove('is-active');
+  });
+}
+
+/** Boutons magnétiques : les CTA principaux se laissent légèrement attirer par le curseur. */
+export function initMagneticButtons() {
+  if (prefersReducedMotion() || !pointerIsFine()) return;
+
+  document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
+    const strength = 0.35;
+    const moveX = gsap.quickTo(btn, 'x', { duration: 0.3, ease: 'power3.out' });
+    const moveY = gsap.quickTo(btn, 'y', { duration: 0.3, ease: 'power3.out' });
+
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      moveX((e.clientX - (rect.left + rect.width / 2)) * strength);
+      moveY((e.clientY - (rect.top + rect.height / 2)) * strength);
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      moveX(0);
+      moveY(0);
+    });
+  });
 }
