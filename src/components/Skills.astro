@@ -1,0 +1,54 @@
+---
+import { getEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import TechMarquee from './TechMarquee.astro';
+
+const skillsEntry = await getEntry('skills', 'skills');
+const skills = skillsEntry!.data;
+---
+
+<section id="competences" class="reveal-section py-24 md:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// compétences</p>
+    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+      Ce que j'utilise pour livrer.
+    </h2>
+
+    <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {skills.domaines.map((domaine) => (
+        <div class="rounded-card border border-surface-2 bg-surface p-7">
+          <div class="grid h-11 w-11 place-items-center rounded-full border border-surface-2 text-accent">
+            <Icon name={domaine.icone} size={20} />
+          </div>
+          <h3 class="mt-5 font-display text-lg font-medium text-text">{domaine.titre}</h3>
+          <ul class="skill-list mt-4 space-y-2.5">
+            {domaine.items.map((item) => (
+              <li class="text-sm leading-relaxed text-text-muted">{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="mt-16">
+    <TechMarquee technologies={skills.technologies} />
+  </div>
+</section>
+
+<style>
+  .skill-list li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+  .skill-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+</style>

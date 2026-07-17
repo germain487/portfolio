@@ -165,6 +165,46 @@ export function initPortraitTilt() {
   wrap.addEventListener('mouseleave', onLeave);
 }
 
+/** Compteurs de stats animés, déclenchés à l'entrée dans le viewport. */
+export function initCounters() {
+  const counters = document.querySelectorAll<HTMLElement>('[data-counter]');
+  if (!counters.length) return;
+
+  const animate = (el: HTMLElement) => {
+    const target = Number(el.dataset.counter);
+    if (Number.isNaN(target)) return;
+
+    if (prefersReducedMotion()) {
+      el.textContent = target.toLocaleString('fr-FR');
+      return;
+    }
+
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: target,
+      duration: 1.6,
+      ease: 'power2.out',
+      onUpdate: () => {
+        el.textContent = Math.round(obj.val).toLocaleString('fr-FR');
+      },
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target as HTMLElement);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  counters.forEach((el) => observer.observe(el));
+}
+
 /** Navbar compacte au scroll + scrollspy avec indicateur animé sous le lien actif. */
 export function initNavbar() {
   const nav = document.querySelector<HTMLElement>('[data-navbar]');

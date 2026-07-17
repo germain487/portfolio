@@ -1,0 +1,51 @@
+---
+import { getEntry } from 'astro:content';
+
+const aboutEntry = await getEntry('about', 'about');
+const about = aboutEntry!.data;
+
+const renderBold = (text: string) =>
+  text.replace(/\*\*(.+?)\*\*/g, '<strong class="font-medium text-text">$1</strong>');
+---
+
+<section id="a-propos" class="reveal-section py-24 md:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// à-propos</p>
+    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+      {about.titre}
+    </h2>
+
+    <div class="mt-14 grid gap-16 md:grid-cols-2 md:items-start">
+      <div class="space-y-5">
+        {about.paragraphes.map((p) => (
+          <p class="text-base leading-[1.7] text-text-muted" set:html={renderBold(p)} />
+        ))}
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        {about.stats.map((stat) => (
+          <div class="stat-card relative overflow-hidden rounded-card border border-surface-2 bg-surface p-6">
+            <svg
+              class="pointer-events-none absolute -right-4 -top-4 h-20 w-20 opacity-[0.08]"
+              viewBox="0 0 100 100"
+              aria-hidden="true"
+            >
+              <polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="none" stroke="var(--accent)" stroke-width="5" />
+            </svg>
+            <p class="font-mono text-3xl font-medium text-accent md:text-4xl">
+              <span data-counter={stat.valeur}>0</span>{stat.suffixe}
+            </p>
+            <p class="mt-2 font-mono text-xs uppercase tracking-[0.08em] text-text-muted">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initCounters } from '../scripts/motion';
+  initCounters();
+</script>
