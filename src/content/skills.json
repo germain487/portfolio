@@ -1,0 +1,31 @@
+{
+  "skills": {
+    "domaines": [
+      {
+        "icone": "server",
+        "titre": "Backend",
+        "items": ["Python", "Django 5", "Django REST Framework", "PostgreSQL", "Laravel (secondaire)"]
+      },
+      {
+        "icone": "layout-panel-left",
+        "titre": "Frontend",
+        "items": ["HTMX", "Alpine.js", "Tailwind CSS", "JavaScript", "Astro"]
+      },
+      {
+        "icone": "database",
+        "titre": "Data",
+        "items": ["pandas / openpyxl", "KoboToolbox", "Nettoyage & dédoublonnage", "Validation GPS & cartographie"]
+      },
+      {
+        "icone": "cloud",
+        "titre": "Outils & Cloud",
+        "items": ["Claude Code", "Git / GitHub", "Netlify", "cPanel", "Brevo", "API Mobile Money (Orange Money, MTN MoMo)"]
+      }
+    ],
+    "technologies": [
+      "Python", "Django", "DRF", "PostgreSQL", "Laravel", "HTMX", "Alpine.js",
+      "Tailwind CSS", "JavaScript", "Astro", "pandas", "KoboToolbox",
+      "Claude Code", "Git", "Netlify", "cPanel", "Brevo", "Orange Money", "MTN MoMo"
+    ]
+  }
+}

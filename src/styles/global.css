@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+:root {
+  /* Couleurs */
+  --bg: #171B22;
+  --surface: #1F242D;
+  --surface-2: #2A313C;
+  --accent: #00E5FF;
+  --accent-soft: #7DF3E9;
+  --text: #F4F7FA;
+  --text-muted: #9AA5B5;
+
+  /* Effets */
+  --glow: 0 0 24px rgba(0, 229, 255, 0.35);
+  --glow-strong: 0 0 48px rgba(0, 229, 255, 0.45);
+
+  /* Rayons */
+  --radius-card: 1.25rem;
+  --radius-container: 2rem;
+  --radius-pill: 999px;
+}
+
+@theme {
+  --font-display: "Space Grotesk Variable", "Space Grotesk", sans-serif;
+  --font-sans: "Inter Variable", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --radius-card: var(--radius-card);
+  --radius-container: var(--radius-container);
+  --radius-pill: var(--radius-pill);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
