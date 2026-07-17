@@ -1,0 +1,168 @@
+---
+import { getEntry } from 'astro:content';
+import Icon from './Icon.astro';
+
+const settingsEntry = await getEntry('settings', 'settings');
+const contactEntry = await getEntry('contact', 'contact');
+const settings = settingsEntry!.data;
+const contact = contactEntry!.data;
+
+const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
+---
+
+<section id="contact" class="reveal-section py-24 md:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// contact</p>
+    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+      {contact.intro}
+    </h2>
+
+    <div class="mt-14 grid gap-12 md:grid-cols-2">
+      <div class="space-y-6">
+        <a
+          href={`mailto:${settings.email}`}
+          class="flex items-center gap-4 rounded-card border border-surface-2 bg-surface p-5 transition-colors duration-300 hover:border-accent/40"
+        >
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-surface-2 text-accent">
+            <Icon name="mail" size={18} />
+          </span>
+          <span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">Email</span>
+            <span class="block text-sm text-text">{settings.email}</span>
+          </span>
+        </a>
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-4 rounded-card border border-surface-2 bg-surface p-5 transition-colors duration-300 hover:border-accent/40"
+        >
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-surface-2 text-accent">
+            <Icon name="message-circle" size={18} />
+          </span>
+          <span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">WhatsApp</span>
+            <span class="block text-sm text-text">Discuter directement</span>
+          </span>
+        </a>
+
+        <div class="flex items-center gap-4 rounded-card border border-surface-2 bg-surface p-5">
+          <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-surface-2 text-accent">
+            <Icon name="map-pin" size={18} />
+          </span>
+          <span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">Localisation</span>
+            <span class="block text-sm text-text">{settings.localisation}</span>
+          </span>
+        </div>
+      </div>
+
+      <form
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-contact-form
+        class="space-y-5"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden">
+          <label>
+            Ne pas remplir si vous êtes humain : <input name="bot-field" />
+          </label>
+        </p>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="nom" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
+              Nom
+            </label>
+            <input
+              id="nom"
+              name="nom"
+              type="text"
+              required
+              autocomplete="name"
+              class="form-field w-full rounded-card border border-surface-2 bg-surface px-4 py-3 text-sm text-text outline-none transition-colors duration-300 focus:border-accent"
+            />
+          </div>
+          <div>
+            <label for="email" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              class="form-field w-full rounded-card border border-surface-2 bg-surface px-4 py-3 text-sm text-text outline-none transition-colors duration-300 focus:border-accent"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="sujet" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
+            Sujet
+          </label>
+          <select
+            id="sujet"
+            name="sujet"
+            required
+            class="form-field w-full rounded-card border border-surface-2 bg-surface px-4 py-3 text-sm text-text outline-none transition-colors duration-300 focus:border-accent"
+          >
+            {contact.sujets.map((sujet) => (
+              <option value={sujet}>{sujet}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label for="message" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
+            Message
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="form-field w-full resize-none rounded-card border border-surface-2 bg-surface px-4 py-3 text-sm text-text outline-none transition-colors duration-300 focus:border-accent"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-pill inline-flex items-center justify-center gap-2 rounded-pill bg-accent px-7 py-3.5 font-mono text-sm tracking-wide text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] transition-all duration-300 hover:shadow-[0_0_48px_rgba(0,229,255,0.45)] hover:-translate-y-0.5 disabled:opacity-50"
+        >
+          <Icon name="send" size={15} />
+          Envoyer le message
+        </button>
+
+        <p data-form-success role="status" class="hidden items-center gap-2 font-mono text-sm text-accent">
+          <Icon name="check-circle" size={16} />
+          {contact.messageSucces}
+        </p>
+        <p data-form-error role="alert" class="hidden items-center gap-2 font-mono text-sm text-red-400">
+          <Icon name="alert-circle" size={16} />
+          {contact.messageErreur}
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initContactForm } from '../scripts/motion';
+  initContactForm();
+</script>
+
+<style>
+  .form-field::placeholder {
+    color: var(--text-muted);
+  }
+  [data-form-success]:not(.hidden),
+  [data-form-error]:not(.hidden) {
+    display: flex;
+  }
+</style>

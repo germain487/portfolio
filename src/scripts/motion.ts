@@ -208,6 +208,48 @@ export function initProjectFilters() {
   });
 }
 
+/** Soumission Netlify Forms en AJAX, avec états succès/erreur explicites. */
+export function initContactForm() {
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (!form) return;
+
+  const successEl = form.querySelector<HTMLElement>('[data-form-success]');
+  const errorEl = form.querySelector<HTMLElement>('[data-form-error]');
+  const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  const encode = (data: Record<string, string>) =>
+    Object.keys(data)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+      .join('&');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    successEl?.classList.add('hidden');
+    errorEl?.classList.add('hidden');
+    submitBtn?.setAttribute('disabled', 'true');
+
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries()) as Record<string, string>;
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode(payload),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Statut HTTP ${res.status}`);
+        form.reset();
+        successEl?.classList.remove('hidden');
+      })
+      .catch(() => {
+        errorEl?.classList.remove('hidden');
+      })
+      .finally(() => {
+        submitBtn?.removeAttribute('disabled');
+      });
+  });
+}
+
 /** Compteurs de stats animés, déclenchés à l'entrée dans le viewport. */
 export function initCounters() {
   const counters = document.querySelectorAll<HTMLElement>('[data-counter]');
