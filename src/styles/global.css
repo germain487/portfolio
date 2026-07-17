@@ -71,6 +71,16 @@
   }
 }
 
+.hex-grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L56 16.6V50L28 66.6L0 50V16.6L28 0zM28 33.3L56 50V83.3L28 100L0 83.3V50L28 33.3z' fill='none' stroke='%2300E5FF' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

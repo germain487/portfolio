@@ -1,9 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import Preloader from '../components/Preloader.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
 ---
 
 <Base>
-  <main class="flex min-h-screen items-center justify-center">
-    <p class="font-mono text-sm text-text-muted">// phase 0 — fondations en place</p>
+  <Preloader />
+  <Navbar />
+  <main>
+    <Hero />
   </main>
 </Base>

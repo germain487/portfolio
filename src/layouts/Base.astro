@@ -59,8 +59,23 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImageURL} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <noscript>
+      <style>
+        [data-hero] {
+          visibility: visible !important;
+        }
+        [data-hero-hex-glow] {
+          opacity: 1 !important;
+        }
+        [data-preloader] {
+          display: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
+    <div class="hex-grid-bg" aria-hidden="true"></div>
     <slot />
   </body>
 </html>

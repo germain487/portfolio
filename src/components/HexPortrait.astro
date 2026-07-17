@@ -1,0 +1,81 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+}
+
+const { src, alt = 'Portrait' } = Astro.props;
+---
+
+<div
+  data-portrait-tilt
+  class="portrait-tilt relative mx-auto aspect-square w-full max-w-[420px]"
+>
+  <div class="portrait-halo pointer-events-none absolute -inset-6 -z-10" aria-hidden="true"></div>
+
+  <div class="hex-clip relative h-full w-full overflow-hidden">
+    {src ? (
+      <img
+        src={src}
+        alt={alt}
+        class="h-full w-full object-cover"
+        width="420"
+        height="420"
+        loading="eager"
+        decoding="async"
+      />
+    ) : (
+      <svg viewBox="0 0 100 100" class="h-full w-full" role="img" aria-label={alt}>
+        <defs>
+          <linearGradient id="hexFill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--surface-2)" />
+            <stop offset="100%" stop-color="var(--surface)" />
+          </linearGradient>
+        </defs>
+        <rect width="100" height="100" fill="url(#hexFill)" />
+        <circle cx="50" cy="36" r="15" fill="var(--accent-soft)" opacity="0.85" />
+        <path d="M15 102c2-26 20-40 35-40s33 14 35 40" fill="var(--accent-soft)" opacity="0.85" />
+      </svg>
+    )}
+  </div>
+
+  <svg
+    class="pointer-events-none absolute inset-0 h-full w-full"
+    viewBox="0 0 100 100"
+    aria-hidden="true"
+  >
+    <polygon
+      points="50,1 92,25 92,75 50,99 8,75 8,25"
+      fill="none"
+      stroke="var(--accent)"
+      stroke-width="1.4"
+      opacity="0.9"
+    />
+  </svg>
+</div>
+
+<style>
+  .portrait-tilt {
+    transform-style: preserve-3d;
+  }
+  .hex-clip {
+    clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
+  }
+  .portrait-halo {
+    background: radial-gradient(circle, var(--accent) 0%, var(--accent-soft) 35%, transparent 72%);
+    filter: blur(48px);
+    opacity: 0.5;
+    animation: portrait-pulse 4s ease-in-out infinite;
+  }
+  @keyframes portrait-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(0.94);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+import { getEntry } from 'astro:content';
+import Icon from './Icon.astro';
+
+const settingsEntry = await getEntry('settings', 'settings');
+const settings = settingsEntry!.data;
+
+const links = [
+  { label: 'Accueil', href: '#accueil' },
+  { label: 'À propos', href: '#a-propos' },
+  { label: 'Compétences', href: '#competences' },
+  { label: 'Projets', href: '#projets' },
+  { label: 'Services', href: '#services' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<header data-navbar class="navbar fixed inset-x-0 top-0 z-50">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+    <a href="#accueil" class="flex items-center gap-2 font-display text-lg font-bold text-text">
+      <svg width="28" height="28" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="none" stroke="var(--accent)" stroke-width="6" />
+        <text x="50" y="66" font-family="var(--font-display)" font-weight="700" font-size="46" fill="var(--accent)" text-anchor="middle">G</text>
+      </svg>
+      {settings.wordmark}
+    </a>
+
+    <nav class="relative hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+      {links.map((link) => (
+        <a
+          data-nav-link
+          href={link.href}
+          class="nav-link font-mono text-xs uppercase tracking-[0.12em] text-text-muted transition-colors hover:text-text"
+        >
+          {link.label}
+        </a>
+      ))}
+      <span
+        data-nav-indicator
+        class="pointer-events-none absolute -bottom-2 h-px bg-accent shadow-[0_0_8px_rgba(0,229,255,0.6)] transition-all duration-300"
+      ></span>
+    </nav>
+
+    <button
+      data-nav-toggle
+      type="button"
+      class="relative grid h-10 w-10 place-items-center rounded-full border border-surface-2 text-text md:hidden"
+      aria-label="Ouvrir le menu"
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+    >
+      <span data-icon-open class="grid place-items-center"><Icon name="menu" size={20} /></span>
+      <span data-icon-close class="absolute hidden place-items-center"><Icon name="x" size={20} /></span>
+    </button>
+  </div>
+
+  <div
+    data-nav-mobile
+    id="menu-mobile"
+    class="nav-mobile fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-bg md:hidden"
+  >
+    {links.map((link) => (
+      <a data-nav-link href={link.href} class="font-display text-2xl font-medium text-text">
+        {link.label}
+      </a>
+    ))}
+  </div>
+</header>
+
+<script>
+  import { initNavbar } from '../scripts/motion';
+  initNavbar();
+</script>
+
+<style>
+  .navbar {
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+  .navbar.is-scrolled {
+    background-color: color-mix(in srgb, var(--surface) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-color: var(--surface-2);
+  }
+  .nav-link.is-active {
+    color: var(--text);
+  }
+  .nav-mobile {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  }
+  .nav-mobile.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+</style>

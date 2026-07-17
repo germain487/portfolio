@@ -1,0 +1,30 @@
+---
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+interface Props {
+  name: string;
+  class?: string;
+  size?: number;
+  strokeWidth?: number;
+}
+
+const { name, class: className = '', size = 24, strokeWidth } = Astro.props;
+
+const svgPath = fileURLToPath(
+  new URL(`../../node_modules/lucide-static/icons/${name}.svg`, import.meta.url)
+);
+let raw = readFileSync(svgPath, 'utf-8');
+
+raw = raw
+  .replace(/<!--[\s\S]*?-->\n?/, '')
+  .replace(/width="24"/, `width="${size}"`)
+  .replace(/height="24"/, `height="${size}"`)
+  .replace(/class="[^"]*"/, `class="${className}"`.trim())
+  .replace(/\n/g, '');
+
+if (strokeWidth) {
+  raw = raw.replace(/stroke-width="2"/, `stroke-width="${strokeWidth}"`);
+}
+---
+<Fragment set:html={raw} />

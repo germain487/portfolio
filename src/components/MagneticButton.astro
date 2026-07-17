@@ -1,0 +1,26 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  download?: boolean;
+  external?: boolean;
+}
+
+const { href, variant = 'primary', download = false, external = false } = Astro.props;
+---
+
+<a
+  href={href}
+  data-magnetic
+  download={download ? true : undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  class:list={[
+    'btn-pill inline-flex items-center justify-center gap-2 rounded-pill px-7 py-3.5 font-mono text-sm tracking-wide transition-all duration-300',
+    variant === 'primary'
+      ? 'bg-accent text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] hover:shadow-[0_0_48px_rgba(0,229,255,0.45)] hover:-translate-y-0.5'
+      : 'border border-surface-2 text-text hover:border-accent hover:text-accent hover:shadow-[0_0_24px_rgba(0,229,255,0.35)]',
+  ]}
+>
+  <slot />
+</a>
