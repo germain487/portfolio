@@ -1,0 +1,185 @@
+# Configuration Sveltia CMS — voir README.md § Administration pour la mise en service.
+backend:
+  name: github
+  # [À COMPLÉTER] remplacer par "votre-compte-github/nom-du-depot"
+  repo: germain-camara/portfolio
+  branch: main
+  # [À COMPLÉTER] remplacer par l'URL du worker sveltia-cms-auth déployé (README § Administration, étape 2)
+  base_url: https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev
+  auth_endpoint: auth
+
+# Pas d'option "local_backend" à activer : Sveltia CMS propose nativement un
+# bouton « Work with Local Repository » sur son écran de connexion (via la
+# File System Access API du navigateur, Chrome/Edge). En cliquant dessus et
+# en sélectionnant le dossier racine du projet, les sauvegardes s'écrivent
+# directement sur le disque local, sans authentification GitHub — pratique
+# pour tester l'admin pendant le développement (README § Administration).
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: settings
+    label: "Réglages généraux"
+    icon: settings
+    files:
+      - name: settings
+        label: "Réglages généraux"
+        file: src/content/settings.json
+        fields:
+          - { label: "Nom complet", name: nomComplet, widget: string, hint: "Affiché dans le H1 du hero et les métadonnées SEO." }
+          - { label: "Wordmark (logo navbar)", name: wordmark, widget: string, hint: "Texte à côté du monogramme hexagonal dans la navbar." }
+          - { label: "Titre SEO", name: titreSEO, widget: string, hint: "Balise <title> et Open Graph." }
+          - { label: "Meta description", name: metaDescription, widget: text, hint: "180 caractères maximum, pour les moteurs de recherche." }
+          - { label: "Image Open Graph", name: imageOG, widget: image, required: false, hint: "1200×630px recommandé, utilisée lors du partage du lien." }
+          - { label: "Couleur d'accent", name: couleurAccent, widget: color, default: "#00E5FF", hint: "Injectée dans tout le site (boutons, liens actifs, halos lumineux)." }
+          - { label: "Email de contact", name: email, widget: string }
+          - { label: "Numéro WhatsApp", name: whatsapp, widget: string, hint: "Format international sans + ni espaces, ex : 224600000000" }
+          - { label: "Localisation", name: localisation, widget: string }
+          - { label: "Disponible pour de nouveaux projets ?", name: disponible, widget: boolean, default: true }
+          - { label: "Texte du badge de disponibilité", name: badgeTexte, widget: string, hint: "Affiché dans le hero si « Disponible » est activé." }
+          - { label: "CV (PDF)", name: cv, widget: file, required: false, hint: "Téléchargé via le bouton « Télécharger mon CV » du hero." }
+          - label: "Réseaux sociaux"
+            name: reseaux
+            widget: list
+            hint: "Réordonnables par glisser-déposer."
+            fields:
+              - { label: "Plateforme", name: plateforme, widget: select, options: ["LinkedIn", "GitHub", "X", "Facebook"] }
+              - { label: "URL", name: url, widget: string }
+
+  - name: hero
+    label: Hero
+    icon: home
+    files:
+      - name: hero
+        label: Hero
+        file: src/content/hero.json
+        fields:
+          - { label: Eyebrow, name: eyebrow, widget: string, hint: "Petite ligne au-dessus du nom, ex : « // salut, moi c'est »." }
+          - { label: Accroche, name: accroche, widget: text, hint: "2 lignes maximum recommandées." }
+          - label: "Rôles (machine à écrire)"
+            name: roles
+            widget: list
+            hint: "Ajout, suppression et réorganisation des intitulés qui défilent en boucle."
+            field: { label: Rôle, name: role, widget: string }
+          - { label: "Libellé du CTA principal", name: ctaPrimaireLabel, widget: string }
+          - { label: "Libellé du CTA secondaire", name: ctaSecondaireLabel, widget: string }
+          - { label: Portrait, name: portrait, widget: image, required: false, hint: "Tant qu'aucune photo n'est envoyée, une silhouette hexagonale s'affiche automatiquement." }
+
+  - name: about
+    label: "À propos"
+    icon: person
+    files:
+      - name: about
+        label: "À propos"
+        file: src/content/about.json
+        fields:
+          - { label: Titre, name: titre, widget: string }
+          - label: "Paragraphes de bio"
+            name: paragraphes
+            widget: list
+            hint: "Le format **gras** est pris en charge."
+            field: { label: Paragraphe, name: paragraphe, widget: text }
+          - label: "Statistiques (compteurs animés)"
+            name: stats
+            widget: list
+            hint: "Réordonnables par glisser-déposer."
+            fields:
+              - { label: Valeur, name: valeur, widget: number, value_type: int }
+              - { label: Suffixe, name: suffixe, widget: string, required: false, hint: "Ex : « + »" }
+              - { label: Libellé, name: label, widget: string }
+
+  - name: skills
+    label: "Compétences"
+    icon: build
+    files:
+      - name: skills
+        label: "Compétences"
+        file: src/content/skills.json
+        fields:
+          - label: "Domaines de compétence"
+            name: domaines
+            widget: list
+            fields:
+              - { label: "Icône (nom Lucide)", name: icone, widget: string, hint: "Ex : server, layout-panel-left, database, cloud — voir lucide.dev/icons." }
+              - { label: Titre, name: titre, widget: string }
+              - label: Éléments
+                name: items
+                widget: list
+                field: { label: Élément, name: item, widget: string }
+          - label: "Technologies (bandeau défilant)"
+            name: technologies
+            widget: list
+            field: { label: Technologie, name: techno, widget: string }
+
+  - name: projets
+    label: Projets
+    icon: work
+    folder: src/content/projets
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{titre}} — {{annee}} ({{statut}})"
+    fields:
+      - { label: Titre, name: titre, widget: string }
+      - { label: Description, name: description, widget: text }
+      - label: "Stack technique"
+        name: stack
+        widget: list
+        field: { label: Technologie, name: techno, widget: string }
+      - label: Tags
+        name: tags
+        widget: select
+        multiple: true
+        options: ["SaaS", "Civic Tech", "Data", "Web Design"]
+        hint: "Utilisés par les filtres de la section Projets."
+      - { label: Année, name: annee, widget: number, value_type: int }
+      - { label: Statut, name: statut, widget: select, options: ["En ligne", "En cours", "Archivé"] }
+      - { label: "Lien externe", name: lien, widget: string, required: false }
+      - { label: Couverture, name: couverture, widget: image, required: false, hint: "Optionnelle : une couverture générée automatiquement s'affiche sinon (jamais d'image cassée)." }
+      - { label: "Ordre d'affichage", name: ordre, widget: number, value_type: int, default: 0, hint: "Les projets s'affichent du plus petit au plus grand." }
+      - { label: "Brouillon", name: brouillon, widget: boolean, default: false, hint: "Masque le projet du site public sans le supprimer." }
+
+  - name: services
+    label: Services
+    icon: handyman
+    files:
+      - name: services
+        label: Services
+        file: src/content/services.json
+        fields:
+          - label: Cartes
+            name: cartes
+            widget: list
+            fields:
+              - { label: "Icône (nom Lucide)", name: icone, widget: string }
+              - { label: Titre, name: titre, widget: string }
+              - { label: Phrase, name: phrase, widget: text }
+          - { label: "Libellé du CTA final", name: ctaFinalLabel, widget: string }
+
+  - name: contact
+    label: Contact
+    icon: mail
+    files:
+      - name: contact
+        label: Contact
+        file: src/content/contact.json
+        fields:
+          - { label: "Texte d'intro", name: intro, widget: text }
+          - label: "Sujets du formulaire"
+            name: sujets
+            widget: list
+            field: { label: Sujet, name: sujet, widget: string }
+          - { label: "Message de succès", name: messageSucces, widget: string }
+          - { label: "Message d'erreur", name: messageErreur, widget: string }
+
+  - name: footer
+    label: Footer
+    icon: dock_to_bottom
+    files:
+      - name: footer
+        label: Footer
+        file: src/content/footer.json
+        fields:
+          - { label: "Mention de signature", name: mention, widget: string }
+          - { label: "Afficher le filigrane Mont Nimba", name: filigraneNimba, widget: boolean, default: true }

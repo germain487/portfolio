@@ -1,0 +1,43 @@
+name: Déploiement cPanel (FTPS)
+
+# Désactivé par défaut : ce workflow ne se déclenche qu'à la main
+# (onglet "Actions" → "Déploiement cPanel (FTPS)" → "Run workflow").
+#
+# Pour activer le déploiement automatique à chaque sauvegarde depuis
+# l'admin (donc à chaque commit sur main) : décommentez le bloc `push`
+# ci-dessous, et renseignez les secrets FTP_HOST, FTP_USER, FTP_PASSWORD
+# dans Settings → Secrets and variables → Actions du dépôt GitHub.
+# Voir le README, section « Administration ».
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Builder le site
+        run: npm run build
+
+      - name: Déployer par FTPS vers cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ./public_html/

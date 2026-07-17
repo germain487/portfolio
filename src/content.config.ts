@@ -1,13 +1,21 @@
 import { defineCollection, z } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 
+// Sveltia CMS édite chaque fichier de réglages comme un objet JSON plat
+// (un « file collection » standard). Le loader Astro attend en interne une
+// entrée nommée : ce parser fait le pont sans changer le format sur disque
+// ni le code des composants (getEntry('settings', 'settings') etc.).
+const singleton = (id: string) => ({
+  parser: (text: string) => ({ [id]: JSON.parse(text) }),
+});
+
 const reseauSchema = z.object({
   plateforme: z.string(),
   url: z.string().url(),
 });
 
 const settings = defineCollection({
-  loader: file('src/content/settings.json'),
+  loader: file('src/content/settings.json', singleton('settings')),
   schema: z.object({
     nomComplet: z.string(),
     wordmark: z.string(),
@@ -26,7 +34,7 @@ const settings = defineCollection({
 });
 
 const hero = defineCollection({
-  loader: file('src/content/hero.json'),
+  loader: file('src/content/hero.json', singleton('hero')),
   schema: z.object({
     eyebrow: z.string(),
     accroche: z.string(),
@@ -38,7 +46,7 @@ const hero = defineCollection({
 });
 
 const about = defineCollection({
-  loader: file('src/content/about.json'),
+  loader: file('src/content/about.json', singleton('about')),
   schema: z.object({
     titre: z.string(),
     paragraphes: z.array(z.string()).min(1),
@@ -53,7 +61,7 @@ const about = defineCollection({
 });
 
 const skills = defineCollection({
-  loader: file('src/content/skills.json'),
+  loader: file('src/content/skills.json', singleton('skills')),
   schema: z.object({
     domaines: z.array(
       z.object({
@@ -83,7 +91,7 @@ const projets = defineCollection({
 });
 
 const services = defineCollection({
-  loader: file('src/content/services.json'),
+  loader: file('src/content/services.json', singleton('services')),
   schema: z.object({
     cartes: z.array(
       z.object({
@@ -97,7 +105,7 @@ const services = defineCollection({
 });
 
 const contact = defineCollection({
-  loader: file('src/content/contact.json'),
+  loader: file('src/content/contact.json', singleton('contact')),
   schema: z.object({
     intro: z.string(),
     sujets: z.array(z.string()).min(1),
@@ -107,7 +115,7 @@ const contact = defineCollection({
 });
 
 const footer = defineCollection({
-  loader: file('src/content/footer.json'),
+  loader: file('src/content/footer.json', singleton('footer')),
   schema: z.object({
     mention: z.string(),
     filigraneNimba: z.boolean().default(true),
