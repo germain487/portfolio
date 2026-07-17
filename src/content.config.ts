@@ -87,6 +87,7 @@ const projets = defineCollection({
     couverture: z.string().optional(),
     ordre: z.number().int().default(0),
     brouillon: z.boolean().default(false),
+    misEnAvant: z.boolean().default(false),
   }),
 });
 

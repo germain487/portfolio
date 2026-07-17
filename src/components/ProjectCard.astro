@@ -10,18 +10,14 @@ interface Props {
   tags: string[];
   annee: number;
   statut: string;
-  lien?: string;
   couverture?: string;
 }
 
-const { slug, titre, description, stack, tags, annee, statut, lien, couverture } = Astro.props;
-
-const Tag = lien ? 'a' : 'div';
-const linkProps = lien ? { href: lien, target: '_blank', rel: 'noopener noreferrer' } : {};
+const { slug, titre, description, stack, tags, annee, statut, couverture } = Astro.props;
 ---
 
-<Tag
-  {...linkProps}
+<a
+  href={`/projets/${slug}`}
   data-project-card
   data-project-tilt
   data-tags={JSON.stringify(tags)}
@@ -42,17 +38,15 @@ const linkProps = lien ? { href: lien, target: '_blank', rel: 'noopener noreferr
       )}
     </div>
 
-    {lien && (
-      <div
-        aria-hidden="true"
-        class="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-bg/85 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      >
-        <span class="flex items-center gap-1.5 rounded-pill bg-accent px-4 py-2 font-mono text-xs text-bg">
-          Découvrir
-          <Icon name="arrow-up-right" size={14} />
-        </span>
-      </div>
-    )}
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-bg/85 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    >
+      <span class="flex items-center gap-1.5 rounded-pill bg-accent px-4 py-2 font-mono text-xs text-bg">
+        Découvrir
+        <Icon name="arrow-up-right" size={14} />
+      </span>
+    </div>
 
     <span class="statut-badge absolute left-4 top-4 rounded-pill border bg-bg/70 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wide backdrop-blur-sm">
       {statut}
@@ -73,7 +67,7 @@ const linkProps = lien ? { href: lien, target: '_blank', rel: 'noopener noreferr
       ))}
     </ul>
   </div>
-</Tag>
+</a>
 
 <style>
   .statut-badge {

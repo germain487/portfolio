@@ -1,6 +1,11 @@
 ---
 import { getEntry } from 'astro:content';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
+import Preloader from '../components/Preloader.astro';
+import Navbar from '../components/Navbar.astro';
+import Cursor from '../components/Cursor.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -15,6 +20,10 @@ const { title = settings.titreSEO, description = settings.metaDescription, noind
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(settings.imageOG ?? '/og.jpg', Astro.site);
+
+// Le balisage Person n'a de sens que sur les pages qui parlent de Germain
+// lui-même — pas sur une fiche projet ou le formulaire de contact.
+const includePersonSchema = ['/', '/a-propos'].includes(Astro.url.pathname);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -58,7 +67,9 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
 
-    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {includePersonSchema && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <ClientRouter />
 
     <noscript>
       <style>
@@ -76,6 +87,17 @@ const jsonLd = {
   </head>
   <body>
     <div class="hex-grid-bg" aria-hidden="true"></div>
-    <slot />
+    <Preloader />
+    <Navbar />
+    <Cursor />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { initPageLifecycle } from '../scripts/bootstrap';
+      initPageLifecycle();
+    </script>
   </body>
 </html>

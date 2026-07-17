@@ -76,6 +76,11 @@ export function initTypewriter(
   let deleting = false;
 
   const tick = () => {
+    // Navigation client-side (ClientRouter) : si cet élément a quitté le DOM
+    // entre-temps, on arrête la chaîne de setTimeout plutôt que d'écrire
+    // dans le vide indéfiniment.
+    if (!el.isConnected) return;
+
     const word = words[wordIndex];
 
     if (!deleting) {
@@ -298,8 +303,12 @@ export function initCounters() {
   counters.forEach((el) => observer.observe(el));
 }
 
-/** Navbar compacte au scroll + scrollspy avec indicateur animé sous le lien actif. */
-export function initNavbar() {
+/**
+ * Mise en place de la navbar (scroll compact + menu mobile) — la navbar est
+ * persistée entre les pages (transition:persist), donc cette fonction ne
+ * doit s'exécuter qu'une seule fois pour toute la session de navigation.
+ */
+export function initNavbarChrome() {
   const nav = document.querySelector<HTMLElement>('[data-navbar]');
   if (!nav) return;
 
@@ -308,45 +317,7 @@ export function initNavbar() {
   };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
-
-  const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'));
-  const indicator = nav.querySelector<HTMLElement>('[data-nav-indicator]');
-  const sections = links
-    .map((link) => document.querySelector<HTMLElement>(link.hash))
-    .filter((s): s is HTMLElement => Boolean(s));
-
-  const moveIndicator = (link: HTMLAnchorElement) => {
-    if (!indicator) return;
-    indicator.style.width = `${link.offsetWidth}px`;
-    indicator.style.transform = `translateX(${link.offsetLeft}px)`;
-  };
-
-  const setActive = (id: string) => {
-    links.forEach((link) => {
-      const active = link.hash === `#${id}`;
-      link.classList.toggle('is-active', active);
-      if (active) moveIndicator(link);
-    });
-  };
-
-  if (sections.length) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
-    );
-    sections.forEach((section) => observer.observe(section));
-  }
-
-  const activeLink = links.find((l) => l.classList.contains('is-active')) ?? links[0];
-  if (activeLink) moveIndicator(activeLink);
-  window.addEventListener('resize', () => {
-    const current = links.find((l) => l.classList.contains('is-active')) ?? links[0];
-    if (current) moveIndicator(current);
-  });
+  window.addEventListener('resize', updateNavbarActiveLink);
 
   const toggle = document.querySelector<HTMLElement>('[data-nav-toggle]');
   const mobileMenu = document.querySelector<HTMLElement>('[data-nav-mobile]');
@@ -385,9 +356,53 @@ export function initNavbar() {
   }
 }
 
-/** Défilement fluide global (Lenis), synchronisé avec ScrollTrigger. Bascule sur le scroll natif en reduced-motion. */
+/**
+ * Met à jour le lien actif de la navbar en fonction de la page courante.
+ * Appelée à chaque `astro:page-load` (chargement initial + chaque
+ * transition), puisque la page courante change à chaque navigation.
+ */
+export function updateNavbarActiveLink() {
+  const nav = document.querySelector<HTMLElement>('[data-navbar]');
+  if (!nav) return;
+
+  const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-nav-link]'));
+  const indicator = nav.querySelector<HTMLElement>('[data-nav-indicator]');
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+
+  const moveIndicator = (link: HTMLAnchorElement) => {
+    if (!indicator) return;
+    indicator.style.width = `${link.offsetWidth}px`;
+    indicator.style.transform = `translateX(${link.offsetLeft}px)`;
+  };
+
+  let activeLink: HTMLAnchorElement | undefined;
+  links.forEach((link) => {
+    const linkPath = new URL(link.href).pathname.replace(/\/$/, '') || '/';
+    const active =
+      linkPath === '/' ? currentPath === '/' : currentPath === linkPath || currentPath.startsWith(`${linkPath}/`);
+    link.classList.toggle('is-active', active);
+    if (active) activeLink = link;
+  });
+
+  if (activeLink) moveIndicator(activeLink);
+
+  // Menu plein écran mobile : miroir du même état actif.
+  document.querySelectorAll<HTMLAnchorElement>('[data-nav-mobile] [data-nav-link]').forEach((link) => {
+    const linkPath = new URL(link.href).pathname.replace(/\/$/, '') || '/';
+    const active =
+      linkPath === '/' ? currentPath === '/' : currentPath === linkPath || currentPath.startsWith(`${linkPath}/`);
+    link.classList.toggle('is-active', active);
+  });
+}
+
+/**
+ * Défilement fluide global (Lenis), synchronisé avec ScrollTrigger. Bascule
+ * sur le scroll natif en reduced-motion. Lenis pilote le scroll pour toute
+ * la session de navigation : cette fonction est idempotente (un seul
+ * ticker/instance), à appeler une fois pour toutes les pages.
+ */
 export function initSmoothScroll() {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || lenis) return;
 
   lenis = new Lenis({ duration: 1.1, smoothWheel: true });
 
@@ -399,31 +414,12 @@ export function initSmoothScroll() {
   lenis.on('scroll', ScrollTrigger.update);
 }
 
-/** Ancres de nav/CTA : défilement fluide via Lenis (ou natif en reduced-motion), en tenant compte de la navbar fixe. */
-export function initAnchorScroll() {
-  const NAVBAR_OFFSET = 84;
-
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (e) => {
-      const hash = link.getAttribute('href');
-      if (!hash || hash === '#') return;
-      const target = document.querySelector<HTMLElement>(hash);
-      if (!target) return;
-
-      e.preventDefault();
-      history.pushState(null, '', hash);
-
-      if (lenis) {
-        lenis.scrollTo(target, { offset: -NAVBAR_OFFSET });
-      } else {
-        const top = target.getBoundingClientRect().top + window.scrollY - NAVBAR_OFFSET;
-        window.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-      }
-    });
-  });
+/** Détruit les ScrollTrigger de la page quittée avant qu'une transition ne remplace le DOM. */
+export function cleanupScrollTriggers() {
+  ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 }
 
-/** Reveals au scroll : y:32→0 + fade, stagger léger, une fois par section. */
+/** Reveals au scroll : y:32→0 + fade, stagger léger, une fois par section — recréés à chaque page. */
 export function initScrollReveals() {
   if (prefersReducedMotion()) return;
 
@@ -443,9 +439,14 @@ export function initScrollReveals() {
   });
 }
 
-/** Curseur personnalisé (point + anneau) — desktop uniquement, jamais en reduced-motion ni tactile. */
+/**
+ * Curseur personnalisé (point + anneau) — desktop uniquement, jamais en
+ * reduced-motion ni tactile. Le curseur est persisté entre les pages
+ * (transition:persist) : idempotent, à initialiser une seule fois.
+ */
 export function initCustomCursor() {
   if (prefersReducedMotion() || !pointerIsFine()) return;
+  if (document.documentElement.classList.contains('has-custom-cursor')) return;
 
   const dot = document.querySelector<HTMLElement>('[data-cursor-dot]');
   const ring = document.querySelector<HTMLElement>('[data-cursor-ring]');

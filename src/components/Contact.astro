@@ -13,9 +13,9 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
 <section id="contact" class="reveal-section py-24 md:py-32">
   <div class="mx-auto max-w-6xl px-6">
     <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// contact</p>
-    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+    <h1 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
       {contact.intro}
-    </h2>
+    </h1>
 
     <div class="mt-14 grid gap-12 md:grid-cols-2">
       <div class="space-y-6">
@@ -153,10 +153,8 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
   </div>
 </section>
 
-<script>
-  import { initContactForm } from '../scripts/motion';
-  initContactForm();
-</script>
+<!-- Le formulaire est (ré)initialisé de façon centralisée par
+     scripts/bootstrap.ts sur `astro:page-load`, pas ici : voir Base.astro. -->
 
 <style>
   .form-field::placeholder {

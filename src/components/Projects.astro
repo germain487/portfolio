@@ -11,9 +11,9 @@ const filters = ['Tous', 'SaaS', 'Civic Tech', 'Data', 'Web Design'];
 <section id="projets" class="reveal-section py-24 md:py-32">
   <div class="mx-auto max-w-6xl px-6">
     <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// projets</p>
-    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+    <h1 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
       Des produits qui tournent en production, pas des maquettes.
-    </h2>
+    </h1>
 
     <div class="mt-10 flex flex-wrap gap-3">
       {filters.map((filter, i) => (
@@ -40,7 +40,6 @@ const filters = ['Tous', 'SaaS', 'Civic Tech', 'Data', 'Web Design'];
           tags={project.data.tags}
           annee={project.data.annee}
           statut={project.data.statut}
-          lien={project.data.lien}
           couverture={project.data.couverture}
         />
       ))}
@@ -48,11 +47,9 @@ const filters = ['Tous', 'SaaS', 'Civic Tech', 'Data', 'Web Design'];
   </div>
 </section>
 
-<script>
-  import { initProjectFilters, initCardTilt } from '../scripts/motion';
-  initProjectFilters();
-  initCardTilt('[data-project-tilt]', 6);
-</script>
+<!-- Les filtres et le tilt des cartes sont (ré)initialisés de façon
+     centralisée par scripts/bootstrap.ts sur `astro:page-load`, pas ici :
+     voir Base.astro. -->
 
 <style>
   .filter-chip {

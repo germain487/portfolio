@@ -65,7 +65,7 @@ const socialIconMap: Record<string, string> = {
           <Icon name="download" size={16} />
           {hero.ctaPrimaireLabel}
         </MagneticButton>
-        <MagneticButton href="#projets" variant="secondary">
+        <MagneticButton href="/projets" variant="secondary">
           {hero.ctaSecondaireLabel}
         </MagneticButton>
       </div>
@@ -91,18 +91,9 @@ const socialIconMap: Record<string, string> = {
   </div>
 </section>
 
-<script>
-  import { initTypewriter, initHeroIntro, initCardTilt } from '../scripts/motion';
-
-  const heroSection = document.querySelector('[data-hero]');
-  const typewriterEl = document.querySelector<HTMLElement>('[data-typewriter]');
-  const roles = JSON.parse(heroSection?.getAttribute('data-roles') ?? '[]');
-
-  if (typewriterEl && roles.length) initTypewriter(typewriterEl, roles);
-
-  initHeroIntro();
-  initCardTilt('[data-portrait-tilt]', 8);
-</script>
+<!-- Le typewriter, l'intro GSAP et le tilt du portrait sont (ré)initialisés
+     de façon centralisée par scripts/bootstrap.ts sur `astro:page-load`,
+     pas ici : voir Base.astro. -->
 
 <style>
   .typewriter-cursor {

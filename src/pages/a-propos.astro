@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+
+const title = 'À propos — Germain Camara — Développeur Fullstack · Conakry';
+const description =
+  "Développeur fullstack basé à Conakry : parcours, compétences techniques et statistiques derrière les produits Nimba Educ, Ziama Educ et l'Atlas des OSC de Guinée.";
+---
+
+<Base title={title} description={description}>
+  <About />
+  <Skills />
+</Base>

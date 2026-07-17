@@ -32,8 +32,5 @@
     document.documentElement.classList.add('overflow-hidden');
   }
 </script>
-
-<script>
-  import { initPreloader } from '../scripts/motion';
-  initPreloader();
-</script>
+<!-- initPreloader() est appelé de façon centralisée par scripts/bootstrap.ts
+     sur `astro:page-load`, pas ici : voir Base.astro. -->

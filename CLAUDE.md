@@ -1,5 +1,6 @@
+
 # 🎯 PROMPT MAÎTRE — PORTFOLIO PERSONNEL DE GERMAIN
-**Version 1.1 — ajout de l'administration complète du contenu (§7)**
+**Version 1.2 — passage en site multi-pages avec transitions (§1, §6, §10, §11)**
 
 > **Usage** : colle ce document comme premier message dans Claude Code, ou place-le en `CLAUDE.md` à la racine d'un dossier vide, puis écris simplement : « Exécute le prompt maître, phase par phase. »
 > **Prérequis** : copie la capture d'écran de référence dans `design/reference.png` avant de lancer.
@@ -12,7 +13,7 @@ Tu es à la fois **développeur frontend créatif senior** et **design lead**. T
 
 **Objectif du site** : convaincre en moins de 10 secondes trois audiences — clients potentiels (PME, ONG), partenaires tech et recruteurs — que Germain conçoit des produits web sérieux, modernes et ancrés dans les réalités ouest-africaines.
 
-**Livrable** : un site **one-page** (navigation par ancres) **100 % statique**, ultra-rapide, animé avec goût, entièrement **en français**, prêt à déployer — **doté d'une interface d'administration sur `/admin`** permettant à Germain de tout modifier, ajouter, réorganiser et supprimer sans jamais toucher au code (§7).
+**Livrable** : un site **multi-pages** (`/`, `/a-propos`, `/projets`, `/projets/[slug]`, `/services`, `/contact`) **100 % statique**, ultra-rapide, animé avec goût — transitions de page fluides via `<ClientRouter />` —, entièrement **en français**, prêt à déployer — **doté d'une interface d'administration sur `/admin`** permettant à Germain de tout modifier, ajouter, réorganiser et supprimer sans jamais toucher au code (§7).
 
 **Autonomie** : si un point est ambigu, tranche toi-même en cohérence avec la direction créative (§3) et note ta décision dans le README. Ne t'arrête jamais pour poser une question non bloquante.
 
@@ -104,20 +105,38 @@ Cette référence est un template de tutoriel vu des milliers de fois. **Interdi
 
 Tout le contenu éditable vit dans **`src/content/`** sous forme de fichiers JSON/Markdown organisés en collections typées (voir §7) — **jamais en dur dans les composants**. Le contenu ci-dessous constitue le **seed initial** de ces collections : utilise-le exactement. Les champs `[À COMPLÉTER]` reçoivent une valeur plausible en attendant et sont récapitulés dans le README.
 
-### 6.1 Navbar
-Logo : monogramme hexagonal « G » + wordmark « Germain » — liens : Accueil · À propos · Compétences · Projets · Services · Contact — scrollspy avec indicateur animé sous le lien actif — au scroll, navbar compacte avec fond `--surface` translucide + `backdrop-blur`. Menu mobile plein écran, apparition en stagger.
+### 6.0 Pages & navigation
 
-### 6.2 Hero (deux colonnes, comme la référence — mais signée)
+Le site est **multi-pages** (sortie statique, une route par page + une route dynamique pour le détail projet) :
+
+| Route | Contenu |
+|---|---|
+| `/` | Hero complet + à-propos condensé (3 lignes + lien) + 3 projets mis en avant + aperçu des 4 services + CTA contact |
+| `/a-propos` | Bio complète, stats à compteurs animés, compétences + marquee technologies |
+| `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
+| `/projets/[slug]` | Détail d'un projet : description longue en markdown, stack, lien live, navigation précédent/suivant |
+| `/services` | Les 4 services détaillés + CTA contact |
+| `/contact` | Formulaire Netlify + WhatsApp + coordonnées |
+
+Navbar et footer sont communs à toutes les pages (rendus depuis `Base.astro`). Plus de scrollspy : le lien actif de la navbar correspond à la page courante.
+
+### 6.1 Navbar
+Logo : monogramme hexagonal « G » + wordmark « Germain » — liens vers les pages : Accueil · À propos · Projets · Services · Contact — indicateur animé sous le lien de la **page courante** (pas de scrollspy) — au scroll, navbar compacte avec fond `--surface` translucide + `backdrop-blur`. Menu mobile plein écran, apparition en stagger. Persistante entre les pages (`transition:persist`) pour un rendu sans à-coup pendant les transitions.
+
+### 6.2 Accueil (`/`)
+**Hero**, deux colonnes, comme la référence — mais signée :
 - Eyebrow mono : `// salut, moi c'est`
 - H1 : **Germain [NOM]**
 - Ligne rotative (machine à écrire, curseur clignotant) : `Développeur Fullstack` → `Fondateur EdTech` → `Ingénieur Data Civic Tech` → `Bâtisseur du web ouest-africain`
 - Accroche (2 lignes max) : « Je conçois des SaaS et des plateformes web pensés pour les réalités du terrain : mobile-first, résilients hors-ligne, intégrés au Mobile Money. »
 - Badge : `● Disponible · Conakry 🇬🇳` (point pulsant — texte et visibilité pilotés depuis l'admin)
-- CTA primaire pilule glow : **Télécharger mon CV** (fichier uploadé via l'admin, `[À COMPLÉTER]`) · CTA secondaire fantôme : **Voir mes projets** (ancre)
+- CTA primaire pilule glow : **Télécharger mon CV** (fichier uploadé via l'admin, `[À COMPLÉTER]`) · CTA secondaire fantôme : **Voir mes projets** (→ `/projets`)
 - Icônes sociales rondes en contour (hover : remplissage cyan + glow) : LinkedIn, GitHub, X, Facebook — URLs `[À COMPLÉTER]`
 - Colonne droite : **portrait détouré débordant d'un hexagone** `--accent-soft`, halo pulsant lent, très léger tilt 3D à la souris. Tant que la vraie photo n'existe pas : silhouette hexagonale stylisée en SVG (jamais d'image cassée). Portrait remplaçable depuis l'admin.
 
-### 6.3 À propos
+Sous le hero : **à-propos condensé** (titre + 1er paragraphe de bio sur 3 lignes + lien « En savoir plus → » vers `/a-propos`), **3 projets mis en avant** (champ `misEnAvant`, cartes identiques à `/projets` + lien « Voir tous les projets → »), **aperçu des 4 services** (mêmes cartes que `/services` + lien « Voir tous les services → »), **CTA contact** (bandeau avec bouton vers `/contact`).
+
+### 6.3 À propos (`/a-propos`)
 Eyebrow `// à-propos` · titre « Construire pour ici, au niveau d'exigence de partout. » · bio en 3 courts paragraphes `[BIO À VALIDER PAR GERMAIN]` :
 
 1. Développeur fullstack basé à Conakry, je conçois des produits web qui tiennent compte du terrain : connexions instables, usage massivement mobile, paiements par Mobile Money.
@@ -126,8 +145,7 @@ Eyebrow `// à-propos` · titre « Construire pour ici, au niveau d'exigence de 
 
 **Stats à compteurs animés** (mono, hexagones en fond, liste répétable dans l'admin) : `[X]+ années d'expérience` · `[X]+ projets livrés` · `2 SaaS EdTech conçus` · `1 869 OSC cartographiées`.
 
-### 6.4 Compétences — SANS barres de pourcentage
-Quatre cartes par domaine (icône Lucide + liste puces hexagonales) :
+**Compétences — SANS barres de pourcentage**, sur la même page, sous la bio. Quatre cartes par domaine (icône Lucide + liste puces hexagonales) :
 - **Backend** : Python, Django 5, Django REST Framework, PostgreSQL, Laravel (secondaire)
 - **Frontend** : HTMX, Alpine.js, Tailwind CSS, JavaScript, Astro
 - **Data** : pandas / openpyxl, KoboToolbox, nettoyage & dédoublonnage, validation GPS & cartographie
@@ -135,14 +153,14 @@ Quatre cartes par domaine (icône Lucide + liste puces hexagonales) :
 
 Sous les cartes : **marquee infini** des noms de technologies en JetBrains Mono, séparés par des hexagones, pause au survol.
 
-### 6.5 Projets (la section la plus soignée)
-Grille responsive de cartes + **filtres** : Tous · SaaS · Civic Tech · Data · Web Design (vanilla JS, transitions FLIP douces).
+### 6.5 Projets (`/projets` + `/projets/[slug]`)
+`/projets` : grille responsive de cartes + **filtres** : Tous · SaaS · Civic Tech · Data · Web Design (vanilla JS, transitions FLIP douces). Chaque carte lie vers sa page de détail `/projets/[slug]`.
 
-Structure d'un projet : `{ slug, titre, description, stack[], tags[], annee, statut, lien?, couverture?, ordre, brouillon }`. Données seed :
+Structure d'un projet : `{ slug, titre, description, stack[], tags[], annee, statut, lien?, couverture?, ordre, brouillon, misEnAvant, body (markdown) }`. Données seed :
 
-1. **Ziama Educ** — 2026, en cours — SaaS · EdTech — « Gestion scolaire cloud-first et résiliente hors-ligne pour les écoles guinéennes. Paiements des frais par Mobile Money, expérience parents au premier plan. » — Django 5, DRF, HTMX, Alpine.js, PostgreSQL. `[DESCRIPTION PUBLIQUE À VALIDER]`
-2. **Nimba Educ** — SaaS · EdTech — « SaaS de gestion scolaire complet : 70+ modèles de données, présence, emplois du temps avec détection de conflits, paiements Mobile Money, synchronisation online/offline. » — Django, DRF, HTMX, Alpine.js, Tailwind.
-3. **Atlas des OSC de Guinée** — Civic Tech · Data — « Cartographie de la société civile guinéenne : 1 869 OSC recensées, consolidées et validées (dédoublonnage flou, contrôle GPS), avec l'ONG Ouvrir Les Horizons. » — Laravel, Livewire, KoboToolbox. — lien `[À COMPLÉTER]`
+1. **Ziama Educ** — 2026, en cours — SaaS · EdTech — mis en avant — « Gestion scolaire cloud-first et résiliente hors-ligne pour les écoles guinéennes. Paiements des frais par Mobile Money, expérience parents au premier plan. » — Django 5, DRF, HTMX, Alpine.js, PostgreSQL. `[DESCRIPTION PUBLIQUE À VALIDER]`
+2. **Nimba Educ** — SaaS · EdTech — mis en avant — « SaaS de gestion scolaire complet : 70+ modèles de données, présence, emplois du temps avec détection de conflits, paiements Mobile Money, synchronisation online/offline. » — Django, DRF, HTMX, Alpine.js, Tailwind.
+3. **Atlas des OSC de Guinée** — Civic Tech · Data — mis en avant — « Cartographie de la société civile guinéenne : 1 869 OSC recensées, consolidées et validées (dédoublonnage flou, contrôle GPS), avec l'ONG Ouvrir Les Horizons. » — Laravel, Livewire, KoboToolbox. — pas de lien public (outil interne à l'ONG)
 4. **Wonmafé** — Civic Tech · Data — « Plateforme de datavisualisation citoyenne sur les inégalités territoriales en Guinée. » — lien : wonmafe.com
 5. **Agence web [NOM — À COMPLÉTER]** — Web Design — « Sites vitrines et boutiques pour PME francophones d'Afrique de l'Ouest, avec maintenance, hébergement et intégrations sur mesure. » — WordPress, Elementor, Django.
 
@@ -150,22 +168,27 @@ Structure d'un projet : `{ slug, titre, description, stack[], tags[], annee, sta
 
 Carte au survol : tilt 3D léger (≤ 6°), zoom de la couverture (1.05), overlay avec flèche « Découvrir » ; statut « En cours » en badge mono.
 
-### 6.6 Services (Germain est aussi entrepreneur)
+`/projets/[slug]` (page de détail, générée via `getStaticPaths`) : statut + année, titre (H1), description courte, stack, bouton « Voir le projet en ligne » si `lien` existe, couverture en grand format, **description longue en markdown** (`body` du fichier), puis navigation **projet précédent / suivant** (selon `ordre`).
+
+### 6.6 Services (`/services`, Germain est aussi entrepreneur)
 Quatre cartes sobres, verbe d'action + une phrase :
 1. **Développer votre SaaS ou application web sur mesure**
 2. **Créer votre site web** (vitrine ou e-commerce) avec maintenance et hébergement
 3. **Structurer vos données** : consolidation, nettoyage, cartographie
 4. **Intégrer le Mobile Money** à vos produits (Orange Money, MTN MoMo)
 
-CTA de fin de section : « Discutons de votre projet → » (ancre Contact).
+CTA de fin de page : « Discutons de votre projet → » (→ `/contact`).
 
-### 6.7 Contact
+### 6.7 Contact (`/contact`)
 Deux colonnes : à gauche coordonnées (email `[À COMPLÉTER]`, bouton **WhatsApp** direct `wa.me/224XXXXXXXXX` `[À COMPLÉTER]`, « Conakry, Guinée ») ; à droite le formulaire.
 - Champs : nom, email, sujet (`Projet SaaS / Site web / Data / Autre` — liste modifiable depuis l'admin), message. Attributs Netlify Forms + champ honeypot caché.
 - Microcopie précise : bouton « Envoyer le message » ; succès « Message envoyé — je vous réponds sous 24 h. » ; erreur « L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à [email]. » Les erreurs disent quoi faire, jamais de vague « une erreur est survenue ».
 
 ### 6.8 Footer
-Rappel nav + réseaux sociaux + « Conçu et développé par Germain · Conakry 🇬🇳 » + filigrane Mont Nimba (§3). Pas de « © tous droits réservés » pompeux — juste l'année.
+Rappel nav (liens de page) + réseaux sociaux + « Conçu et développé par Germain · Conakry 🇬🇳 » + filigrane Mont Nimba (§3). Pas de « © tous droits réservés » pompeux — juste l'année. Commun à toutes les pages, persistant entre les transitions (`transition:persist`).
+
+### 6.9 Transitions de page
+`<ClientRouter />` (View Transitions natives d'Astro) sur toutes les pages, pour des transitions fluides fidèles à la direction créative (§3). Navbar, curseur personnalisé et Lenis sont `transition:persist` (état/scroll continus, pas de flash). Tout le reste (hero, compteurs, filtres, formulaire, reveals) est ré-initialisé à chaque `astro:page-load` — c'est le seul événement garanti de se déclencher aussi bien au chargement initial qu'après chaque transition côté client ; les `<script>` de composant, eux, ne se ré-exécutent pas automatiquement d'une page à l'autre. Le préloader ne s'affiche qu'à la toute première visite de la session (`sessionStorage`), jamais à chaque page.
 
 ---
 
@@ -226,7 +249,7 @@ Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir *
 3. **Machine à écrire** : rotation des rôles, vitesse naturelle, curseur `|` clignotant en `--accent`.
 4. **Portrait** : pulsation lente du halo (4 s) + tilt 3D subtil à la souris (desktop uniquement).
 5. **Reveals au scroll** : ScrollTrigger, `y: 32 → 0` + fade, stagger 0.08 s, `once: true`.
-6. **Lenis** smooth scroll + scrollspy nav.
+6. **Lenis** smooth scroll (persistant entre les pages) + navbar dont le lien actif suit la page courante.
 7. **Boutons magnétiques** (CTA principaux, desktop) + intensification du glow au survol.
 8. **Curseur personnalisé** : point + anneau qui s'agrandit sur les éléments interactifs — desktop uniquement, curseur natif jamais supprimé sur tactile.
 9. **Compteurs** des stats déclenchés à l'entrée dans le viewport.
@@ -240,8 +263,8 @@ Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir *
 
 - **Responsive** : impeccable de 360 px à 1536 px+. Mobile-first — la majorité du trafic ouest-africain est mobile. Hero mobile : portrait au-dessus du texte, réduit.
 - **Performance** (connexions guinéennes = contrainte de design) : Lighthouse ≥ 95 sur les quatre scores en mobile ; JS initial < 130 KB gzip ; page complète < 1,5 MB ; images AVIF/WebP en lazy ; fontes woff2 sous-ensemble latin, `font-display: swap` ; GSAP chargé après le first paint. Le CMS n'impacte pas ces budgets (chargé uniquement sur `/admin`).
-- **SEO** : `lang="fr"`, title « Germain [NOM] — Développeur Fullstack & Fondateur EdTech · Conakry », meta description, Open Graph + image `og.jpg` 1200×630 générée dans la charte, JSON-LD `Person`, sitemap (sans `/admin`), favicon hexagonal (SVG + PNG).
-- **Accessibilité** : HTML sémantique (un seul `h1`, sections labellisées), contrastes AA, focus visible personnalisé (anneau cyan), `alt` partout (éditables via l'admin pour les images uploadées), labels de formulaire explicites, navigation clavier complète, `prefers-reduced-motion` respecté.
+- **SEO** : `lang="fr"`, **title et meta description uniques par page** (accueil : « Germain [NOM] — Développeur Fullstack & Fondateur EdTech · Conakry » ; les autres pages déclinent le pattern), Open Graph + image `og.jpg` 1200×630 générée dans la charte, JSON-LD `Person` sur `/` et `/a-propos` uniquement, sitemap couvrant toutes les pages (statiques + `/projets/[slug]`, sans `/admin`), favicon hexagonal (SVG + PNG).
+- **Accessibilité** : HTML sémantique (**un seul `h1` par page**, sections labellisées), contrastes AA, focus visible personnalisé (anneau cyan), `alt` partout (éditables via l'admin pour les images uploadées), labels de formulaire explicites, navigation clavier complète, `prefers-reduced-motion` respecté.
 
 ---
 
@@ -261,18 +284,28 @@ portfolio/
 │   ├── content/
 │   │   ├── settings.json · hero.json · about.json · skills.json
 │   │   ├── services.json · contact.json · footer.json
-│   │   └── projets/               # un fichier .md par projet (CRUD via l'admin)
+│   │   └── projets/               # un fichier .md par projet (CRUD via l'admin, body = description longue)
 │   ├── content.config.ts          # collections + schémas zod (garde-fous)
 │   ├── styles/global.css          # tokens + Tailwind
-│   ├── layouts/Base.astro         # SEO, fontes, OG, JSON-LD
+│   ├── layouts/Base.astro         # navbar + footer + curseur + préloader + SEO + <ClientRouter />
 │   ├── components/
 │   │   ├── Preloader.astro · Navbar.astro · Hero.astro · HexPortrait.astro
 │   │   ├── About.astro · Skills.astro · TechMarquee.astro
-│   │   ├── Projects.astro · ProjectCard.astro
+│   │   ├── Projects.astro · ProjectCard.astro · ProjectCover.astro
 │   │   ├── Services.astro · Contact.astro · Footer.astro
-│   │   └── MagneticButton.astro · Cursor.astro
-│   ├── scripts/motion.ts          # GSAP, Lenis, scrollspy, compteurs
-│   └── pages/index.astro
+│   │   ├── AboutPreview.astro · FeaturedProjects.astro · ServicesPreview.astro · ContactCTA.astro  # blocs condensés de l'accueil
+│   │   └── MagneticButton.astro · Cursor.astro · Icon.astro
+│   ├── scripts/
+│   │   ├── motion.ts              # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
+│   │   └── bootstrap.ts           # point d'entrée unique : (ré)initialise tout sur astro:page-load
+│   └── pages/
+│       ├── index.astro            # /
+│       ├── a-propos.astro         # /a-propos
+│       ├── services.astro         # /services
+│       ├── contact.astro          # /contact
+│       └── projets/
+│           ├── index.astro        # /projets
+│           └── [slug].astro       # /projets/[slug] (getStaticPaths, détail + préc/suiv)
 ├── .github/workflows/
 │   └── deploy-cpanel.yml          # variante cPanel (désactivée par défaut)
 └── astro.config.mjs
@@ -287,10 +320,11 @@ Exécute dans l'ordre. À la fin de **chaque** phase : `npm run build` doit pass
 - **Phase 0 — Fondations** : init Astro 5 + Tailwind 4, fontes locales, tokens §5, **collections `src/content/` + schémas zod + seed complet du §6**, `Base.astro` avec tout le SEO, page vide qui build.
 - **Phase 1 — Première impression** : Preloader, Navbar (+ mobile), Hero complet (typing, hexagone, badge, CTA, socials) — alimenté par les collections.
 - **Phase 2 — Crédibilité** : À propos + compteurs, Compétences + marquee.
-- **Phase 3 — Preuve** : Projets (données réelles, couvertures SVG générées, filtres FLIP, cartes tilt, respect de `ordre` et `brouillon`).
+- **Phase 3 — Preuve** : grille Projets complète (données réelles, couvertures SVG générées, filtres FLIP, cartes tilt, respect de `ordre` et `brouillon`) + page de détail `/projets/[slug]` (description longue markdown, stack, lien live, navigation précédent/suivant).
 - **Phase 4 — Conversion** : Services, Contact (Netlify Forms + états succès/erreur + honeypot), Footer + filigrane Nimba.
 - **Phase 5 — Polish** : passe motion globale (Lenis, ScrollTrigger, curseur, magnétisme), audit perf/a11y/SEO contre §9.
 - **Phase 6 — Administration** : `public/admin/` (Sveltia + `config.yml` complet en français couvrant les 8 collections §7.3), test local via « local repository » (modifier un texte depuis l'admin doit se refléter au build), workflow cPanel §7.6, puis **`README.md` final** : lancement, déploiement Netlify pas à pas, variante cPanel, **section « Administration » détaillée (§7.5)** et **liste récapitulative de tous les champs `[À COMPLÉTER]`**.
+- **Pivot — Multi-pages** (postérieur à la Phase 6) : le site est passé de one-page à multi-pages (§1, §6, §10). Commit dédié `refactor: passage en multi-pages` : éclatement des sections en pages (`/`, `/a-propos`, `/projets`, `/services`, `/contact`), navbar/footer déplacés dans `Base.astro`, navigation par page (fin du scrollspy), `<ClientRouter />` + `scripts/bootstrap.ts` pour ré-initialiser l'animation à chaque `astro:page-load`, champ `misEnAvant` + corps markdown ajoutés à la collection `projets`. La Phase 3 a été reprise dans la foulée pour livrer `/projets/[slug]`.
 
 ---
 

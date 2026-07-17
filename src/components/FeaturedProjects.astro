@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+
+const allProjects = await getCollection('projets', ({ data }) => !data.brouillon && data.misEnAvant);
+const projects = allProjects.sort((a, b) => a.data.ordre - b.data.ordre).slice(0, 3);
+---
+
+<section class="reveal-section py-24 md:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// projets</p>
+        <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
+          Des produits qui tournent en production, pas des maquettes.
+        </h2>
+      </div>
+      <a
+        href="/projets"
+        class="inline-flex shrink-0 items-center gap-2 font-mono text-sm text-accent transition-transform duration-300 hover:translate-x-1"
+      >
+        Voir tous les projets →
+      </a>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard
+          slug={project.id}
+          titre={project.data.titre}
+          description={project.data.description}
+          stack={project.data.stack}
+          tags={project.data.tags}
+          annee={project.data.annee}
+          statut={project.data.statut}
+          couverture={project.data.couverture}
+        />
+      ))}
+    </div>
+  </div>
+</section>
