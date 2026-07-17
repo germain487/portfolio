@@ -135,34 +135,77 @@ export function initHeroIntro() {
   onPreloaderDone(start);
 }
 
-/** Léger tilt 3D du portrait au mouvement de la souris (desktop uniquement). */
-export function initPortraitTilt() {
+/** Léger tilt 3D au mouvement de la souris (desktop uniquement) — portrait, cartes projets… */
+export function initCardTilt(selector: string, max = 8) {
   if (prefersReducedMotion() || !window.matchMedia('(pointer: fine)').matches) return;
 
-  const wrap = document.querySelector<HTMLElement>('[data-portrait-tilt]');
-  if (!wrap) return;
+  document.querySelectorAll<HTMLElement>(selector).forEach((wrap) => {
+    const onMove = (e: MouseEvent) => {
+      const rect = wrap.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      gsap.to(wrap, {
+        rotateY: px * max,
+        rotateX: -py * max,
+        duration: 0.4,
+        ease: 'power2.out',
+        transformPerspective: 700,
+      });
+    };
 
-  const max = 8;
+    const onLeave = () => {
+      gsap.to(wrap, { rotateX: 0, rotateY: 0, duration: 0.6, ease: 'power3.out' });
+    };
 
-  const onMove = (e: MouseEvent) => {
-    const rect = wrap.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    gsap.to(wrap, {
-      rotateY: px * max,
-      rotateX: -py * max,
-      duration: 0.4,
-      ease: 'power2.out',
-      transformPerspective: 700,
+    wrap.addEventListener('mousemove', onMove);
+    wrap.addEventListener('mouseleave', onLeave);
+  });
+}
+
+/** Filtres de la grille projets avec réorganisation animée douce (technique FLIP). */
+export function initProjectFilters() {
+  const grid = document.querySelector<HTMLElement>('[data-projects-grid]');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+  if (!grid || !buttons.length) return;
+
+  const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-project-card]'));
+
+  const applyFilter = (filter: string) => {
+    const first = new Map(cards.map((card) => [card, card.getBoundingClientRect()]));
+
+    cards.forEach((card) => {
+      const tags: string[] = JSON.parse(card.dataset.tags ?? '[]');
+      const show = filter === 'Tous' || tags.includes(filter);
+      // style inline plutôt qu'une classe : garantit de gagner sur les
+      // utilitaires Tailwind (ex. .flex) posés sur le même élément, quel
+      // que soit l'ordre de bundling des feuilles de style.
+      card.style.display = show ? '' : 'none';
+    });
+
+    if (prefersReducedMotion()) return;
+
+    requestAnimationFrame(() => {
+      cards.forEach((card) => {
+        if (card.style.display === 'none') return;
+        const from = first.get(card);
+        const to = card.getBoundingClientRect();
+        if (!from) return;
+        const dx = from.left - to.left;
+        const dy = from.top - to.top;
+        if (dx || dy) {
+          gsap.fromTo(card, { x: dx, y: dy }, { x: 0, y: 0, duration: 0.5, ease: 'power2.out' });
+        }
+      });
     });
   };
 
-  const onLeave = () => {
-    gsap.to(wrap, { rotateX: 0, rotateY: 0, duration: 0.6, ease: 'power3.out' });
-  };
-
-  wrap.addEventListener('mousemove', onMove);
-  wrap.addEventListener('mouseleave', onLeave);
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      applyFilter(btn.dataset.filter ?? 'Tous');
+    });
+  });
 }
 
 /** Compteurs de stats animés, déclenchés à l'entrée dans le viewport. */

@@ -92,7 +92,7 @@ const socialIconMap: Record<string, string> = {
 </section>
 
 <script>
-  import { initTypewriter, initHeroIntro, initPortraitTilt } from '../scripts/motion';
+  import { initTypewriter, initHeroIntro, initCardTilt } from '../scripts/motion';
 
   const heroSection = document.querySelector('[data-hero]');
   const typewriterEl = document.querySelector<HTMLElement>('[data-typewriter]');
@@ -101,7 +101,7 @@ const socialIconMap: Record<string, string> = {
   if (typewriterEl && roles.length) initTypewriter(typewriterEl, roles);
 
   initHeroIntro();
-  initPortraitTilt();
+  initCardTilt('[data-portrait-tilt]', 8);
 </script>
 
 <style>

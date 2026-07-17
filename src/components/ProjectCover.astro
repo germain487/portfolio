@@ -1,0 +1,64 @@
+---
+interface Props {
+  titre: string;
+  slug: string;
+}
+
+const { titre, slug } = Astro.props;
+
+function hashString(str: string) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
+  }
+  return Math.abs(h);
+}
+
+const hash = hashString(slug);
+const hue = 187 + ((hash % 41) - 20);
+const accent = `hsl(${hue} 85% 60%)`;
+const accentSoft = `hsl(${hue} 85% 78%)`;
+const monogram = titre.trim().charAt(0).toUpperCase();
+
+const hexDecor = [
+  { x: 40, y: 34, s: 1 },
+  { x: 165, y: 22, s: 0.7 },
+  { x: 345, y: 55, s: 1.2 },
+  { x: 55, y: 210, s: 0.8 },
+  { x: 250, y: 220, s: 1 },
+  { x: 365, y: 195, s: 0.6 },
+];
+---
+
+<svg viewBox="0 0 400 260" class="h-full w-full" role="img" aria-label={`Couverture du projet ${titre}`}>
+  <defs>
+    <linearGradient id={`grad-${slug}`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="var(--surface-2)" />
+      <stop offset="100%" stop-color="var(--surface)" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="260" fill={`url(#grad-${slug})`} />
+  {hexDecor.map((h, i) => (
+    <polygon
+      points="0,-18 16,-9 16,9 0,18 -16,9 -16,-9"
+      transform={`translate(${h.x} ${h.y}) scale(${h.s})`}
+      fill="none"
+      stroke={accent}
+      stroke-width="1"
+      opacity={0.1 + (i % 3) * 0.04}
+    />
+  ))}
+  <g transform="translate(200 130)">
+    <polygon points="0,-46 40,-23 40,23 0,46 -40,23 -40,-23" fill="none" stroke={accent} stroke-width="2.5" />
+    <text
+      x="0"
+      y="16"
+      font-family="var(--font-display)"
+      font-weight="700"
+      font-size="42"
+      fill={accentSoft}
+      text-anchor="middle">{monogram}</text
+    >
+  </g>
+</svg>

@@ -1,0 +1,87 @@
+---
+import ProjectCover from './ProjectCover.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  slug: string;
+  titre: string;
+  description: string;
+  stack: string[];
+  tags: string[];
+  annee: number;
+  statut: string;
+  lien?: string;
+  couverture?: string;
+}
+
+const { slug, titre, description, stack, tags, annee, statut, lien, couverture } = Astro.props;
+
+const Tag = lien ? 'a' : 'div';
+const linkProps = lien ? { href: lien, target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<Tag
+  {...linkProps}
+  data-project-card
+  data-project-tilt
+  data-tags={JSON.stringify(tags)}
+  class="project-card group relative flex flex-col overflow-hidden rounded-card border border-surface-2 bg-surface transition-colors duration-300 hover:border-accent/40"
+>
+  <div class="relative aspect-[16/10] overflow-hidden">
+    <div class="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105">
+      {couverture ? (
+        <img
+          src={couverture}
+          alt={`Couverture du projet ${titre}`}
+          class="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <ProjectCover titre={titre} slug={slug} />
+      )}
+    </div>
+
+    {lien && (
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-bg/85 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      >
+        <span class="flex items-center gap-1.5 rounded-pill bg-accent px-4 py-2 font-mono text-xs text-bg">
+          Découvrir
+          <Icon name="arrow-up-right" size={14} />
+        </span>
+      </div>
+    )}
+
+    <span class="statut-badge absolute left-4 top-4 rounded-pill border bg-bg/70 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wide backdrop-blur-sm">
+      {statut}
+    </span>
+  </div>
+
+  <div class="flex flex-1 flex-col p-6">
+    <div class="flex items-center justify-between gap-2">
+      <h3 class="font-display text-lg font-semibold text-text">{titre}</h3>
+      <span class="shrink-0 font-mono text-xs text-text-muted">{annee}</span>
+    </div>
+    <p class="mt-2 text-sm leading-relaxed text-text-muted">{description}</p>
+    <ul class="mt-4 flex flex-wrap gap-2">
+      {stack.map((tech) => (
+        <li class="rounded-pill border border-surface-2 px-2.5 py-1 font-mono text-[0.65rem] text-text-muted">
+          {tech}
+        </li>
+      ))}
+    </ul>
+  </div>
+</Tag>
+
+<style>
+  .statut-badge {
+    border-color: var(--surface-2);
+    color: var(--text-muted);
+  }
+  .project-card:hover .statut-badge {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
