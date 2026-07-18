@@ -111,7 +111,7 @@ Le site est **multi-pages** (sortie statique, une route par page + une route dyn
 
 | Route | Contenu |
 |---|---|
-| `/` | Hero complet + à-propos condensé (3 lignes + lien) + 3 projets mis en avant + aperçu des 4 services + CTA contact |
+| `/` | Hero complet + 3 projets mis en avant + aperçu des 4 services + CTA contact |
 | `/a-propos` | Bio complète, stats à compteurs animés, compétences par domaine |
 | `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
 | `/projets/[slug]` | Détail d'un projet : description longue en markdown, stack, lien live, navigation précédent/suivant |
@@ -134,7 +134,7 @@ Logo : monogramme hexagonal « G » + wordmark « Germain » — liens vers les 
 - Icônes sociales rondes en contour (hover : remplissage cyan + glow) : LinkedIn, GitHub, X, Facebook — URLs `[À COMPLÉTER]`
 - Colonne droite : **portrait détouré débordant d'un hexagone** `--accent-soft`, halo pulsant lent, très léger tilt 3D à la souris. Tant que la vraie photo n'existe pas : silhouette hexagonale stylisée en SVG (jamais d'image cassée). Portrait remplaçable depuis l'admin.
 
-Sous le hero : **à-propos condensé** (titre + 1er paragraphe de bio sur 3 lignes + lien « En savoir plus → » vers `/a-propos`), **3 projets mis en avant** (champ `misEnAvant`, cartes identiques à `/projets` + lien « Voir tous les projets → »), **aperçu des 4 services** (mêmes cartes que `/services` + lien « Voir tous les services → »), **CTA contact** (bandeau avec bouton vers `/contact`).
+Sous le hero : **3 projets mis en avant** (champ `misEnAvant`, cartes identiques à `/projets` + lien « Voir tous les projets → »), **aperçu des 4 services** (mêmes cartes que `/services` + lien « Voir tous les services → »), **CTA contact** (bandeau avec bouton vers `/contact`). Pas de récapitulatif « à-propos » sur l'accueil — le lien de nav vers `/a-propos` suffit à y amener.
 
 ### 6.3 À propos (`/a-propos`)
 Eyebrow `// à-propos` · titre « Construire pour ici, au niveau d'exigence de partout. » · bio en 3 courts paragraphes `[BIO À VALIDER PAR GERMAIN]` :
@@ -295,7 +295,7 @@ portfolio/
 │   │   ├── About.astro · Skills.astro
 │   │   ├── Projects.astro · ProjectCard.astro · ProjectCover.astro
 │   │   ├── Services.astro · Contact.astro · Footer.astro
-│   │   ├── AboutPreview.astro · FeaturedProjects.astro · ServicesPreview.astro · ContactCTA.astro  # blocs condensés de l'accueil
+│   │   ├── FeaturedProjects.astro · ServicesPreview.astro · ContactCTA.astro  # blocs condensés de l'accueil
 │   │   └── MagneticButton.astro · Cursor.astro · Icon.astro
 │   ├── scripts/
 │   │   ├── motion.ts              # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…

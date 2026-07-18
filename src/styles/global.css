@@ -73,6 +73,23 @@
   }
 }
 
+/* Séparateur discret entre deux sections consécutives (jamais juste
+   après le hero, qui a déjà son propre poids visuel) : un fin trait en
+   dégradé qui s'estompe vers transparent sur les bords, plutôt qu'une
+   ligne pleine largeur trop marquée. */
+.reveal-section + .reveal-section {
+  position: relative;
+}
+.reveal-section + .reveal-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--surface-2), transparent);
+}
+
 .hex-grid-bg {
   position: fixed;
   inset: 0;
