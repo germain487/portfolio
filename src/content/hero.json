@@ -1,5 +1,9 @@
 {
-  "eyebrow": { "texte": "// salut, moi c'est", "alignement": "gauche", "police": "mono" },
+  "eyebrow": {
+    "texte": "// salut, moi c'est",
+    "alignement": "centre",
+    "police": "display"
+  },
   "accroche": {
     "texte": "Je conçois des SaaS et des plateformes web pensés pour les réalités du terrain : mobile-first, résilients hors-ligne, intégrés au Mobile Money.",
     "alignement": "gauche",
