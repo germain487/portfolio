@@ -1,5 +1,9 @@
 {
-  "intro": "Un projet, une question ? Écrivez-moi — je réponds sous 24 h.",
+  "intro": {
+    "texte": "Un projet, une question ? Écrivez-moi — je réponds sous 24 h.",
+    "alignement": "gauche",
+    "police": "display"
+  },
   "sujets": ["Projet SaaS", "Site web", "Data", "Autre"],
   "messageSucces": "Message envoyé — je vous réponds sous 24 h.",
   "messageErreur": "L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à contact@germainmonemou.dev."

@@ -69,11 +69,12 @@ portfolio/
 │   ├── og.jpg, favicon.svg
 ├── src/
 │   ├── content/             # settings.json, hero.json, about.json, skills.json,
-│   │                         # services.json, contact.json, footer.json, projets/*.md
-│   ├── content.config.ts    # 8 collections + schémas Zod (garde-fous au build)
+│   │                         # services.json, contact.json, footer.json, sections.json,
+│   │                         # projets/*.md
+│   ├── content.config.ts    # 9 collections + schémas Zod (garde-fous au build)
 │   ├── layouts/Base.astro   # navbar + footer + curseur + préloader + SEO + <ClientRouter />
-│   ├── components/          # un composant par section + blocs condensés (AboutPreview,
-│   │                         # FeaturedProjects, ServicesPreview, ContactCTA) + Icon/Cursor…
+│   ├── components/          # un composant par section + blocs condensés (FeaturedProjects,
+│   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor…
 │   ├── scripts/
 │   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
 │   │   └── bootstrap.ts     # point d'entrée unique, ré-exécuté à chaque astro:page-load
@@ -142,20 +143,23 @@ C'est le moyen le plus rapide de vérifier une modification de champ ou de teste
 
 `monsite.com/admin` → connexion GitHub (un clic) → modification dans un formulaire en français → **Enregistrer** → commit automatique → rebuild → en ligne en 1 à 2 minutes. Tout est historisé dans Git : rien n'est jamais perdu, tout est réversible (historique/rollback via GitHub).
 
-### Couverture des 8 collections
+### Couverture des 9 collections
 
 Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints) :
 
 | Collection | Fichier(s) | Champs |
 |---|---|---|
 | Réglages généraux | `settings.json` | identité, SEO, couleur d'accent, CV, réseaux sociaux… |
-| Hero | `hero.json` | eyebrow, accroche, rôles de la machine à écrire, CTA, portrait |
-| À propos | `about.json` | titre, paragraphes, statistiques animées |
-| Compétences | `skills.json` | domaines (icône + items), technologies du bandeau |
+| Hero | `hero.json` | eyebrow, accroche (mise en forme), rôles de la machine à écrire, CTA, portrait |
+| À propos | `about.json` | titre, paragraphes (mise en forme), statistiques animées |
+| Compétences | `skills.json` | domaines (icône + titre en mise en forme + items) |
 | Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, mis en avant (accueil), description longue markdown (page de détail) |
-| Services | `services.json` | cartes, CTA final |
-| Contact | `contact.json` | intro, sujets du formulaire, microcopies succès/erreur |
-| Footer | `footer.json` | mention de signature, filigrane Mont Nimba |
+| Services | `services.json` | cartes (titre + phrase en mise en forme), CTA final |
+| Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur |
+| Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba |
+| Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil |
+
+**Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec trois champs — texte, alignement (gauche / centré / droite) et police, limitée aux 3 familles déjà chargées sur le site (Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono) afin de préserver l'identité visuelle. Volontairement exclus : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton, les messages système et la mention de copyright du footer.
 
 ---
 

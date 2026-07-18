@@ -1,9 +1,12 @@
 ---
 import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
+import StyledText from './StyledText.astro';
 
 const servicesEntry = await getEntry('services', 'services');
+const sectionsEntry = await getEntry('sections', 'sections');
 const services = servicesEntry!.data;
+const sections = sectionsEntry!.data;
 ---
 
 <section class="reveal-section py-16 md:py-20">
@@ -11,9 +14,14 @@ const services = servicesEntry!.data;
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div>
         <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// services</p>
-        <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
-          Au-delà du code, un partenaire technique.
-        </h2>
+        <StyledText
+          as="h2"
+          alignement={sections.servicesTitre.alignement}
+          police={sections.servicesTitre.police}
+          class="mt-4 max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text"
+        >
+          {sections.servicesTitre.texte}
+        </StyledText>
       </div>
       <a
         href="/services"
@@ -29,8 +37,22 @@ const services = servicesEntry!.data;
           <div class="grid h-11 w-11 place-items-center rounded-full border border-surface-2 text-accent">
             <Icon name={carte.icone} size={20} />
           </div>
-          <h3 class="mt-5 font-display text-base font-medium leading-snug text-text">{carte.titre}</h3>
-          <p class="mt-3 text-sm leading-relaxed text-text-muted">{carte.phrase}</p>
+          <StyledText
+            as="h3"
+            alignement={carte.titre.alignement}
+            police={carte.titre.police}
+            class="mt-5 text-base font-medium leading-snug text-text"
+          >
+            {carte.titre.texte}
+          </StyledText>
+          <StyledText
+            as="p"
+            alignement={carte.phrase.alignement}
+            police={carte.phrase.police}
+            class="mt-3 text-sm leading-relaxed text-text-muted"
+          >
+            {carte.phrase.texte}
+          </StyledText>
         </div>
       ))}
     </div>

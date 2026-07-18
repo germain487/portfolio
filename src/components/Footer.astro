@@ -1,6 +1,7 @@
 ---
 import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
+import StyledText from './StyledText.astro';
 
 const settingsEntry = await getEntry('settings', 'settings');
 const footerEntry = await getEntry('footer', 'footer');
@@ -45,7 +46,14 @@ const year = new Date().getFullYear();
           </svg>
           {settings.wordmark}
         </a>
-        <p class="mt-4 max-w-[22rem] text-sm leading-relaxed text-text-muted">{footer.tagline}</p>
+        <StyledText
+          as="p"
+          alignement={footer.tagline.alignement}
+          police={footer.tagline.police}
+          class="mt-4 max-w-[22rem] text-sm leading-relaxed text-text-muted"
+        >
+          {footer.tagline.texte}
+        </StyledText>
         {settings.disponible && (
           <div class="mt-5 inline-flex items-center gap-2 rounded-pill border border-surface-2 px-4 py-2 font-mono text-xs text-text-muted">
             <span class="relative flex h-2 w-2">

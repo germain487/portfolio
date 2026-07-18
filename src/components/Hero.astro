@@ -3,6 +3,7 @@ import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
 import HexPortrait from './HexPortrait.astro';
 import MagneticButton from './MagneticButton.astro';
+import StyledText from './StyledText.astro';
 
 const settingsEntry = await getEntry('settings', 'settings');
 const heroEntry = await getEntry('hero', 'hero');
@@ -26,9 +27,15 @@ const socialIconMap: Record<string, string> = {
 >
   <div class="mx-auto grid max-w-6xl items-center gap-16 px-6 md:grid-cols-2">
     <div class="order-2 md:order-1">
-      <p data-hero-eyebrow class="font-mono text-xs uppercase tracking-[0.12em] text-accent">
-        {hero.eyebrow}
-      </p>
+      <StyledText
+        as="p"
+        data-hero-eyebrow
+        alignement={hero.eyebrow.alignement}
+        police={hero.eyebrow.police}
+        class="text-xs uppercase tracking-[0.12em] text-accent"
+      >
+        {hero.eyebrow.texte}
+      </StyledText>
 
       <h1
         data-hero-name
@@ -46,9 +53,15 @@ const socialIconMap: Record<string, string> = {
         <span class="sr-only">{hero.roles.join(' · ')}</span>
       </p>
 
-      <p data-hero-tagline class="mt-6 max-w-md text-base leading-[1.7] text-text-muted">
-        {hero.accroche}
-      </p>
+      <StyledText
+        as="p"
+        data-hero-tagline
+        alignement={hero.accroche.alignement}
+        police={hero.accroche.police}
+        class="mt-6 max-w-md text-base leading-[1.7] text-text-muted"
+      >
+        {hero.accroche.texte}
+      </StyledText>
 
       {settings.disponible && (
         <div class="mt-6 inline-flex items-center gap-2 rounded-pill border border-surface-2 px-4 py-2 font-mono text-xs text-text-muted">

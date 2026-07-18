@@ -1,9 +1,25 @@
 {
-  "titre": "Construire pour ici, au niveau d'exigence de partout.",
+  "titre": {
+    "texte": "Construire pour ici, au niveau d'exigence de partout.",
+    "alignement": "gauche",
+    "police": "display"
+  },
   "paragraphes": [
-    "Développeur fullstack basé à Conakry, je conçois des produits web qui tiennent compte du terrain : connexions instables, usage massivement mobile, paiements par Mobile Money.",
-    "J'ai fondé **Nimba Educ** puis **Ziama Educ**, deux SaaS de gestion scolaire pensés pour les écoles guinéennes — de la modélisation des données (70+ modèles) à la synchronisation online/offline.",
-    "Côté civic tech, je travaille avec l'ONG Ouvrir Les Horizons sur l'**Atlas des OSC de Guinée** (1 869 organisations cartographiées) et j'ai créé **Wonmafé**, plateforme de datavisualisation des inégalités territoriales."
+    {
+      "texte": "Développeur fullstack basé à Conakry, je conçois des produits web qui tiennent compte du terrain : connexions instables, usage massivement mobile, paiements par Mobile Money.",
+      "alignement": "gauche",
+      "police": "sans"
+    },
+    {
+      "texte": "J'ai fondé **Nimba Educ** puis **Ziama Educ**, deux SaaS de gestion scolaire pensés pour les écoles guinéennes — de la modélisation des données (70+ modèles) à la synchronisation online/offline.",
+      "alignement": "gauche",
+      "police": "sans"
+    },
+    {
+      "texte": "Côté civic tech, je travaille avec l'ONG Ouvrir Les Horizons sur l'**Atlas des OSC de Guinée** (1 869 organisations cartographiées) et j'ai créé **Wonmafé**, plateforme de datavisualisation des inégalités territoriales.",
+      "alignement": "gauche",
+      "police": "sans"
+    }
   ],
   "stats": [
     { "valeur": 4, "suffixe": "+", "label": "années d'expérience" },

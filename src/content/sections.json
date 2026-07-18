@@ -1,0 +1,27 @@
+{
+  "skillsTitre": {
+    "texte": "Ce que j'utilise pour livrer.",
+    "alignement": "gauche",
+    "police": "display"
+  },
+  "projetsTitre": {
+    "texte": "Des produits qui tournent en production, pas des maquettes.",
+    "alignement": "gauche",
+    "police": "display"
+  },
+  "servicesTitre": {
+    "texte": "Au-delà du code, un partenaire technique.",
+    "alignement": "gauche",
+    "police": "display"
+  },
+  "contactCtaTitre": {
+    "texte": "Un projet, une question ?",
+    "alignement": "centre",
+    "police": "display"
+  },
+  "contactCtaTexte": {
+    "texte": "Écrivez-moi — je réponds sous 24 h.",
+    "alignement": "centre",
+    "police": "sans"
+  }
+}

@@ -2,23 +2,43 @@
   "cartes": [
     {
       "icone": "rocket",
-      "titre": "Développer votre SaaS ou application web sur mesure",
-      "phrase": "De la modélisation des données à la mise en production, une plateforme pensée pour votre métier."
+      "titre": {
+        "texte": "Développer votre SaaS ou application web sur mesure",
+        "alignement": "gauche",
+        "police": "display"
+      },
+      "phrase": {
+        "texte": "De la modélisation des données à la mise en production, une plateforme pensée pour votre métier.",
+        "alignement": "gauche",
+        "police": "sans"
+      }
     },
     {
       "icone": "layout-template",
-      "titre": "Créer votre site web",
-      "phrase": "Vitrine ou e-commerce, avec maintenance et hébergement inclus."
+      "titre": { "texte": "Créer votre site web", "alignement": "gauche", "police": "display" },
+      "phrase": {
+        "texte": "Vitrine ou e-commerce, avec maintenance et hébergement inclus.",
+        "alignement": "gauche",
+        "police": "sans"
+      }
     },
     {
       "icone": "database",
-      "titre": "Structurer vos données",
-      "phrase": "Consolidation, nettoyage, dédoublonnage et cartographie de vos jeux de données."
+      "titre": { "texte": "Structurer vos données", "alignement": "gauche", "police": "display" },
+      "phrase": {
+        "texte": "Consolidation, nettoyage, dédoublonnage et cartographie de vos jeux de données.",
+        "alignement": "gauche",
+        "police": "sans"
+      }
     },
     {
       "icone": "smartphone",
-      "titre": "Intégrer le Mobile Money",
-      "phrase": "Orange Money, MTN MoMo : des paiements fluides directement dans votre produit."
+      "titre": { "texte": "Intégrer le Mobile Money", "alignement": "gauche", "police": "display" },
+      "phrase": {
+        "texte": "Orange Money, MTN MoMo : des paiements fluides directement dans votre produit.",
+        "alignement": "gauche",
+        "police": "sans"
+      }
     }
   ],
   "ctaFinalLabel": "Discutons de votre projet →"

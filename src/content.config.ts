@@ -14,6 +14,17 @@ const reseauSchema = z.object({
   url: z.string().url(),
 });
 
+// Texte éditable avec mise en forme (alignement + police) depuis l'admin.
+// Réservé aux titres et paragraphes de prose affichés une seule fois ;
+// exclu des champs réutilisés comme identifiants ailleurs (texte alternatif,
+// balises <title>/<meta>, aria-label…) — voir CLAUDE.md §7.3 pour le détail
+// des exclusions.
+const richText = z.object({
+  texte: z.string(),
+  alignement: z.enum(['gauche', 'centre', 'droite']).default('gauche'),
+  police: z.enum(['display', 'sans', 'mono']).default('sans'),
+});
+
 const settings = defineCollection({
   loader: file('src/content/settings.json', singleton('settings')),
   schema: z.object({
@@ -36,8 +47,8 @@ const settings = defineCollection({
 const hero = defineCollection({
   loader: file('src/content/hero.json', singleton('hero')),
   schema: z.object({
-    eyebrow: z.string(),
-    accroche: z.string(),
+    eyebrow: richText,
+    accroche: richText,
     roles: z.array(z.string()).min(1),
     ctaPrimaireLabel: z.string(),
     ctaSecondaireLabel: z.string(),
@@ -48,8 +59,8 @@ const hero = defineCollection({
 const about = defineCollection({
   loader: file('src/content/about.json', singleton('about')),
   schema: z.object({
-    titre: z.string(),
-    paragraphes: z.array(z.string()).min(1),
+    titre: richText,
+    paragraphes: z.array(richText).min(1),
     stats: z.array(
       z.object({
         valeur: z.number(),
@@ -66,7 +77,7 @@ const skills = defineCollection({
     domaines: z.array(
       z.object({
         icone: z.string(),
-        titre: z.string(),
+        titre: richText,
         items: z.array(z.string()).min(1),
       })
     ),
@@ -76,6 +87,9 @@ const skills = defineCollection({
 const projets = defineCollection({
   loader: glob({ pattern: '**/*.md', base: 'src/content/projets' }),
   schema: z.object({
+    // titre/description restent en texte simple : réutilisés comme texte
+    // alternatif, initiale du monogramme de couverture, balise <title> et
+    // navigation précédent/suivant — pas de mise en forme indépendante.
     titre: z.string(),
     description: z.string(),
     stack: z.array(z.string()),
@@ -96,8 +110,8 @@ const services = defineCollection({
     cartes: z.array(
       z.object({
         icone: z.string(),
-        titre: z.string(),
-        phrase: z.string(),
+        titre: richText,
+        phrase: richText,
       })
     ),
     ctaFinalLabel: z.string(),
@@ -107,7 +121,7 @@ const services = defineCollection({
 const contact = defineCollection({
   loader: file('src/content/contact.json', singleton('contact')),
   schema: z.object({
-    intro: z.string(),
+    intro: richText,
     sujets: z.array(z.string()).min(1),
     messageSucces: z.string(),
     messageErreur: z.string(),
@@ -117,9 +131,24 @@ const contact = defineCollection({
 const footer = defineCollection({
   loader: file('src/content/footer.json', singleton('footer')),
   schema: z.object({
-    tagline: z.string(),
+    tagline: richText,
     mention: z.string(),
     filigraneNimba: z.boolean().default(true),
+  }),
+});
+
+// Titres de section auparavant codés en dur dans les composants (Compétences,
+// Projets, Services sur l'accueil, bandeau Contact de l'accueil) — regroupés
+// ici pour être éditables depuis l'admin sans dupliquer le texte entre la
+// page complète et son aperçu sur l'accueil.
+const sections = defineCollection({
+  loader: file('src/content/sections.json', singleton('sections')),
+  schema: z.object({
+    skillsTitre: richText,
+    projetsTitre: richText,
+    servicesTitre: richText,
+    contactCtaTitre: richText,
+    contactCtaTexte: richText,
   }),
 });
 
@@ -132,4 +161,5 @@ export const collections = {
   services,
   contact,
   footer,
+  sections,
 };

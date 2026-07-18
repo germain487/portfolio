@@ -55,8 +55,34 @@ collections:
         label: Hero
         file: src/content/hero.json
         fields:
-          - { label: Eyebrow, name: eyebrow, widget: string, hint: "Petite ligne au-dessus du nom, ex : « // salut, moi c'est »." }
-          - { label: Accroche, name: accroche, widget: text, hint: "2 lignes maximum recommandées." }
+          - label: Eyebrow
+            name: eyebrow
+            widget: object
+            hint: "Petite ligne au-dessus du nom, ex : « // salut, moi c'est »."
+            fields: &texteMiseEnForme
+              - { label: Texte, name: texte, widget: string }
+              - label: Alignement
+                name: alignement
+                widget: select
+                default: gauche
+                options:
+                  - { label: Gauche, value: gauche }
+                  - { label: Centré, value: centre }
+                  - { label: Droite, value: droite }
+              - label: Police
+                name: police
+                widget: select
+                default: sans
+                hint: "Les 3 familles chargées sur le site — pas d'autre police pour garder l'identité visuelle cohérente."
+                options:
+                  - { label: "Titres (Space Grotesk)", value: display }
+                  - { label: "Texte courant (Inter)", value: sans }
+                  - { label: "Mono (JetBrains Mono)", value: mono }
+          - label: Accroche
+            name: accroche
+            widget: object
+            hint: "2 lignes maximum recommandées."
+            fields: *texteMiseEnForme
           - label: "Rôles (machine à écrire)"
             name: roles
             widget: list
@@ -74,12 +100,29 @@ collections:
         label: "À propos"
         file: src/content/about.json
         fields:
-          - { label: Titre, name: titre, widget: string }
+          - { label: Titre, name: titre, widget: object, fields: *texteMiseEnForme }
           - label: "Paragraphes de bio"
             name: paragraphes
             widget: list
-            hint: "Le format **gras** est pris en charge."
-            field: { label: Paragraphe, name: paragraphe, widget: text }
+            hint: "Le format **gras** est pris en charge. Réordonnables par glisser-déposer."
+            fields:
+              - { label: Texte, name: texte, widget: text }
+              - label: Alignement
+                name: alignement
+                widget: select
+                default: gauche
+                options:
+                  - { label: Gauche, value: gauche }
+                  - { label: Centré, value: centre }
+                  - { label: Droite, value: droite }
+              - label: Police
+                name: police
+                widget: select
+                default: sans
+                options:
+                  - { label: "Titres (Space Grotesk)", value: display }
+                  - { label: "Texte courant (Inter)", value: sans }
+                  - { label: "Mono (JetBrains Mono)", value: mono }
           - label: "Statistiques (compteurs animés)"
             name: stats
             widget: list
@@ -102,7 +145,7 @@ collections:
             widget: list
             fields:
               - { label: "Icône (nom Lucide)", name: icone, widget: string, hint: "Ex : server, layout-panel-left, database, cloud — voir lucide.dev/icons." }
-              - { label: Titre, name: titre, widget: string }
+              - { label: Titre, name: titre, widget: object, fields: *texteMiseEnForme }
               - label: Éléments
                 name: items
                 widget: list
@@ -117,7 +160,7 @@ collections:
     slug: "{{slug}}"
     summary: "{{titre}} — {{annee}} ({{statut}})"
     fields:
-      - { label: Titre, name: titre, widget: string }
+      - { label: Titre, name: titre, widget: string, hint: "Texte simple : réutilisé comme texte alternatif, initiale de la couverture générée et titre de page — pas de mise en forme indépendante." }
       - { label: Description, name: description, widget: text }
       - label: "Stack technique"
         name: stack
@@ -151,8 +194,8 @@ collections:
             widget: list
             fields:
               - { label: "Icône (nom Lucide)", name: icone, widget: string }
-              - { label: Titre, name: titre, widget: string }
-              - { label: Phrase, name: phrase, widget: text }
+              - { label: Titre, name: titre, widget: object, fields: *texteMiseEnForme }
+              - { label: Phrase, name: phrase, widget: object, fields: *texteMiseEnForme }
           - { label: "Libellé du CTA final", name: ctaFinalLabel, widget: string }
 
   - name: contact
@@ -163,7 +206,7 @@ collections:
         label: Contact
         file: src/content/contact.json
         fields:
-          - { label: "Texte d'intro", name: intro, widget: text }
+          - { label: "Texte d'intro", name: intro, widget: object, fields: *texteMiseEnForme }
           - label: "Sujets du formulaire"
             name: sujets
             widget: list
@@ -179,6 +222,21 @@ collections:
         label: Footer
         file: src/content/footer.json
         fields:
-          - { label: "Phrase de positionnement", name: tagline, widget: string, hint: "Une ligne courte, affichée sous le logo dans le pied de page." }
+          - { label: "Phrase de positionnement", name: tagline, widget: object, hint: "Une ligne courte, affichée sous le logo dans le pied de page.", fields: *texteMiseEnForme }
           - { label: "Mention de signature", name: mention, widget: string, hint: "Affichée en bas de page, précédée automatiquement de « © année · »." }
           - { label: "Afficher le filigrane Mont Nimba", name: filigraneNimba, widget: boolean, default: true }
+
+  - name: sections
+    label: "Titres de section"
+    icon: title
+    files:
+      - name: sections
+        label: "Titres de section"
+        file: src/content/sections.json
+        description: "Titres affichés en tête de section — Compétences, Projets et Services (repris à la fois sur leur page complète et sur l'aperçu de l'accueil), et le bandeau Contact de l'accueil."
+        fields:
+          - { label: "Titre — Compétences", name: skillsTitre, widget: object, fields: *texteMiseEnForme }
+          - { label: "Titre — Projets", name: projetsTitre, widget: object, hint: "Utilisé sur /projets et sur l'aperçu « projets mis en avant » de l'accueil.", fields: *texteMiseEnForme }
+          - { label: "Titre — Services", name: servicesTitre, widget: object, hint: "Utilisé sur /services et sur l'aperçu de l'accueil.", fields: *texteMiseEnForme }
+          - { label: "Titre — Bandeau contact (accueil)", name: contactCtaTitre, widget: object, fields: *texteMiseEnForme }
+          - { label: "Texte — Bandeau contact (accueil)", name: contactCtaTexte, widget: object, fields: *texteMiseEnForme }

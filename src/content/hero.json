@@ -1,6 +1,10 @@
 {
-  "eyebrow": "// salut, moi c'est",
-  "accroche": "Je conçois des SaaS et des plateformes web pensés pour les réalités du terrain : mobile-first, résilients hors-ligne, intégrés au Mobile Money.",
+  "eyebrow": { "texte": "// salut, moi c'est", "alignement": "gauche", "police": "mono" },
+  "accroche": {
+    "texte": "Je conçois des SaaS et des plateformes web pensés pour les réalités du terrain : mobile-first, résilients hors-ligne, intégrés au Mobile Money.",
+    "alignement": "gauche",
+    "police": "sans"
+  },
   "roles": [
     "Développeur Fullstack",
     "Fondateur EdTech",

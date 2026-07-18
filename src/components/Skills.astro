@@ -1,17 +1,25 @@
 ---
 import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
+import StyledText from './StyledText.astro';
 
 const skillsEntry = await getEntry('skills', 'skills');
+const sectionsEntry = await getEntry('sections', 'sections');
 const skills = skillsEntry!.data;
+const sections = sectionsEntry!.data;
 ---
 
 <section id="competences" class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
     <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// compétences</p>
-    <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
-      Ce que j'utilise pour livrer.
-    </h2>
+    <StyledText
+      as="h2"
+      alignement={sections.skillsTitre.alignement}
+      police={sections.skillsTitre.police}
+      class="mt-4 max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text"
+    >
+      {sections.skillsTitre.texte}
+    </StyledText>
 
     <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {skills.domaines.map((domaine) => (
@@ -19,7 +27,14 @@ const skills = skillsEntry!.data;
           <div class="grid h-11 w-11 place-items-center rounded-full border border-surface-2 text-accent">
             <Icon name={domaine.icone} size={20} />
           </div>
-          <h3 class="mt-5 font-display text-lg font-medium text-text">{domaine.titre}</h3>
+          <StyledText
+            as="h3"
+            alignement={domaine.titre.alignement}
+            police={domaine.titre.police}
+            class="mt-5 text-lg font-medium text-text"
+          >
+            {domaine.titre.texte}
+          </StyledText>
           <ul class="skill-list mt-4 space-y-2.5">
             {domaine.items.map((item) => (
               <li class="text-sm leading-relaxed text-text-muted">{item}</li>

@@ -215,14 +215,17 @@ Une interface d'administration accessible sur **`monsite.com/admin`** (desktop e
 ### 7.3 Collections à configurer — couverture totale du site
 Chaque champ porte un **label et un hint en français** ; champs requis marqués ; slugs générés depuis le titre.
 
+**Texte avec mise en forme (`richText`)** : les titres de section et les paragraphes de prose (pas les boutons, tags, options de liste déroulante ni les champs réutilisés comme texte alternatif/`<title>`/meta) sont stockés comme `{ texte, alignement, police }` plutôt qu'une simple chaîne — alignement (`gauche` / `centre` / `droite`) et police (`display` = Space Grotesk, `sans` = Inter, `mono` = JetBrains Mono, **jamais d'autre police**, cf. §13.8) réglables depuis l'admin sans toucher au code. Rendu via le composant partagé `src/components/StyledText.astro`. Exclus délibérément : `projets.titre`/`description` (réutilisés comme texte alternatif, initiale du monogramme de couverture et balise `<title>` — les transformer casserait le SEO/l'accessibilité), `nomComplet`/`wordmark` (réutilisés dans le JSON-LD et la navbar), les libellés de bouton, les messages de succès/erreur du formulaire et la mention de copyright du footer (couplée au « © année · » généré automatiquement).
+
 1. **Réglages généraux** (fichier unique `settings.json`) : nom complet, wordmark, titre SEO, meta description, image OG (upload), **couleur d'accent** (widget color, défaut `#00E5FF`), email, numéro WhatsApp, localisation, **disponibilité** (toggle + texte du badge), fichier CV (upload PDF), liste répétable des réseaux sociaux (plateforme + URL, réordonnables).
-2. **Hero** (`hero.json`) : eyebrow, accroche, **liste ordonnée des rôles** de la machine à écrire (ajout / suppression / réorganisation), libellés des deux CTA, portrait (upload image).
-3. **À propos** (`about.json`) : titre, paragraphes de bio (markdown), **stats répétables** (valeur numérique, suffixe, label — réordonnables).
-4. **Compétences** (`skills.json`) : **domaines répétables** (nom d'icône Lucide, titre, liste d'items).
-5. **Projets** (collection dossier `src/content/projets/*.md`) : **CRUD complet** — titre, slug, description, stack (liste), tags (sélection multiple : SaaS / Civic Tech / Data / Web Design), année, statut (En ligne / En cours / Archivé), lien externe, couverture (upload, optionnelle — fallback SVG sinon), **champ `ordre`** pour maîtriser l'affichage, **champ `brouillon`** (booléen : masque le projet du site sans le supprimer).
-6. **Services** (`services.json`) : cartes répétables (icône Lucide, titre, phrase) + texte du CTA final.
-7. **Contact** (`contact.json`) : textes d'intro, **liste des sujets** du formulaire, microcopies de succès et d'erreur.
-8. **Footer** (`footer.json`) : mention de signature, toggle du filigrane Mont Nimba.
+2. **Hero** (`hero.json`) : eyebrow et accroche (`richText`), **liste ordonnée des rôles** de la machine à écrire (ajout / suppression / réorganisation, texte simple), libellés des deux CTA, portrait (upload image).
+3. **À propos** (`about.json`) : titre (`richText`), paragraphes de bio (`richText` répétables, markdown **gras** pris en charge), **stats répétables** (valeur numérique, suffixe, label — réordonnables).
+4. **Compétences** (`skills.json`) : **domaines répétables** (nom d'icône Lucide, titre en `richText`, liste d'items).
+5. **Projets** (collection dossier `src/content/projets/*.md`) : **CRUD complet** — titre, slug, description (texte simple, voir exclusions ci-dessus), stack (liste), tags (sélection multiple : SaaS / Civic Tech / Data / Web Design), année, statut (En ligne / En cours / Archivé), lien externe, couverture (upload, optionnelle — fallback SVG sinon), **champ `ordre`** pour maîtriser l'affichage, **champ `brouillon`** (booléen : masque le projet du site sans le supprimer), **champ `misEnAvant`** (alimente les 3 projets de l'accueil), **description longue en markdown** (`body`, page de détail).
+6. **Services** (`services.json`) : cartes répétables (icône Lucide, titre et phrase en `richText`) + texte du CTA final.
+7. **Contact** (`contact.json`) : texte d'intro (`richText`), **liste des sujets** du formulaire, microcopies de succès et d'erreur (texte simple).
+8. **Footer** (`footer.json`) : phrase de positionnement (`richText`), mention de signature, toggle du filigrane Mont Nimba.
+9. **Titres de section** (`sections.json`, nouvelle collection) : titres Compétences / Projets / Services (`richText`, partagés entre la page complète et son aperçu sur l'accueil pour éviter la duplication) + titre et texte du bandeau Contact de l'accueil.
 
 **Test de couverture (fait partie de la Definition of Done)** : il ne doit exister **aucun texte, aucune image et aucun réglage visible sur le site qui ne soit pas modifiable depuis `/admin`** — à l'exception des microcopies purement techniques (aria-labels).
 
@@ -285,7 +288,7 @@ portfolio/
 ├── src/
 │   ├── content/
 │   │   ├── settings.json · hero.json · about.json · skills.json
-│   │   ├── services.json · contact.json · footer.json
+│   │   ├── services.json · contact.json · footer.json · sections.json
 │   │   └── projets/               # un fichier .md par projet (CRUD via l'admin, body = description longue)
 │   ├── content.config.ts          # collections + schémas zod (garde-fous)
 │   ├── styles/global.css          # tokens + Tailwind
@@ -296,7 +299,7 @@ portfolio/
 │   │   ├── Projects.astro · ProjectCard.astro · ProjectCover.astro
 │   │   ├── Services.astro · Contact.astro · Footer.astro
 │   │   ├── FeaturedProjects.astro · ServicesPreview.astro · ContactCTA.astro  # blocs condensés de l'accueil
-│   │   └── MagneticButton.astro · Cursor.astro · Icon.astro
+│   │   └── MagneticButton.astro · Cursor.astro · Icon.astro · StyledText.astro
 │   ├── scripts/
 │   │   ├── motion.ts              # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
 │   │   └── bootstrap.ts           # point d'entrée unique : (ré)initialise tout sur astro:page-load

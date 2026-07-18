@@ -1,0 +1,30 @@
+---
+// Rend un titre ou un paragraphe dont l'alignement et la police sont
+// pilotés depuis l'admin (collections content.config.ts, type `richText`).
+// Le texte passe par le <slot /> plutôt qu'une prop `texte` pour rester
+// compatible avec les paragraphes en gras (`set:html`) et tout autre
+// balisage interne déjà en place dans les composants appelants.
+interface Props {
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
+  alignement?: 'gauche' | 'centre' | 'droite';
+  police?: 'display' | 'sans' | 'mono';
+  class?: string;
+  [key: `data-${string}`]: string | boolean | undefined;
+}
+
+const { as: Tag = 'p', alignement = 'gauche', police = 'sans', class: className, ...rest } = Astro.props;
+
+const alignClass = {
+  gauche: 'text-left',
+  centre: 'text-center',
+  droite: 'text-right',
+}[alignement];
+
+const policeClass = {
+  display: 'font-display',
+  sans: 'font-sans',
+  mono: 'font-mono',
+}[police];
+---
+
+<Tag class:list={[className, alignClass, policeClass]} {...rest}><slot /></Tag>

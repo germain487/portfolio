@@ -1,5 +1,6 @@
 ---
 import { getEntry } from 'astro:content';
+import StyledText from './StyledText.astro';
 
 const aboutEntry = await getEntry('about', 'about');
 const about = aboutEntry!.data;
@@ -11,14 +12,26 @@ const renderBold = (text: string) =>
 <section id="a-propos" class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
     <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// à-propos</p>
-    <h1 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
-      {about.titre}
-    </h1>
+    <StyledText
+      as="h1"
+      alignement={about.titre.alignement}
+      police={about.titre.police}
+      class="mt-4 max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text"
+    >
+      {about.titre.texte}
+    </StyledText>
 
     <div class="mt-14 grid gap-16 md:grid-cols-2 md:items-start">
       <div class="space-y-5">
         {about.paragraphes.map((p) => (
-          <p class="text-base leading-[1.7] text-text-muted" set:html={renderBold(p)} />
+          <StyledText
+            as="p"
+            alignement={p.alignement}
+            police={p.police}
+            class="text-base leading-[1.7] text-text-muted"
+          >
+            <Fragment set:html={renderBold(p.texte)} />
+          </StyledText>
         ))}
       </div>
 
