@@ -94,7 +94,7 @@ Cette référence est un template de tutoriel vu des milliers de fois. **Interdi
 ```
 
 - **Échelle typographique** (desktop → mobile) : h1 `clamp(2.5rem, 6vw, 4.5rem)` ; h2 `clamp(1.75rem, 4vw, 2.75rem)` ; corps 1rem/1.7 ; eyebrows mono 0.8rem, lettrage +0.12em, majuscules.
-- **Rythme vertical** : sections `py-24` mobile / `py-32` desktop ; conteneur `max-w-6xl` centré ; grille 12 colonnes.
+- **Rythme vertical** : sections `py-16` mobile / `py-24` desktop ; conteneur `max-w-6xl` centré ; grille 12 colonnes.
 - **Le cyan est rare donc précieux** : réservé aux CTA, au lien actif, aux glows et aux mots-clés. Jamais de grands aplats cyan hors hexagone du portrait.
 - La couleur d'accent est **pilotable depuis l'admin** (§7.3, réglage « Couleur d'accent ») : injecte sa valeur dans `--accent` au build et dérive `--accent-soft` et les glows automatiquement.
 - Contrastes AA vérifiés sur chaque combinaison texte/fond.
@@ -112,7 +112,7 @@ Le site est **multi-pages** (sortie statique, une route par page + une route dyn
 | Route | Contenu |
 |---|---|
 | `/` | Hero complet + à-propos condensé (3 lignes + lien) + 3 projets mis en avant + aperçu des 4 services + CTA contact |
-| `/a-propos` | Bio complète, stats à compteurs animés, compétences + marquee technologies |
+| `/a-propos` | Bio complète, stats à compteurs animés, compétences par domaine |
 | `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
 | `/projets/[slug]` | Détail d'un projet : description longue en markdown, stack, lien live, navigation précédent/suivant |
 | `/services` | Les 4 services détaillés + CTA contact |
@@ -150,8 +150,6 @@ Eyebrow `// à-propos` · titre « Construire pour ici, au niveau d'exigence de 
 - **Frontend** : HTMX, Alpine.js, Tailwind CSS, JavaScript, Astro
 - **Data** : pandas / openpyxl, KoboToolbox, nettoyage & dédoublonnage, validation GPS & cartographie
 - **Outils & Cloud** : Claude Code, Git/GitHub, Netlify, cPanel, Brevo, API Mobile Money (Orange Money, MTN MoMo)
-
-Sous les cartes : **marquee infini** des noms de technologies en JetBrains Mono, séparés par des hexagones, pause au survol.
 
 ### 6.5 Projets (`/projets` + `/projets/[slug]`)
 `/projets` : grille responsive de cartes + **filtres** : Tous · SaaS · Civic Tech · Data · Web Design (vanilla JS, transitions FLIP douces). Chaque carte lie vers sa page de détail `/projets/[slug]`.
@@ -215,7 +213,7 @@ Chaque champ porte un **label et un hint en français** ; champs requis marqués
 1. **Réglages généraux** (fichier unique `settings.json`) : nom complet, wordmark, titre SEO, meta description, image OG (upload), **couleur d'accent** (widget color, défaut `#00E5FF`), email, numéro WhatsApp, localisation, **disponibilité** (toggle + texte du badge), fichier CV (upload PDF), liste répétable des réseaux sociaux (plateforme + URL, réordonnables).
 2. **Hero** (`hero.json`) : eyebrow, accroche, **liste ordonnée des rôles** de la machine à écrire (ajout / suppression / réorganisation), libellés des deux CTA, portrait (upload image).
 3. **À propos** (`about.json`) : titre, paragraphes de bio (markdown), **stats répétables** (valeur numérique, suffixe, label — réordonnables).
-4. **Compétences** (`skills.json`) : **domaines répétables** (nom d'icône Lucide, titre, liste d'items) + liste des technologies du marquee.
+4. **Compétences** (`skills.json`) : **domaines répétables** (nom d'icône Lucide, titre, liste d'items).
 5. **Projets** (collection dossier `src/content/projets/*.md`) : **CRUD complet** — titre, slug, description, stack (liste), tags (sélection multiple : SaaS / Civic Tech / Data / Web Design), année, statut (En ligne / En cours / Archivé), lien externe, couverture (upload, optionnelle — fallback SVG sinon), **champ `ordre`** pour maîtriser l'affichage, **champ `brouillon`** (booléen : masque le projet du site sans le supprimer).
 6. **Services** (`services.json`) : cartes répétables (icône Lucide, titre, phrase) + texte du CTA final.
 7. **Contact** (`contact.json`) : textes d'intro, **liste des sujets** du formulaire, microcopies de succès et d'erreur.
@@ -242,7 +240,7 @@ Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir *
 
 ## 8. ANIMATIONS & MICRO-INTERACTIONS — LE CŒUR DU « DYNAMIQUE »
 
-**Règle d'or** : une seule scène orchestrée par section ; chaque animation sert la lecture ; rien ne bouge en permanence hors halo du portrait et marquee. `prefers-reduced-motion` désactive tout proprement (contenu affiché directement, 100 % lisible).
+**Règle d'or** : une seule scène orchestrée par section ; chaque animation sert la lecture ; rien ne bouge en permanence hors halo du portrait. `prefers-reduced-motion` désactive tout proprement (contenu affiché directement, 100 % lisible).
 
 1. **Préloader** : hexagone SVG qui se dessine (stroke-dashoffset) autour du « G », ~1 s, puis rideau qui se lève. Une fois par session (`sessionStorage`).
 2. **Entrée du hero** : timeline GSAP en stagger — eyebrow → nom (léger clip-path) → ligne typée → accroche → CTA → hexagone qui « s'allume » (glow 0 → 100 %).
@@ -253,9 +251,8 @@ Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir *
 7. **Boutons magnétiques** (CTA principaux, desktop) + intensification du glow au survol.
 8. **Curseur personnalisé** : point + anneau qui s'agrandit sur les éléments interactifs — desktop uniquement, curseur natif jamais supprimé sur tactile.
 9. **Compteurs** des stats déclenchés à l'entrée dans le viewport.
-10. **Marquee** technologies : boucle CSS infinie, pause au survol.
-11. **Cartes projets** : tilt + zoom + overlay (cf. §6.5).
-12. **Filtres projets** : réorganisation animée douce (FLIP), jamais de saut brutal.
+10. **Cartes projets** : tilt + zoom + overlay (cf. §6.5).
+11. **Filtres projets** : réorganisation animée douce (FLIP), jamais de saut brutal.
 
 ---
 
@@ -290,7 +287,7 @@ portfolio/
 │   ├── layouts/Base.astro         # navbar + footer + curseur + préloader + SEO + <ClientRouter />
 │   ├── components/
 │   │   ├── Preloader.astro · Navbar.astro · Hero.astro · HexPortrait.astro
-│   │   ├── About.astro · Skills.astro · TechMarquee.astro
+│   │   ├── About.astro · Skills.astro
 │   │   ├── Projects.astro · ProjectCard.astro · ProjectCover.astro
 │   │   ├── Services.astro · Contact.astro · Footer.astro
 │   │   ├── AboutPreview.astro · FeaturedProjects.astro · ServicesPreview.astro · ContactCTA.astro  # blocs condensés de l'accueil
@@ -319,7 +316,7 @@ Exécute dans l'ordre. À la fin de **chaque** phase : `npm run build` doit pass
 
 - **Phase 0 — Fondations** : init Astro 5 + Tailwind 4, fontes locales, tokens §5, **collections `src/content/` + schémas zod + seed complet du §6**, `Base.astro` avec tout le SEO, page vide qui build.
 - **Phase 1 — Première impression** : Preloader, Navbar (+ mobile), Hero complet (typing, hexagone, badge, CTA, socials) — alimenté par les collections.
-- **Phase 2 — Crédibilité** : À propos + compteurs, Compétences + marquee.
+- **Phase 2 — Crédibilité** : À propos + compteurs, Compétences par domaine.
 - **Phase 3 — Preuve** : grille Projets complète (données réelles, couvertures SVG générées, filtres FLIP, cartes tilt, respect de `ordre` et `brouillon`) + page de détail `/projets/[slug]` (description longue markdown, stack, lien live, navigation précédent/suivant).
 - **Phase 4 — Conversion** : Services, Contact (Netlify Forms + états succès/erreur + honeypot), Footer + filigrane Nimba.
 - **Phase 5 — Polish** : passe motion globale (Lenis, ScrollTrigger, curseur, magnétisme), audit perf/a11y/SEO contre §9.

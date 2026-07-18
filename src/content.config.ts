@@ -70,7 +70,6 @@ const skills = defineCollection({
         items: z.array(z.string()).min(1),
       })
     ),
-    technologies: z.array(z.string()).min(1),
   }),
 });
 

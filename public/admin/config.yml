@@ -107,10 +107,6 @@ collections:
                 name: items
                 widget: list
                 field: { label: Élément, name: item, widget: string }
-          - label: "Technologies (bandeau défilant)"
-            name: technologies
-            widget: list
-            field: { label: Technologie, name: techno, widget: string }
 
   - name: projets
     label: Projets

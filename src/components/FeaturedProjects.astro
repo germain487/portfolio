@@ -6,7 +6,7 @@ const allProjects = await getCollection('projets', ({ data }) => !data.brouillon
 const projects = allProjects.sort((a, b) => a.data.ordre - b.data.ordre).slice(0, 3);
 ---
 
-<section class="reveal-section py-24 md:py-32">
+<section class="reveal-section py-16 md:py-24">
   <div class="mx-auto max-w-6xl px-6">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div>

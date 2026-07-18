@@ -1,13 +1,12 @@
 ---
 import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
-import TechMarquee from './TechMarquee.astro';
 
 const skillsEntry = await getEntry('skills', 'skills');
 const skills = skillsEntry!.data;
 ---
 
-<section id="competences" class="reveal-section py-24 md:py-32">
+<section id="competences" class="reveal-section py-16 md:py-24">
   <div class="mx-auto max-w-6xl px-6">
     <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// compétences</p>
     <h2 class="mt-4 max-w-2xl font-display text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text">
@@ -29,10 +28,6 @@ const skills = skillsEntry!.data;
         </div>
       ))}
     </div>
-  </div>
-
-  <div class="mt-16">
-    <TechMarquee technologies={skills.technologies} />
   </div>
 </section>
 
