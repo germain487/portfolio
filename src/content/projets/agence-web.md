@@ -1,5 +1,5 @@
 ---
-titre: "Agence web Camara Digital"
+titre: "Agence web Monemou Digital"
 description: "Sites vitrines et boutiques pour PME francophones d'Afrique de l'Ouest, avec maintenance, hébergement et intégrations sur mesure."
 stack: ["WordPress", "Elementor", "Django"]
 tags: ["Web Design"]

@@ -1,4 +1,4 @@
-# Portfolio — Germain Camara
+# Portfolio — Germain Monemou
 
 Site multi-pages statique (Astro 5 + Tailwind 4), transitions de page fluides (`<ClientRouter />`), animé avec GSAP/Lenis, entièrement pilotable depuis une interface d'administration (`/admin`) sans jamais toucher au code.
 
@@ -163,7 +163,6 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 
 Le prompt maître autorisait à trancher les points ambigus sans bloquer. Décisions prises :
 
-- **Nom de famille** : « Camara » — plausible pour un développeur basé à Conakry, à valider par Germain (voir liste des champs à compléter).
 - **Conteneur global arrondi flottant sur fond plus sombre** (visible sur `design/reference.png`) : délibérément **non repris**. Il fait partie des éléments « template de tutoriel » à dépasser (§2 du prompt maître) plutôt que de l'ADN à conserver ; le site utilise un fond plein bleu-anthracite avec des cartes/boutons arrondis ponctuels, ce qui différencie mieux l'identité de la référence.
 - **Icône « X »** : Lucide ne fournit pas le logo X (marque), l'icône Twitter (oiseau) historique a été utilisée comme meilleur équivalent disponible dans le set d'icônes imposé.
 - **Statistiques « À propos »** (années d'expérience, projets livrés) : valeurs plausibles (4+ ans, 15+ projets) en attendant confirmation.
@@ -178,15 +177,14 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 | Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | ✅ `germain487/portfolio` (fait) |
 | URL du worker d'auth | `public/admin/config.yml` → `backend.base_url` | `https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev` — en attente du déploiement Cloudflare (étape 2) |
 | URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
-| Nom de famille | Admin → Réglages généraux | « Camara » |
-| Email de contact | Admin → Réglages généraux | `contact@germaincamara.dev` |
+| Email de contact | Admin → Réglages généraux | `contact@germainmonemou.dev` |
 | Numéro WhatsApp | Admin → Réglages généraux | `224600000000` |
 | CV (PDF) | Admin → Réglages généraux | non fourni (lien pointe vers un fichier inexistant) |
 | URLs réseaux sociaux | Admin → Réglages généraux | comptes placeholder à corriger |
 | Portrait du hero | Admin → Hero | silhouette SVG de secours (aucune photo) |
 | Description publique — Ziama Educ | Admin → Projets | texte de travail à valider |
 | Lien externe — Atlas des OSC de Guinée | Admin → Projets | non renseigné |
-| Nom de l'agence web | Admin → Projets | « Camara Digital » (à valider) |
+| Nom de l'agence web | Admin → Projets | « Monemou Digital » (à valider) |
 | Bio (3 paragraphes) | Admin → À propos | texte du prompt maître, à valider par Germain |
 | Statistiques (années d'expérience, projets livrés) | Admin → À propos | valeurs plausibles à confirmer |
 

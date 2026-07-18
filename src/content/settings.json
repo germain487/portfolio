@@ -1,20 +1,20 @@
 {
-  "nomComplet": "Germain Camara",
+  "nomComplet": "Germain Monemou",
   "wordmark": "Germain",
-  "titreSEO": "Germain Camara — Développeur Fullstack & Fondateur EdTech · Conakry",
+  "titreSEO": "Germain Monemou — Développeur Fullstack & Fondateur EdTech · Conakry",
   "metaDescription": "Développeur fullstack et entrepreneur basé à Conakry. Fondateur de Nimba Educ et Ziama Educ, acteur de la civic tech guinéenne.",
   "imageOG": "/og.jpg",
   "couleurAccent": "#00E5FF",
-  "email": "contact@germaincamara.dev",
+  "email": "contact@germainmonemou.dev",
   "whatsapp": "224600000000",
   "localisation": "Conakry, Guinée",
   "disponible": true,
   "badgeTexte": "Disponible · Conakry 🇬🇳",
-  "cv": "/uploads/cv-germain-camara.pdf",
+  "cv": "/uploads/cv-germain-monemou.pdf",
   "reseaux": [
-    { "plateforme": "LinkedIn", "url": "https://linkedin.com/in/germain-camara" },
-    { "plateforme": "GitHub", "url": "https://github.com/germain-camara" },
-    { "plateforme": "X", "url": "https://x.com/germaincamara" },
-    { "plateforme": "Facebook", "url": "https://facebook.com/germain.camara" }
+    { "plateforme": "LinkedIn", "url": "https://linkedin.com/in/germain-monemou" },
+    { "plateforme": "GitHub", "url": "https://github.com/germain-monemou" },
+    { "plateforme": "X", "url": "https://x.com/germainmonemou" },
+    { "plateforme": "Facebook", "url": "https://facebook.com/germain.monemou" }
   ]
 }
