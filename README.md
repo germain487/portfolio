@@ -1,11 +1,12 @@
 # Portfolio — Germain Camara
 
-Site one-page statique (Astro 5 + Tailwind 4), animé avec GSAP/Lenis, entièrement pilotable depuis une interface d'administration (`/admin`) sans jamais toucher au code.
+Site multi-pages statique (Astro 5 + Tailwind 4), transitions de page fluides (`<ClientRouter />`), animé avec GSAP/Lenis, entièrement pilotable depuis une interface d'administration (`/admin`) sans jamais toucher au code.
 
 ## Sommaire
 
 - [Lancement en local](#lancement-en-local)
 - [Stack technique](#stack-technique)
+- [Pages](#pages)
 - [Structure du projet](#structure-du-projet)
 - [Déploiement Netlify](#déploiement-netlify-pas-à-pas)
 - [Variante cPanel](#variante-cpanel)
@@ -45,6 +46,19 @@ npm run preview    # sert dist/ localement, pour vérifier le build de prod
 | Formulaire | Netlify Forms (AJAX + honeypot) |
 | Déploiement | Netlify (par défaut) ou cPanel via GitHub Actions |
 
+## Pages
+
+| Route | Contenu |
+|---|---|
+| `/` | Hero complet + à-propos condensé + 3 projets mis en avant + aperçu des services + CTA contact |
+| `/a-propos` | Bio complète, statistiques à compteurs animés, compétences + bandeau technologies |
+| `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
+| `/projets/[slug]` | Détail d'un projet : description longue, stack, lien live, navigation précédent/suivant |
+| `/services` | Les 4 services détaillés + CTA contact |
+| `/contact` | Formulaire Netlify + WhatsApp + coordonnées |
+
+Navbar et footer sont communs à toutes les pages (rendus depuis `Base.astro`) ; le lien actif de la navbar suit la page courante. Les transitions entre pages sont gérées par `<ClientRouter />` (View Transitions natives d'Astro) : navbar, curseur personnalisé et défilement fluide (Lenis) restent continus d'une page à l'autre, tandis que le hero, les compteurs, les filtres et le formulaire sont ré-initialisés à chaque navigation (`scripts/bootstrap.ts`, sur l'événement `astro:page-load`). Le préloader ne s'affiche qu'à la toute première visite de la session.
+
 ## Structure du projet
 
 ```
@@ -57,10 +71,15 @@ portfolio/
 │   ├── content/             # settings.json, hero.json, about.json, skills.json,
 │   │                         # services.json, contact.json, footer.json, projets/*.md
 │   ├── content.config.ts    # 8 collections + schémas Zod (garde-fous au build)
-│   ├── layouts/Base.astro   # SEO, fontes, OG, JSON-LD
-│   ├── components/          # un composant par section + Icon/HexPortrait/MagneticButton/Cursor
-│   ├── scripts/motion.ts    # GSAP, Lenis, scrollspy, compteurs, filtres, curseur…
-│   └── pages/index.astro
+│   ├── layouts/Base.astro   # navbar + footer + curseur + préloader + SEO + <ClientRouter />
+│   ├── components/          # un composant par section + blocs condensés (AboutPreview,
+│   │                         # FeaturedProjects, ServicesPreview, ContactCTA) + Icon/Cursor…
+│   ├── scripts/
+│   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
+│   │   └── bootstrap.ts     # point d'entrée unique, ré-exécuté à chaque astro:page-load
+│   └── pages/
+│       ├── index.astro · a-propos.astro · services.astro · contact.astro
+│       └── projets/index.astro · projets/[slug].astro
 ├── .github/workflows/deploy-cpanel.yml   # variante cPanel (désactivée par défaut)
 └── astro.config.mjs
 ```
@@ -133,7 +152,7 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 | Hero | `hero.json` | eyebrow, accroche, rôles de la machine à écrire, CTA, portrait |
 | À propos | `about.json` | titre, paragraphes, statistiques animées |
 | Compétences | `skills.json` | domaines (icône + items), technologies du bandeau |
-| Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon |
+| Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, mis en avant (accueil), description longue markdown (page de détail) |
 | Services | `services.json` | cartes, CTA final |
 | Contact | `contact.json` | intro, sujets du formulaire, microcopies succès/erreur |
 | Footer | `footer.json` | mention de signature, filigrane Mont Nimba |
@@ -173,4 +192,4 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 
 ---
 
-*Fin du README. Généré à l'issue de la Phase 6 du prompt maître — voir `CLAUDE.md` pour le cahier des charges complet.*
+*Fin du README. Généré à l'issue de la Phase 6 du prompt maître, mis à jour après le passage en multi-pages — voir `CLAUDE.md` pour le cahier des charges complet.*
