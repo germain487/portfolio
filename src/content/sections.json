@@ -2,26 +2,31 @@
   "skillsTitre": {
     "texte": "Ce que j'utilise pour livrer.",
     "alignement": "gauche",
-    "police": "display"
+    "police": "display",
+    "taille": "4xl"
   },
   "projetsTitre": {
     "texte": "Des produits qui tournent en production, pas des maquettes.",
     "alignement": "gauche",
-    "police": "display"
+    "police": "display",
+    "taille": "4xl"
   },
   "servicesTitre": {
     "texte": "Au-delà du code, un partenaire technique.",
     "alignement": "gauche",
-    "police": "display"
+    "police": "display",
+    "taille": "4xl"
   },
   "contactCtaTitre": {
     "texte": "Un projet, une question ?",
     "alignement": "centre",
-    "police": "display"
+    "police": "display",
+    "taille": "4xl"
   },
   "contactCtaTexte": {
     "texte": "Écrivez-moi — je réponds sous 24 h.",
     "alignement": "centre",
-    "police": "sans"
+    "police": "sans",
+    "taille": "base"
   }
 }

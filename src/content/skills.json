@@ -2,22 +2,22 @@
   "domaines": [
     {
       "icone": "server",
-      "titre": { "texte": "Backend", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Backend", "alignement": "gauche", "police": "display", "taille": "lg" },
       "items": ["Python", "Django 5", "Django REST Framework", "PostgreSQL", "Laravel (secondaire)"]
     },
     {
       "icone": "layout-panel-left",
-      "titre": { "texte": "Frontend", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Frontend", "alignement": "gauche", "police": "display", "taille": "lg" },
       "items": ["HTMX", "Alpine.js", "Tailwind CSS", "JavaScript", "Astro"]
     },
     {
       "icone": "database",
-      "titre": { "texte": "Data", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Data", "alignement": "gauche", "police": "display", "taille": "lg" },
       "items": ["pandas / openpyxl", "KoboToolbox", "Nettoyage & dédoublonnage", "Validation GPS & cartographie"]
     },
     {
       "icone": "cloud",
-      "titre": { "texte": "Outils & Cloud", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Outils & Cloud", "alignement": "gauche", "police": "display", "taille": "lg" },
       "items": ["Claude Code", "Git / GitHub", "Netlify", "cPanel", "Brevo", "API Mobile Money (Orange Money, MTN MoMo)"]
     }
   ]

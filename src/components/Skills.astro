@@ -16,7 +16,8 @@ const sections = sectionsEntry!.data;
       as="h2"
       alignement={sections.skillsTitre.alignement}
       police={sections.skillsTitre.police}
-      class="mt-4 max-w-2xl text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-text"
+      taille={sections.skillsTitre.taille}
+      class="mt-4 max-w-2xl font-bold leading-tight text-text"
     >
       {sections.skillsTitre.texte}
     </StyledText>
@@ -31,7 +32,8 @@ const sections = sectionsEntry!.data;
             as="h3"
             alignement={domaine.titre.alignement}
             police={domaine.titre.police}
-            class="mt-5 text-lg font-medium text-text"
+            taille={domaine.titre.taille}
+            class="mt-5 font-medium text-text"
           >
             {domaine.titre.texte}
           </StyledText>

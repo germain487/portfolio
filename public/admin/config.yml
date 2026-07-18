@@ -78,6 +78,21 @@ collections:
                   - { label: "Titres (Space Grotesk)", value: display }
                   - { label: "Texte courant (Inter)", value: sans }
                   - { label: "Mono (JetBrains Mono)", value: mono }
+              - label: Taille
+                name: taille
+                widget: select
+                default: base
+                hint: "Échelle du plus petit au plus grand — les tailles 3xl à 5xl s'adaptent automatiquement à l'écran (mobile/desktop)."
+                options:
+                  - { label: "Très petit (xs)", value: xs }
+                  - { label: "Petit (sm)", value: sm }
+                  - { label: "Normal (base)", value: base }
+                  - { label: "Grand (lg)", value: lg }
+                  - { label: "Très grand (xl)", value: xl }
+                  - { label: "2× grand (2xl)", value: 2xl }
+                  - { label: "Titre discret (3xl)", value: 3xl }
+                  - { label: "Titre standard (4xl)", value: 4xl }
+                  - { label: "Titre imposant (5xl)", value: 5xl }
           - label: Accroche
             name: accroche
             widget: object
@@ -123,6 +138,20 @@ collections:
                   - { label: "Titres (Space Grotesk)", value: display }
                   - { label: "Texte courant (Inter)", value: sans }
                   - { label: "Mono (JetBrains Mono)", value: mono }
+              - label: Taille
+                name: taille
+                widget: select
+                default: base
+                options:
+                  - { label: "Très petit (xs)", value: xs }
+                  - { label: "Petit (sm)", value: sm }
+                  - { label: "Normal (base)", value: base }
+                  - { label: "Grand (lg)", value: lg }
+                  - { label: "Très grand (xl)", value: xl }
+                  - { label: "2× grand (2xl)", value: 2xl }
+                  - { label: "Titre discret (3xl)", value: 3xl }
+                  - { label: "Titre standard (4xl)", value: 4xl }
+                  - { label: "Titre imposant (5xl)", value: 5xl }
           - label: "Statistiques (compteurs animés)"
             name: stats
             widget: list

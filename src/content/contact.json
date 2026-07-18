@@ -2,7 +2,8 @@
   "intro": {
     "texte": "Un projet, une question ? Écrivez-moi — je réponds sous 24 h.",
     "alignement": "gauche",
-    "police": "display"
+    "police": "display",
+    "taille": "4xl"
   },
   "sujets": ["Projet SaaS", "Site web", "Data", "Autre"],
   "messageSucces": "Message envoyé — je vous réponds sous 24 h.",

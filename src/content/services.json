@@ -5,39 +5,44 @@
       "titre": {
         "texte": "Développer votre SaaS ou application web sur mesure",
         "alignement": "gauche",
-        "police": "display"
+        "police": "display",
+        "taille": "base"
       },
       "phrase": {
         "texte": "De la modélisation des données à la mise en production, une plateforme pensée pour votre métier.",
         "alignement": "gauche",
-        "police": "sans"
+        "police": "sans",
+        "taille": "sm"
       }
     },
     {
       "icone": "layout-template",
-      "titre": { "texte": "Créer votre site web", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Créer votre site web", "alignement": "gauche", "police": "display", "taille": "base" },
       "phrase": {
         "texte": "Vitrine ou e-commerce, avec maintenance et hébergement inclus.",
         "alignement": "gauche",
-        "police": "sans"
+        "police": "sans",
+        "taille": "sm"
       }
     },
     {
       "icone": "database",
-      "titre": { "texte": "Structurer vos données", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Structurer vos données", "alignement": "gauche", "police": "display", "taille": "base" },
       "phrase": {
         "texte": "Consolidation, nettoyage, dédoublonnage et cartographie de vos jeux de données.",
         "alignement": "gauche",
-        "police": "sans"
+        "police": "sans",
+        "taille": "sm"
       }
     },
     {
       "icone": "smartphone",
-      "titre": { "texte": "Intégrer le Mobile Money", "alignement": "gauche", "police": "display" },
+      "titre": { "texte": "Intégrer le Mobile Money", "alignement": "gauche", "police": "display", "taille": "base" },
       "phrase": {
         "texte": "Orange Money, MTN MoMo : des paiements fluides directement dans votre produit.",
         "alignement": "gauche",
-        "police": "sans"
+        "police": "sans",
+        "taille": "sm"
       }
     }
   ],

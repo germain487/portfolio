@@ -2,7 +2,8 @@
   "tagline": {
     "texte": "SaaS et sites web pensés pour le terrain ouest-africain.",
     "alignement": "gauche",
-    "police": "sans"
+    "police": "sans",
+    "taille": "sm"
   },
   "mention": "Conçu et développé par Germain MONEMOU · Conakry 🇬🇳",
   "filigraneNimba": true

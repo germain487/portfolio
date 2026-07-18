@@ -1,18 +1,26 @@
 ---
-// Rend un titre ou un paragraphe dont l'alignement et la police sont
-// pilotés depuis l'admin (collections content.config.ts, type `richText`).
-// Le texte passe par le <slot /> plutôt qu'une prop `texte` pour rester
-// compatible avec les paragraphes en gras (`set:html`) et tout autre
-// balisage interne déjà en place dans les composants appelants.
+// Rend un titre ou un paragraphe dont l'alignement, la police et la taille
+// sont pilotés depuis l'admin (collections content.config.ts, type
+// `richText`). Le texte passe par le <slot /> plutôt qu'une prop `texte`
+// pour rester compatible avec les paragraphes en gras (`set:html`) et tout
+// autre balisage interne déjà en place dans les composants appelants.
 interface Props {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span';
   alignement?: 'gauche' | 'centre' | 'droite';
   police?: 'display' | 'sans' | 'mono';
+  taille?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
   class?: string;
   [key: `data-${string}`]: string | boolean | undefined;
 }
 
-const { as: Tag = 'p', alignement = 'gauche', police = 'sans', class: className, ...rest } = Astro.props;
+const {
+  as: Tag = 'p',
+  alignement = 'gauche',
+  police = 'sans',
+  taille = 'base',
+  class: className,
+  ...rest
+} = Astro.props;
 
 const alignClass = {
   gauche: 'text-left',
@@ -25,6 +33,21 @@ const policeClass = {
   sans: 'font-sans',
   mono: 'font-mono',
 }[police];
+
+// Les paliers 3xl/4xl/5xl restent en clamp() responsive (mêmes valeurs que
+// l'échelle typographique du §5 du prompt maître) pour éviter tout
+// débordement sur mobile lorsqu'un titre est choisi en grande taille.
+const tailleClass = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  '2xl': 'text-2xl',
+  '3xl': 'text-[clamp(1.5rem,3.5vw,1.875rem)]',
+  '4xl': 'text-[clamp(1.75rem,4vw,2.75rem)]',
+  '5xl': 'text-[clamp(2.25rem,5vw,3.5rem)]',
+}[taille];
 ---
 
-<Tag class:list={[className, alignClass, policeClass]} {...rest}><slot /></Tag>
+<Tag class:list={[className, alignClass, policeClass, tailleClass]} {...rest}><slot /></Tag>

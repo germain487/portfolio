@@ -14,15 +14,16 @@ const reseauSchema = z.object({
   url: z.string().url(),
 });
 
-// Texte éditable avec mise en forme (alignement + police) depuis l'admin.
-// Réservé aux titres et paragraphes de prose affichés une seule fois ;
-// exclu des champs réutilisés comme identifiants ailleurs (texte alternatif,
-// balises <title>/<meta>, aria-label…) — voir CLAUDE.md §7.3 pour le détail
-// des exclusions.
+// Texte éditable avec mise en forme (alignement + police + taille) depuis
+// l'admin. Réservé aux titres et paragraphes de prose affichés une seule
+// fois ; exclu des champs réutilisés comme identifiants ailleurs (texte
+// alternatif, balises <title>/<meta>, aria-label…) — voir CLAUDE.md §7.3
+// pour le détail des exclusions.
 const richText = z.object({
   texte: z.string(),
   alignement: z.enum(['gauche', 'centre', 'droite']).default('gauche'),
   police: z.enum(['display', 'sans', 'mono']).default('sans'),
+  taille: z.enum(['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl']).default('base'),
 });
 
 const settings = defineCollection({
