@@ -175,8 +175,8 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 
 | Champ | Emplacement | Valeur actuelle (placeholder) |
 |---|---|---|
-| Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | `germain-camara/portfolio` |
-| URL du worker d'auth | `public/admin/config.yml` → `backend.base_url` | `https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev` |
+| Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | ✅ `germain487/portfolio` (fait) |
+| URL du worker d'auth | `public/admin/config.yml` → `backend.base_url` | `https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev` — en attente du déploiement Cloudflare (étape 2) |
 | URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
 | Nom de famille | Admin → Réglages généraux | « Camara » |
 | Email de contact | Admin → Réglages généraux | `contact@germaincamara.dev` |
