@@ -3,9 +3,10 @@ backend:
   name: github
   repo: germain487/portfolio
   branch: main
-  # [À COMPLÉTER] remplacer par l'URL du worker sveltia-cms-auth déployé (README § Administration, étape 2)
-  base_url: https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev
-  auth_endpoint: auth
+  # Pas de base_url/auth_endpoint : le site est hébergé sur Netlify et son
+  # fournisseur OAuth GitHub intégré (Project configuration → Access &
+  # security → OAuth) gère l'authentification automatiquement, sans worker
+  # externe (README § Administration).
 
 # Pas d'option "local_backend" à activer : Sveltia CMS propose nativement un
 # bouton « Work with Local Repository » sur son écran de connexion (via la

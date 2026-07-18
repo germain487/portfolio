@@ -106,7 +106,7 @@ Si l'hébergement final est un cPanel plutôt que Netlify, le dépôt contient `
 3. Ouvrir `.github/workflows/deploy-cpanel.yml` et décommenter le déclencheur `push` (les lignes sous `# push:`) pour que chaque commit sur `main` déploie automatiquement. Sans cette étape, le workflow reste disponible en déclenchement manuel (onglet **Actions** du dépôt → **Run workflow**).
 4. Vérifier/adapter `server-dir` dans le workflow si le dossier public du cPanel n'est pas `public_html/`.
 
-L'expérience d'administration (`/admin`) reste strictement identique quel que soit l'hébergeur choisi : c'est GitHub qui reçoit les commits dans les deux cas, seul le mécanisme de mise en ligne change.
+Le contenu (fichiers dans `src/content/`) et le mécanisme de sauvegarde restent identiques quel que soit l'hébergeur choisi : c'est GitHub qui reçoit les commits dans les deux cas. L'authentification de `/admin` décrite ci-dessous s'appuie en revanche sur le fournisseur OAuth intégré de Netlify — si le site est finalement servi uniquement depuis un cPanel (sans Netlify du tout), il faudra un autre mécanisme d'authentification pour l'admin (ex. un worker OAuth externe).
 
 ## Administration (`/admin`)
 
@@ -118,14 +118,14 @@ Depuis `/admin`, on peut créer, modifier, réorganiser, masquer et supprimer : 
 
 ### Mise en service (à faire une fois, par Germain)
 
-1. **Créer le dépôt GitHub** et y pousser ce projet (si ce n'est pas déjà fait pour Netlify).
-2. **Déployer le worker d'authentification** : aller sur le dépôt officiel [`sveltia-cms-auth`](https://github.com/sveltia/sveltia-cms-auth), cliquer sur son bouton de déploiement one-click vers **Cloudflare Workers** (compte Cloudflare gratuit suffisant).
-3. **Créer une GitHub OAuth App** : sur GitHub, **Settings → Developer settings → OAuth Apps → New OAuth App**. Renseigner comme *Authorization callback URL* l'URL du worker déployé à l'étape 2 (ex. `https://sveltia-cms-auth.mon-compte.workers.dev/callback`). Copier le *Client ID* et générer un *Client Secret*.
-4. **Renseigner les secrets du worker** : dans le tableau de bord Cloudflare Workers, ouvrir le worker déployé, ajouter les variables d'environnement `GITHUB_CLIENT_ID` et `GITHUB_CLIENT_SECRET` avec les valeurs obtenues à l'étape 3.
-5. **Compléter `public/admin/config.yml`** : remplacer `repo:` par `votre-compte-github/nom-du-depot` et `base_url:` par l'URL du worker de l'étape 2 (voir la liste des `[À COMPLÉTER]` plus bas). Commiter et pousser.
-6. **Connecter le dépôt à Netlify** si ce n'est pas déjà fait (voir section précédente) — chaque sauvegarde depuis l'admin déclenchera un rebuild automatique.
+L'authentification passe par le **fournisseur OAuth GitHub intégré de Netlify** — pas de worker externe à déployer, pas d'URL à faire correspondre entre deux services.
 
-Une fois ces 6 étapes faites : ouvrir `monsite.com/admin`, cliquer **Sign In with GitHub** (un clic), et le panneau d'administration est utilisable — y compris depuis un téléphone.
+1. **Créer le dépôt GitHub** et y pousser ce projet ✅ fait (`germain487/portfolio`).
+2. **Connecter le dépôt à Netlify** si ce n'est pas déjà fait (voir [Déploiement Netlify](#déploiement-netlify-pas-à-pas) ci-dessus).
+3. **Activer le fournisseur OAuth GitHub** : dans Netlify, ouvrir le site → **Project configuration → Access & security → OAuth**, activer le fournisseur **GitHub** (Netlify guide la création de la GitHub OAuth App et le renseignement du Client ID/Secret directement dans son interface — rien à faire côté GitHub séparément).
+4. **Vérifier `public/admin/config.yml`** : `backend.repo` doit correspondre au dépôt (`germain487/portfolio`) ✅ fait — aucune autre valeur à renseigner, Netlify gère le reste automatiquement.
+
+Une fois ces étapes faites : ouvrir `monsite.com/admin`, cliquer **Sign In with GitHub** (un clic), et le panneau d'administration est utilisable — y compris depuis un téléphone.
 
 ### Tester en local sans configurer GitHub
 
@@ -175,7 +175,7 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 | Champ | Emplacement | Valeur actuelle (placeholder) |
 |---|---|---|
 | Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | ✅ `germain487/portfolio` (fait) |
-| URL du worker d'auth | `public/admin/config.yml` → `backend.base_url` | `https://sveltia-cms-auth.VOTRE-COMPTE.workers.dev` — en attente du déploiement Cloudflare (étape 2) |
+| Fournisseur OAuth GitHub | Netlify → Project configuration → Access & security → OAuth | à activer (§ Administration) |
 | URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
 | Email de contact | Admin → Réglages généraux | `contact@germainmonemou.dev` |
 | Numéro WhatsApp | Admin → Réglages généraux | `224600000000` |

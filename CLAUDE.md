@@ -59,7 +59,7 @@ Cette référence est un template de tutoriel vu des milliers de fois. **Interdi
 | Défilement | **Lenis** | Smooth scroll léger |
 | Contenu structuré | **Astro Content Collections** + schémas **zod** | Contenu typé, validé au build, éditable par le CMS |
 | Administration | **Sveltia CMS** (Git-based) monté sur `/admin` | Édition totale sans code ni base de données (§7) |
-| Auth admin | **GitHub OAuth** via `sveltia-cms-auth` (Cloudflare Worker gratuit) | Accès réservé au propriétaire du dépôt |
+| Auth admin | **GitHub OAuth**, fournisseur intégré de Netlify (Access & security → OAuth) | Accès réservé au propriétaire du dépôt, sans worker externe |
 | Icônes | **Lucide** en SVG inline | Jamais de font-icons, jamais d'émojis en guise d'icônes |
 | Effet machine à écrire | Implémentation maison (~30 lignes) | Pas de dépendance pour si peu |
 | Formulaire | **Netlify Forms** + honeypot, fallback lien WhatsApp et mailto | Statique, gratuit, fiable |
@@ -203,7 +203,7 @@ Une interface d'administration accessible sur **`monsite.com/admin`** (desktop e
 
 ### 7.2 Implémentation technique
 - **CMS : Sveltia CMS** (successeur moderne et maintenu de Decap/Netlify CMS ; compatible avec son format de configuration). Montage minimal : `public/admin/index.html` (qui charge le script Sveltia) + `public/admin/config.yml`.
-- **Backend : GitHub.** Authentification OAuth via le worker officiel **`sveltia-cms-auth`** (Cloudflare Workers, gratuit, déploiement one-click). Seuls les comptes GitHub ayant accès en écriture au dépôt peuvent se connecter — donc Germain, et personne d'autre.
+- **Backend : GitHub.** Authentification OAuth via le **fournisseur intégré de Netlify** (Project configuration → Access & security → OAuth) — aucun worker externe à déployer ni à maintenir. Seuls les comptes GitHub ayant accès en écriture au dépôt peuvent se connecter — donc Germain, et personne d'autre.
 - **Contenu : Astro Content Collections** (Content Layer d'Astro 5, loaders `glob`/`file`) avec **schémas zod obligatoires** pour chaque collection. Le CMS édite exactement les fichiers que les collections consomment. Toute entrée invalide fait échouer le build avec un message explicite — garde-fou contre les fausses manipulations.
 - **Médias :** `media_folder: "public/uploads"`, `public_folder: "/uploads"`. Le portrait, les couvertures de projets, l'image OG et le CV (PDF) s'uploadent depuis l'admin et sont commités dans le dépôt.
 - **Développement local :** utiliser la fonctionnalité « local repository » de Sveltia (aucune auth requise en local) pour tester l'admin pendant le build.
@@ -227,16 +227,16 @@ Chaque champ porte un **label et un hint en français** ; champs requis marqués
 `monsite.com/admin` → connexion GitHub (un clic) → modification dans un formulaire clair en français → « Enregistrer » → commit automatique → rebuild Netlify → **en ligne en 1 à 2 minutes**, y compris depuis un téléphone. Chaque modification est historisée dans Git : rien n'est jamais perdu, tout est réversible.
 
 ### 7.5 Étapes manuelles de mise en service (à documenter pas à pas dans le README, section « Administration »)
+Authentification via le **fournisseur OAuth GitHub intégré de Netlify** (pas de worker externe) :
 1. Créer le dépôt GitHub et pousser le projet.
-2. Déployer `sveltia-cms-auth` sur Cloudflare Workers (bouton de déploiement du dépôt officiel).
-3. Créer une **GitHub OAuth App** (URL de callback = URL du worker) et renseigner `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` dans les variables du worker.
-4. Renseigner `base_url` (URL du worker) et le nom du dépôt dans `public/admin/config.yml`.
-5. Connecter le dépôt à Netlify (déploiement automatique à chaque commit).
+2. Connecter le dépôt à Netlify (déploiement automatique à chaque commit).
+3. Activer le fournisseur OAuth GitHub dans Netlify : **Project configuration → Access & security → OAuth** — Netlify gère la création de la GitHub OAuth App et les secrets directement dans son interface.
+4. Renseigner le nom du dépôt (`backend.repo`) dans `public/admin/config.yml` — pas de `base_url` à fournir, Netlify s'en charge automatiquement.
 
 Le README explique chacune de ces étapes comme pour un débutant : où cliquer, quoi copier, où le coller.
 
 ### 7.6 Variante hébergement cPanel
-Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir **`.github/workflows/deploy-cpanel.yml`** — à chaque commit (donc à chaque sauvegarde dans l'admin), GitHub Actions build le site et déploie `dist/` par FTPS (secrets `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD` à renseigner dans le dépôt). L'expérience d'administration reste strictement identique. Le workflow est livré désactivé par défaut, avec instructions d'activation dans le README.
+Si l'hébergement final est le cPanel de Germain plutôt que Netlify : fournir **`.github/workflows/deploy-cpanel.yml`** — à chaque commit (donc à chaque sauvegarde dans l'admin), GitHub Actions build le site et déploie `dist/` par FTPS (secrets `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD` à renseigner dans le dépôt). Le contenu et le mécanisme de sauvegarde restent identiques ; l'authentification de `/admin` (§7.5) dépend en revanche du fournisseur OAuth de Netlify — si le site n'est plus servi du tout par Netlify, prévoir un autre mécanisme d'authentification. Le workflow est livré désactivé par défaut, avec instructions d'activation dans le README.
 
 ---
 
