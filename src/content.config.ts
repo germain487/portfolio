@@ -97,7 +97,9 @@ const projets = defineCollection({
     tags: z.array(z.enum(['SaaS', 'Civic Tech', 'Data', 'Web Design'])),
     annee: z.number().int(),
     statut: z.enum(['En ligne', 'En cours', 'Archivé']),
-    lien: z.string().url().optional(),
+    // Le widget CMS enregistre un champ vide laissé vide comme "" plutôt que
+    // d'omettre la clé : on le traite comme "non renseigné" avant validation.
+    lien: z.preprocess((v) => (v === '' ? undefined : v), z.string().url().optional()),
     couverture: z.string().optional(),
     ordre: z.number().int().default(0),
     brouillon: z.boolean().default(false),

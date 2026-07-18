@@ -190,6 +190,7 @@ collections:
     summary: "{{titre}} — {{annee}} ({{statut}})"
     fields:
       - { label: Titre, name: titre, widget: string, hint: "Texte simple : réutilisé comme texte alternatif, initiale de la couverture générée et titre de page — pas de mise en forme indépendante." }
+      - { label: "Image de couverture (aperçu)", name: couverture, widget: image, required: false, hint: "Cliquez pour importer une photo ou une capture d'écran du projet — un aperçu s'affiche ici juste après l'envoi. Sans image, une couverture générée automatiquement (motif hexagonal) s'affiche à sa place sur le site, jamais d'image cassée." }
       - { label: Description, name: description, widget: text }
       - label: "Stack technique"
         name: stack
@@ -204,7 +205,6 @@ collections:
       - { label: Année, name: annee, widget: number, value_type: int }
       - { label: Statut, name: statut, widget: select, options: ["En ligne", "En cours", "Archivé"] }
       - { label: "Lien externe", name: lien, widget: string, required: false }
-      - { label: Couverture, name: couverture, widget: image, required: false, hint: "Optionnelle : une couverture générée automatiquement s'affiche sinon (jamais d'image cassée)." }
       - { label: "Ordre d'affichage", name: ordre, widget: number, value_type: int, default: 0, hint: "Les projets s'affichent du plus petit au plus grand." }
       - { label: "Brouillon", name: brouillon, widget: boolean, default: false, hint: "Masque le projet du site public sans le supprimer." }
       - { label: "Mis en avant sur l'accueil", name: misEnAvant, widget: boolean, default: false, hint: "Les 3 premiers projets mis en avant (par ordre d'affichage) apparaissent sur la page d'accueil." }
