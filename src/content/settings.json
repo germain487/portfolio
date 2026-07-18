@@ -1,6 +1,6 @@
 {
   "nomComplet": "Germain Monemou",
-  "wordmark": "Germain",
+  "wordmark": "SKYDEV",
   "titreSEO": "Germain Monemou — Développeur Fullstack & Fondateur EdTech · Conakry",
   "metaDescription": "Développeur fullstack et entrepreneur basé à Conakry. Fondateur de Nimba Educ et Ziama Educ, acteur de la civic tech guinéenne.",
   "imageOG": "/og.jpg",
@@ -12,9 +12,21 @@
   "badgeTexte": "Disponible · Conakry 🇬🇳",
   "cv": "/uploads/cv-germain-monemou.pdf",
   "reseaux": [
-    { "plateforme": "LinkedIn", "url": "https://linkedin.com/in/germain-monemou" },
-    { "plateforme": "GitHub", "url": "https://github.com/germain-monemou" },
-    { "plateforme": "X", "url": "https://x.com/germainmonemou" },
-    { "plateforme": "Facebook", "url": "https://facebook.com/germain.monemou" }
+    {
+      "plateforme": "LinkedIn",
+      "url": "https://linkedin.com/in/germain-monemou"
+    },
+    {
+      "plateforme": "GitHub",
+      "url": "https://github.com/germain-monemou"
+    },
+    {
+      "plateforme": "X",
+      "url": "https://x.com/germainmonemou"
+    },
+    {
+      "plateforme": "Facebook",
+      "url": "https://facebook.com/germain.monemou"
+    }
   ]
 }
