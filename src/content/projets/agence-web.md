@@ -1,10 +1,16 @@
 ---
-titre: "Agence web Monemou Digital"
-description: "Sites vitrines et boutiques pour PME francophones d'Afrique de l'Ouest, avec maintenance, hébergement et intégrations sur mesure."
-stack: ["WordPress", "Elementor", "Django"]
-tags: ["Web Design"]
+titre: Agence web Monemou Digital
+description: Sites vitrines et boutiques pour PME francophones d'Afrique de l'Ouest, avec maintenance, hébergement et intégrations sur mesure.
+stack:
+  - WordPress
+  - Elementor
+  - Django
+tags:
+  - Web Design
 annee: 2022
-statut: "En ligne"
+statut: En ligne
+lien: ''
+couverture: /uploads/Ago.png
 ordre: 5
 brouillon: false
 misEnAvant: false
