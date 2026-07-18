@@ -1,5 +1,6 @@
 ---
 titre: Agence web Monemou Digital
+couverture: ''
 description: Sites vitrines et boutiques pour PME francophones d'Afrique de l'Ouest, avec maintenance, hébergement et intégrations sur mesure.
 stack:
   - WordPress
@@ -10,7 +11,6 @@ tags:
 annee: 2022
 statut: En ligne
 lien: ''
-couverture: /uploads/Ago.png
 ordre: 5
 brouillon: false
 misEnAvant: false
