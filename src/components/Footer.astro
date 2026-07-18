@@ -22,61 +22,103 @@ const socialIconMap: Record<string, string> = {
   Facebook: 'facebook',
 };
 
+const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
 const year = new Date().getFullYear();
 ---
 
-<footer class="relative overflow-hidden border-t border-surface-2" transition:persist>
-  {footer.filigraneNimba && (
-    <svg
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full opacity-[0.08]"
-      viewBox="0 0 1200 200"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M0 200 L140 90 L230 150 L340 40 L430 130 L520 70 L620 160 L720 60 L830 140 L930 20 L1040 120 L1130 80 L1200 150 L1200 200 Z"
-        fill="none"
-        stroke="var(--accent)"
-        stroke-width="2"
-      />
-    </svg>
-  )}
+<footer class="border-t border-surface-2 bg-surface" transition:persist>
+  <div class="mx-auto max-w-6xl px-6 py-16 md:py-20">
+    <div class="grid gap-10 md:grid-cols-3 md:gap-8">
+      <div>
+        <a href="/" class="flex items-center gap-2 font-display text-lg font-bold text-text">
+          <svg width="26" height="26" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="none" stroke="var(--accent)" stroke-width="6" />
+            <text
+              x="50"
+              y="66"
+              font-family="var(--font-display)"
+              font-weight="700"
+              font-size="46"
+              fill="var(--accent)"
+              text-anchor="middle">G</text
+            >
+          </svg>
+          {settings.wordmark}
+        </a>
+        <p class="mt-4 max-w-[22rem] text-sm leading-relaxed text-text-muted">{footer.tagline}</p>
+        {settings.disponible && (
+          <div class="mt-5 inline-flex items-center gap-2 rounded-pill border border-surface-2 px-4 py-2 font-mono text-xs text-text-muted">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+            </span>
+            {settings.badgeTexte}
+          </div>
+        )}
+      </div>
 
-  <div class="relative mx-auto max-w-6xl px-6 py-16">
-    <div class="flex flex-col items-center gap-8 text-center md:flex-row md:items-center md:justify-between md:text-left">
-      <a href="/" class="flex items-center gap-2 font-display text-lg font-bold text-text">
-        <svg width="26" height="26" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <polygon points="50,4 91,27 91,73 50,96 9,73 9,27" fill="none" stroke="var(--accent)" stroke-width="6" />
-          <text x="50" y="66" font-family="var(--font-display)" font-weight="700" font-size="46" fill="var(--accent)" text-anchor="middle">G</text>
-        </svg>
-        {settings.wordmark}
-      </a>
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">Navigation</p>
+        <nav class="mt-4 flex flex-col gap-3" aria-label="Navigation du pied de page">
+          {links.map((link) => (
+            <a
+              href={link.href}
+              class="w-fit text-sm text-text-muted transition-colors duration-300 hover:text-accent"
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
 
-      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Navigation du pied de page">
-        {links.map((link) => (
-          <a href={link.href} class="font-mono text-xs uppercase tracking-[0.1em] text-text-muted transition-colors hover:text-accent">
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      <div class="flex items-center gap-3">
-        {settings.reseaux.map((reseau) => (
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">Contact</p>
+        <div class="mt-4 flex flex-col gap-3">
           <a
-            href={reseau.url}
+            href={`mailto:${settings.email}`}
+            class="w-fit text-sm text-text-muted transition-colors duration-300 hover:text-accent"
+          >
+            {settings.email}
+          </a>
+          <a
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={reseau.plateforme}
-            class="grid h-9 w-9 place-items-center rounded-full border border-surface-2 text-text-muted transition-all duration-300 hover:border-accent hover:text-accent"
+            class="w-fit text-sm text-text-muted transition-colors duration-300 hover:text-accent"
           >
-            <Icon name={socialIconMap[reseau.plateforme] ?? 'globe'} size={15} />
+            WhatsApp
           </a>
-        ))}
+        </div>
+
+        <div class="mt-5 flex items-center gap-3">
+          {settings.reseaux.map((reseau) => (
+            <a
+              href={reseau.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={reseau.plateforme}
+              class="grid h-9 w-9 place-items-center rounded-full border border-surface-2 text-text-muted transition-all duration-300 hover:border-accent hover:bg-accent hover:text-bg hover:shadow-[0_0_24px_rgba(0,229,255,0.35)]"
+            >
+              <Icon name={socialIconMap[reseau.plateforme] ?? 'globe'} size={15} />
+            </a>
+          ))}
+        </div>
       </div>
     </div>
 
-    <div class="mt-10 border-t border-surface-2 pt-8 text-center font-mono text-xs text-text-muted md:text-left">
-      {footer.mention} · {year}
+    <div class="mt-12 flex flex-col items-center gap-4 border-t border-surface-2 pt-8 text-center md:flex-row md:items-center md:justify-between md:text-left">
+      <p class="font-mono text-xs text-text-muted">© {year} · {footer.mention}</p>
+
+      {footer.filigraneNimba && (
+        <svg class="pointer-events-none h-8 w-auto shrink-0 opacity-[0.08]" viewBox="0 0 200 60" aria-hidden="true">
+          <path
+            d="M0 60 L28 22 L46 38 L68 8 L86 30 L104 14 L124 40 L144 12 L166 32 L186 20 L200 36 L200 60 Z"
+            fill="none"
+            stroke="var(--accent)"
+            stroke-width="2.5"
+          />
+        </svg>
+      )}
     </div>
   </div>
 </footer>

@@ -179,5 +179,6 @@ collections:
         label: Footer
         file: src/content/footer.json
         fields:
-          - { label: "Mention de signature", name: mention, widget: string }
+          - { label: "Phrase de positionnement", name: tagline, widget: string, hint: "Une ligne courte, affichée sous le logo dans le pied de page." }
+          - { label: "Mention de signature", name: mention, widget: string, hint: "Affichée en bas de page, précédée automatiquement de « © année · »." }
           - { label: "Afficher le filigrane Mont Nimba", name: filigraneNimba, widget: boolean, default: true }

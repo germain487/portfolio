@@ -94,7 +94,7 @@ Cette référence est un template de tutoriel vu des milliers de fois. **Interdi
 ```
 
 - **Échelle typographique** (desktop → mobile) : h1 `clamp(2.5rem, 6vw, 4.5rem)` ; h2 `clamp(1.75rem, 4vw, 2.75rem)` ; corps 1rem/1.7 ; eyebrows mono 0.8rem, lettrage +0.12em, majuscules.
-- **Rythme vertical** : sections `py-16` mobile / `py-24` desktop ; conteneur `max-w-6xl` centré ; grille 12 colonnes.
+- **Rythme vertical** : sections `py-16` mobile / `py-20` desktop (une seule source de séparation par frontière de section — jamais de marge additionnelle qui double le vide) ; conteneur `max-w-6xl` centré ; grille 12 colonnes.
 - **Le cyan est rare donc précieux** : réservé aux CTA, au lien actif, aux glows et aux mots-clés. Jamais de grands aplats cyan hors hexagone du portrait.
 - La couleur d'accent est **pilotable depuis l'admin** (§7.3, réglage « Couleur d'accent ») : injecte sa valeur dans `--accent` au build et dérive `--accent-soft` et les glows automatiquement.
 - Contrastes AA vérifiés sur chaque combinaison texte/fond.
@@ -183,7 +183,12 @@ Deux colonnes : à gauche coordonnées (email `[À COMPLÉTER]`, bouton **WhatsA
 - Microcopie précise : bouton « Envoyer le message » ; succès « Message envoyé — je vous réponds sous 24 h. » ; erreur « L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à [email]. » Les erreurs disent quoi faire, jamais de vague « une erreur est survenue ».
 
 ### 6.8 Footer
-Rappel nav (liens de page) + réseaux sociaux + « Conçu et développé par Germain · Conakry 🇬🇳 » + filigrane Mont Nimba (§3). Pas de « © tous droits réservés » pompeux — juste l'année. Commun à toutes les pages, persistant entre les transitions (`transition:persist`).
+Fond `--surface` (un cran plus clair que le body, marque la fin de page sans casser la palette). Trois colonnes :
+1. **Identité** : monogramme hexagonal « G » + wordmark, phrase de positionnement courte (une ligne, champ `tagline`), badge « Disponible · Conakry 🇬🇳 » repris du hero.
+2. **Navigation** : liens vers les pages du site.
+3. **Contact** : email, WhatsApp, icônes réseaux sociaux (même contour + hover glow cyan que le hero).
+
+Sous les trois colonnes, une ligne de séparation (`border-t border-surface-2`) puis une barre inférieure : à gauche « © [année] · [mention] » (champ `mention`, pas de « tous droits réservés » pompeux), à droite un filigrane Mont Nimba compact en line-art SVG (opacité ≤ 8 %, ne gêne jamais la lecture du texte). Colonnes empilées proprement sur mobile. Commun à toutes les pages via `Base.astro`, persistant entre les transitions (`transition:persist`).
 
 ### 6.9 Transitions de page
 `<ClientRouter />` (View Transitions natives d'Astro) sur toutes les pages, pour des transitions fluides fidèles à la direction créative (§3). Navbar, curseur personnalisé et Lenis sont `transition:persist` (état/scroll continus, pas de flash). Tout le reste (hero, compteurs, filtres, formulaire, reveals) est ré-initialisé à chaque `astro:page-load` — c'est le seul événement garanti de se déclencher aussi bien au chargement initial qu'après chaque transition côté client ; les `<script>` de composant, eux, ne se ré-exécutent pas automatiquement d'une page à l'autre. Le préloader ne s'affiche qu'à la toute première visite de la session (`sessionStorage`), jamais à chaque page.

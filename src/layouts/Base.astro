@@ -19,7 +19,9 @@ const settings = settingsEntry!.data;
 const { title = settings.titreSEO, description = settings.metaDescription, noindex = false } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const ogImageURL = new URL(settings.imageOG ?? '/og.jpg', Astro.site);
+// `|| ` plutôt que `?? ` : une chaîne vide (champ vidé depuis l'admin)
+// doit retomber sur l'image par défaut, pas résoudre une URL vide.
+const ogImageURL = new URL(settings.imageOG || '/og.jpg', Astro.site);
 
 // Le balisage Person n'a de sens que sur les pages qui parlent de Germain
 // lui-même — pas sur une fiche projet ou le formulaire de contact.

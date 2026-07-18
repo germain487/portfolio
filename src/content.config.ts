@@ -117,6 +117,7 @@ const contact = defineCollection({
 const footer = defineCollection({
   loader: file('src/content/footer.json', singleton('footer')),
   schema: z.object({
+    tagline: z.string(),
     mention: z.string(),
     filigraneNimba: z.boolean().default(true),
   }),
