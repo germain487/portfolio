@@ -1,7 +1,7 @@
 {
   "eyebrow": {
     "texte": "// salut, moi c'est",
-    "alignement": "centre",
+    "alignement": "gauche",
     "police": "display",
     "taille": "xs"
   },
