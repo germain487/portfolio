@@ -115,6 +115,7 @@ export function mountChatWidget(root: HTMLElement) {
     requestAnimationFrame(() => panel.classList.add('is-open'));
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Fermer l’assistante Louise');
+    toggle.title = 'Fermer l’assistante Louise';
     iconOpen.classList.add('hidden');
     iconClose.classList.remove('hidden');
 
@@ -132,7 +133,8 @@ export function mountChatWidget(root: HTMLElement) {
     panel.classList.remove('is-open');
     panel.hidden = true;
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', "Ouvrir l'assistante Louise");
+    toggle.setAttribute('aria-label', 'Ouvrir le chat avec Louise, assistante du site');
+    toggle.title = 'Ouvrir le chat avec Louise, assistante du site';
     iconOpen.classList.remove('hidden');
     iconClose.classList.add('hidden');
     document.removeEventListener('keydown', onKeydown);

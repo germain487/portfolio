@@ -273,6 +273,17 @@ collections:
             hint: "3 questions cliquables maximum, affichées à l'ouverture."
             field: { label: Question, name: question, widget: string }
           - { label: "Mention IA", name: mentionIA, widget: string, hint: "Affichée dans l'en-tête du panneau, ex : « IA — réponses indicatives »." }
+          - label: "Animation d'attention sur la bulle"
+            name: animationAttention
+            widget: select
+            default: heartbeat_radar
+            hint: "Attire l'œil du visiteur à l'arrivée sur le site avec un battement de cœur discret sur la bulle. Se coupe automatiquement, pour la session, dès que le chat est ouvert une première fois — jamais affichée si le visiteur préfère limiter les animations (prefers-reduced-motion)."
+            options:
+              - { label: "Battement de cœur seul", value: heartbeat }
+              - { label: "Battement de cœur + onde radar (recommandé)", value: heartbeat_radar }
+              - { label: "Aucune", value: aucune }
+          - { label: "Activer le badge d'invitation", name: badgeInvitationActif, widget: boolean, default: true, hint: "Une petite pastille de texte apparaît au-dessus de la bulle après 6 secondes si le chat n'a pas encore été ouvert, puis disparaît seule." }
+          - { label: "Texte du badge d'invitation", name: badgeInvitationTexte, widget: string, default: "Une question ? Je suis Louise 👋", hint: "Court — c'est une pastille, pas une phrase." }
 
   - name: sections
     label: "Titres de section"

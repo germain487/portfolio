@@ -165,6 +165,12 @@ const chatbot = defineCollection({
     messageAccueil: z.string(),
     questionsSuggerees: z.array(z.string()).max(3),
     mentionIA: z.string(),
+    // Animation d'attention sur la bulle (battement de cœur ± onde radar) —
+    // purement décorative, se coupe définitivement pour la session dès la
+    // première ouverture du chat (sessionStorage, voir scripts/motion.ts).
+    animationAttention: z.enum(['heartbeat', 'heartbeat_radar', 'aucune']).default('heartbeat_radar'),
+    badgeInvitationActif: z.boolean().default(true),
+    badgeInvitationTexte: z.string().default('Une question ? Je suis Louise 👋'),
   }),
 });
 

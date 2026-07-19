@@ -6,5 +6,8 @@
     "Parlez-moi de Ziama Educ",
     "Comment le contacter ?"
   ],
-  "mentionIA": "IA — réponses indicatives"
+  "mentionIA": "IA — réponses indicatives",
+  "animationAttention": "heartbeat_radar",
+  "badgeInvitationActif": true,
+  "badgeInvitationTexte": "Une question ? Je suis Louise 👋"
 }

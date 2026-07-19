@@ -17,22 +17,39 @@ const chatbot = chatbotEntry?.data;
       data-chat-widget
       data-chat-greeting={chatbot.messageAccueil}
       data-chat-offline="Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact."
+      data-chat-animation={chatbot.animationAttention}
       transition:persist="chat-widget"
     >
+      {chatbot.animationAttention === 'heartbeat_radar' && (
+        <span data-chat-radar aria-hidden="true" class="chat-radar fixed bottom-6 right-6 z-30 h-14 w-14" />
+      )}
+
       <button
         type="button"
         data-chat-toggle
         aria-haspopup="dialog"
         aria-expanded="false"
         aria-controls="louise-panel"
-        aria-label="Ouvrir l'assistante Louise"
-        class="chat-bubble fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] transition-transform duration-300 hover:scale-105"
+        aria-label="Ouvrir le chat avec Louise, assistante du site"
+        title="Ouvrir le chat avec Louise, assistante du site"
+        class="chat-bubble fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center text-bg"
       >
         <span data-chat-icon-open class="grid place-items-center font-display text-xl font-bold">L</span>
         <span data-chat-icon-close class="hidden place-items-center">
           <Icon name="x" size={20} />
         </span>
       </button>
+
+      {chatbot.badgeInvitationActif && (
+        <div
+          data-chat-badge
+          aria-hidden="true"
+          hidden
+          class="chat-badge fixed bottom-24 right-6 z-40 max-w-[14rem] rounded-card border border-surface-2 bg-surface px-4 py-2.5 text-sm text-text"
+        >
+          {chatbot.badgeInvitationTexte}
+        </div>
+      )}
 
       <div
         id="louise-panel"
@@ -120,10 +137,95 @@ const chatbot = chatbotEntry?.data;
 }
 
 <style>
+  /* Bulle : apparaît 1,5 s après le chargement (chat-bubble-enter), puis le
+     battement de cœur (chat-heartbeat) reste déclaré mais mis en pause dès
+     le départ (animation-play-state) — scripts/motion.ts (initChatAttention)
+     est seul à le faire « running » par salves, jamais la CSS seule. */
   .chat-bubble {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     background: var(--accent);
+    box-shadow: var(--glow);
+    opacity: 0;
+    transform: scale(0.4);
+    pointer-events: none;
+    will-change: transform;
+    animation:
+      chat-bubble-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s 1 forwards,
+      chat-heartbeat 1.3s ease-in-out infinite;
+    animation-play-state: running, paused;
   }
+  .chat-bubble:hover {
+    animation-play-state: running, paused !important;
+    transform: scale(1.05) !important;
+    box-shadow: var(--glow-strong) !important;
+  }
+  @keyframes chat-bubble-enter {
+    to {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+  }
+  /* Rythme « lub-dub » (~55 bpm) : deux pulsations rapprochées puis un temps
+     de repos jusqu'à la fin du cycle — le battement/repos par salves de 3
+     (3 cycles puis 8 s de pause) est géré en JS via animation-play-state. */
+  @keyframes chat-heartbeat {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: var(--glow);
+    }
+    14% {
+      transform: scale(1.12);
+      box-shadow: var(--glow-strong);
+    }
+    28% {
+      transform: scale(1);
+      box-shadow: var(--glow);
+    }
+    42% {
+      transform: scale(1.14);
+      box-shadow: var(--glow-strong);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: var(--glow);
+    }
+  }
+
+  /* Onde radar : une seule pulsation par salve de battements, déclenchée en
+     JS (classe .is-pinging ajoutée puis retirée à chaque salve). */
+  .chat-radar {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border: 2px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .chat-radar.is-pinging {
+    animation: chat-radar-ping 1s ease-out 1;
+  }
+  @keyframes chat-radar-ping {
+    from {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    to {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+
+  /* Badge d'invitation : indépendant du réglage d'animation ci-dessus. */
+  .chat-badge {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .chat-badge.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
   .chat-panel {
     max-height: min(30rem, calc(100vh - 8rem));
     opacity: 0;
@@ -142,8 +244,35 @@ const chatbot = chatbotEntry?.data;
       right: 1rem;
       bottom: 5.5rem;
     }
-    .chat-bubble {
+    .chat-bubble,
+    .chat-radar,
+    .chat-badge {
       right: 1rem;
+    }
+    /* Empreinte réduite : sur petit écran, le badge reste une pastille
+       compacte collée à la bulle plutôt qu'un large bandeau qui recouvrirait
+       davantage le contenu de la page en dessous. */
+    .chat-badge {
+      max-width: 10rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
+  }
+
+  /* La bulle reste statique, visible immédiatement, glow fixe — jamais de
+     battement ni d'onde radar. Le badge n'est pas concerné : c'est un texte
+     informatif, pas un mouvement, et sa propre transition est déjà neutralisée
+     par la règle globale prefers-reduced-motion (src/styles/global.css). */
+  @media (prefers-reduced-motion: reduce) {
+    .chat-bubble {
+      opacity: 1;
+      transform: none;
+      animation: none;
+      box-shadow: var(--glow);
+      pointer-events: auto;
+    }
+    .chat-radar {
+      display: none;
     }
   }
 </style>

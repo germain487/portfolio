@@ -14,6 +14,7 @@ import {
   initProjectFilters,
   initContactForm,
   initChatWidget,
+  initChatAttention,
 } from './motion';
 
 /**
@@ -61,6 +62,7 @@ export function initPageLifecycle() {
     initCustomCursor();
     initSmoothScroll();
     initChatWidget();
+    initChatAttention();
   }
 
   // `astro:page-load` se déclenche aussi au tout premier chargement, donc

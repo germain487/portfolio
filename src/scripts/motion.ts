@@ -528,3 +528,106 @@ export function initChatWidget() {
     ensureLoaded().then((widget) => widget.toggle());
   });
 }
+
+const CHAT_SEEN_KEY = 'portfolio-louise-seen';
+
+/**
+ * Animation d'attention sur la bulle de Louise (battement de cœur ± onde
+ * radar + badge d'invitation) — cycle de vie géré ici via de simples
+ * temporisations (setTimeout/setInterval), jamais via une boucle rAF : le
+ * battement lui-même reste un @keyframes CSS pur (voir ChatWidget.astro),
+ * on ne fait ici que mettre son animation-play-state en pause/lecture.
+ * Coupée pour toute la session dès la première ouverture du chat
+ * (sessionStorage), et jamais démarrée du tout en prefers-reduced-motion.
+ */
+export function initChatAttention() {
+  const root = document.querySelector<HTMLElement>('[data-chat-widget]');
+  const bubble = root?.querySelector<HTMLElement>('[data-chat-toggle]');
+  if (!root || !bubble) return;
+
+  const alreadySeen = sessionStorage.getItem(CHAT_SEEN_KEY) === '1';
+  if (alreadySeen) return;
+
+  const markSeen = () => sessionStorage.setItem(CHAT_SEEN_KEY, '1');
+  bubble.addEventListener('click', markSeen, { once: true });
+
+  const animationMode = root.dataset.chatAnimation;
+  if (!prefersReducedMotion() && animationMode && animationMode !== 'aucune') {
+    initChatHeartbeat(root, bubble);
+  }
+
+  initChatInviteBadge(root, bubble);
+}
+
+/** Salves de 3 battements (≈1,3 s chacun) séparées de 8 s de repos, en boucle. */
+function initChatHeartbeat(root: HTMLElement, bubble: HTMLElement) {
+  const radar = root.querySelector<HTMLElement>('[data-chat-radar]');
+  const BEAT_DURATION = 1300;
+  const BEATS_PER_BURST = 3;
+  const BURST_DURATION = BEAT_DURATION * BEATS_PER_BURST;
+  const PAUSE_DURATION = 8000;
+  const CYCLE_DURATION = BURST_DURATION + PAUSE_DURATION;
+  const START_DELAY = 2100; // laisse le temps à l'entrée de la bulle (1,5 s + 0,5 s) de se terminer
+
+  let burstTimeoutId: number | undefined;
+
+  const burst = () => {
+    bubble.style.animationPlayState = 'running, running';
+    if (radar) {
+      radar.classList.remove('is-pinging');
+      void radar.offsetWidth; // force le reflow pour permettre de rejouer l'animation
+      radar.classList.add('is-pinging');
+    }
+    burstTimeoutId = window.setTimeout(() => {
+      bubble.style.animationPlayState = 'running, paused';
+    }, BURST_DURATION);
+  };
+
+  let intervalId: number | undefined;
+  const startTimeoutId = window.setTimeout(() => {
+    burst();
+    intervalId = window.setInterval(burst, CYCLE_DURATION);
+  }, START_DELAY);
+
+  bubble.addEventListener(
+    'click',
+    () => {
+      window.clearTimeout(startTimeoutId);
+      window.clearTimeout(burstTimeoutId);
+      if (intervalId) window.clearInterval(intervalId);
+      bubble.style.animationPlayState = 'running, paused';
+    },
+    { once: true }
+  );
+}
+
+/** Pastille de texte au-dessus de la bulle après 6 s sans ouverture du chat. */
+function initChatInviteBadge(root: HTMLElement, bubble: HTMLElement) {
+  const badge = root.querySelector<HTMLElement>('[data-chat-badge]');
+  if (!badge) return;
+
+  let hideTimeoutId: number | undefined;
+
+  const hide = () => {
+    badge.classList.remove('is-visible');
+    window.setTimeout(() => {
+      badge.hidden = true;
+    }, 300);
+  };
+
+  const showTimeoutId = window.setTimeout(() => {
+    badge.hidden = false;
+    requestAnimationFrame(() => badge.classList.add('is-visible'));
+    hideTimeoutId = window.setTimeout(hide, 6000);
+  }, 6000);
+
+  bubble.addEventListener(
+    'click',
+    () => {
+      window.clearTimeout(showTimeoutId);
+      window.clearTimeout(hideTimeoutId);
+      hide();
+    },
+    { once: true }
+  );
+}
