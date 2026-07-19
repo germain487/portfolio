@@ -11,6 +11,7 @@ Site multi-pages statique (Astro 5 + Tailwind 4), transitions de page fluides (`
 - [Déploiement Netlify](#déploiement-netlify-pas-à-pas)
 - [Variante cPanel](#variante-cpanel)
 - [Administration (`/admin`)](#administration-admin)
+- [Louise (chatbot IA)](#louise-chatbot-ia)
 - [Décisions prises en autonomie](#décisions-prises-en-autonomie)
 - [Champs à compléter avant mise en ligne](#champs-à-compléter-avant-mise-en-ligne)
 
@@ -28,9 +29,12 @@ npm run dev       # http://localhost:4321
 Autres commandes :
 
 ```bash
-npm run build      # build statique dans dist/
-npm run preview    # sert dist/ localement, pour vérifier le build de prod
+npm run build          # build statique dans dist/ (régénère aussi la base de connaissances de Louise)
+npm run preview        # sert dist/ localement, pour vérifier le build de prod
+npm run dev:functions  # astro + fonctions Netlify (dont /api de Louise) en local via netlify dev
 ```
+
+`npm run dev` seul (sans fonctions) suffit pour travailler sur le site : la bulle de Louise s'affiche normalement mais indique poliment qu'elle est indisponible tant que `npm run dev:functions` n'est pas utilisé — voir [Louise (chatbot IA)](#louise-chatbot-ia).
 
 ## Stack technique
 
@@ -44,6 +48,7 @@ npm run preview    # sert dist/ localement, pour vérifier le build de prod
 | Administration | Sveltia CMS (Git-based) sur `/admin` |
 | Icônes | Lucide (SVG inline, via `src/components/Icon.astro`) |
 | Formulaire | Netlify Forms (AJAX + honeypot) |
+| Chatbot IA (Louise) | Netlify Functions + API Groq (gratuite, compatible OpenAI) |
 | Déploiement | Netlify (par défaut) ou cPanel via GitHub Actions |
 
 ## Pages
@@ -63,25 +68,35 @@ Navbar et footer sont communs à toutes les pages (rendus depuis `Base.astro`) ;
 
 ```
 portfolio/
+├── netlify/
+│   └── functions/
+│       └── chat/
+│           ├── chat.mjs                 # fonction Louise (appel Groq) — voir § Louise
+│           └── knowledge.generated.mjs  # généré par scripts/build-knowledge.mjs, jamais commité
+│                                         # (même dossier que chat.mjs : importé, pas exposé comme fonction à part)
 ├── public/
 │   ├── admin/              # Sveltia CMS (index.html + config.yml)
 │   ├── uploads/             # médias gérés depuis l'admin
 │   ├── og.jpg, favicon.svg
+├── scripts/
+│   └── build-knowledge.mjs  # génère la base de connaissances de Louise depuis src/content/
 ├── src/
 │   ├── content/             # settings.json, hero.json, about.json, skills.json,
 │   │                         # services.json, contact.json, footer.json, sections.json,
-│   │                         # projets/*.md
-│   ├── content.config.ts    # 9 collections + schémas Zod (garde-fous au build)
+│   │                         # chatbot.json, projets/*.md
+│   ├── content.config.ts    # 10 collections + schémas Zod (garde-fous au build)
 │   ├── layouts/Base.astro   # navbar + footer + curseur + préloader + SEO + <ClientRouter />
 │   ├── components/          # un composant par section + blocs condensés (FeaturedProjects,
-│   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor…
+│   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor/ChatWidget…
 │   ├── scripts/
 │   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
+│   │   ├── chat-widget.ts   # logique du panneau de Louise, importée dynamiquement à l'ouverture
 │   │   └── bootstrap.ts     # point d'entrée unique, ré-exécuté à chaque astro:page-load
 │   └── pages/
 │       ├── index.astro · a-propos.astro · services.astro · contact.astro
 │       └── projets/index.astro · projets/[slug].astro
 ├── .github/workflows/deploy-cpanel.yml   # variante cPanel (désactivée par défaut)
+├── netlify.toml
 └── astro.config.mjs
 ```
 
@@ -143,7 +158,7 @@ C'est le moyen le plus rapide de vérifier une modification de champ ou de teste
 
 `monsite.com/admin` → connexion GitHub (un clic) → modification dans un formulaire en français → **Enregistrer** → commit automatique → rebuild → en ligne en 1 à 2 minutes. Tout est historisé dans Git : rien n'est jamais perdu, tout est réversible (historique/rollback via GitHub).
 
-### Couverture des 9 collections
+### Couverture des 10 collections
 
 Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints) :
 
@@ -158,8 +173,51 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 | Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur |
 | Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba |
 | Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil |
+| Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
 
 **Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec quatre champs — texte, alignement (gauche / centré / droite), police (limitée aux 3 familles déjà chargées sur le site — Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono — afin de préserver l'identité visuelle) et taille (de très petit à très grand, sur l'échelle Tailwind). Volontairement exclus : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton, les messages système et la mention de copyright du footer.
+
+---
+
+## Louise (chatbot IA)
+
+Louise est l'assistante IA du site : une bulle flottante (hexagone cyan avec un « L ») présente sur toutes les pages, qui répond en français aux questions des visiteurs sur Germain (profil, projets, services, contact). Coût zéro : API **Groq** (gratuite, compatible OpenAI) + **Netlify Functions** (plan gratuit).
+
+### Principe
+
+- Le site reste 100 % statique : aucune clé API n'existe côté client. Le widget (`src/components/ChatWidget.astro`) envoie les messages à une fonction serverless (`netlify/functions/chat.mjs`), qui seule connaît la clé Groq (`process.env.GROQ_API_KEY`).
+- La base de connaissances de Louise n'est **jamais dupliquée à la main** : `scripts/build-knowledge.mjs` la régénère à chaque build à partir des mêmes fichiers `src/content/` que le CMS édite (réglages, à-propos, projets non-brouillons, services, contact). Toute modification faite depuis `/admin` se reflète chez Louise au déploiement suivant.
+- Le JS du panneau de discussion (`src/scripts/chat-widget.ts`) n'est chargé qu'à la première ouverture de la bulle (import dynamique depuis `src/scripts/motion.ts`) — aucun impact sur le score Lighthouse tant que le visiteur n'a pas cliqué.
+- Garde-fous côté fonction : `max_tokens` ≤ 350, historique tronqué aux 8 derniers messages, message utilisateur tronqué à 500 caractères, `temperature` 0.4, appels acceptés uniquement depuis l'origine du site. En cas d'échec de l'API (clé absente, quota dépassé, erreur réseau…), Louise répond avec un message de repli qui oriente vers WhatsApp ou `/contact` plutôt que de laisser une erreur brute.
+
+### Mise en service (à faire une fois, par Germain)
+
+1. Créer un compte sur [console.groq.com](https://console.groq.com) — gratuit, sans carte bancaire.
+2. Dans **API Keys**, créer une nouvelle clé et la copier (elle ne sera plus affichée en entier ensuite).
+3. Sur Netlify : ouvrir le site → **Project configuration → Environment variables** → **Add a variable** → nom `GROQ_API_KEY`, valeur = la clé copiée.
+4. Redéployer le site (**Deploys → Trigger deploy**, ou pousser n'importe quel commit) pour que la fonction récupère la nouvelle variable d'environnement.
+
+Sans cette clé, le site continue de fonctionner normalement : Louise affiche simplement son message de repli orientant vers WhatsApp/`/contact`.
+
+### Limites du plan gratuit
+
+Le plan gratuit de Groq applique des limites de débit (nombre de requêtes et de tokens par minute/jour, variables selon le modèle — voir [console.groq.com/settings/limits](https://console.groq.com/settings/limits)). Largement suffisant pour un portfolio ; en cas de dépassement ponctuel, Louise bascule automatiquement sur son message de repli.
+
+### Changer de fournisseur (Gemini, Mistral…)
+
+Toute la logique d'appel au modèle est isolée dans `netlify/functions/chat.mjs` — rien d'autre à toucher. Pour changer de fournisseur : remplacer `GROQ_URL`, `MODEL` et l'en-tête d'authentification par l'équivalent du nouveau fournisseur (la plupart proposent une API compatible OpenAI, comme Groq), et renommer la variable d'environnement en conséquence côté Netlify.
+
+### Tester en local
+
+```bash
+npm run dev:functions   # régénère la base de connaissances puis lance `netlify dev`
+```
+
+Nécessite `GROQ_API_KEY` dans un fichier `.env` local (non commité, voir `.gitignore`) ou dans les variables d'environnement du shell. `netlify dev` sert le site Astro **et** les fonctions sur le même port, donc le widget fonctionne à l'identique de la production.
+
+### Administration
+
+Collection **Louise (chatbot IA)** dans `/admin` (`src/content/chatbot.json`) : activer/désactiver la bulle, message d'accueil, jusqu'à 3 questions suggérées, mention IA affichée dans l'en-tête du panneau. Le reste de la base de connaissances (bio, projets, services, contact) n'est pas dupliqué ici — il est déjà éditable depuis les autres collections et se synchronise automatiquement.
 
 ---
 
@@ -181,6 +239,7 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 | Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | ✅ `germain487/portfolio` (fait) |
 | Fournisseur OAuth GitHub | Netlify → Project configuration → Access & security → OAuth | à activer (§ Administration) |
 | URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
+| Clé API Groq (Louise) | Netlify → Project configuration → Environment variables → `GROQ_API_KEY` | non renseignée (Louise répond avec son message de repli en attendant) |
 | Email de contact | Admin → Réglages généraux | `contact@germainmonemou.dev` |
 | Numéro WhatsApp | Admin → Réglages généraux | `224600000000` |
 | CV (PDF) | Admin → Réglages généraux | non fourni (lien pointe vers un fichier inexistant) |

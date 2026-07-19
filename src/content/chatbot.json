@@ -1,0 +1,10 @@
+{
+  "actif": true,
+  "messageAccueil": "Bonjour, je suis Louise. Je peux vous parler des projets de Germain, de ses services ou vous orienter vers le formulaire de contact.",
+  "questionsSuggerees": [
+    "Quels services propose Germain ?",
+    "Parlez-moi de Ziama Educ",
+    "Comment le contacter ?"
+  ],
+  "mentionIA": "IA — réponses indicatives"
+}

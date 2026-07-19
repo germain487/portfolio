@@ -497,3 +497,34 @@ export function initMagneticButtons() {
     });
   });
 }
+
+/**
+ * Bulle de Louise, persistée entre les pages (transition:persist) — à
+ * n'attacher qu'une seule fois par session, comme la navbar et le curseur.
+ * Ne fait qu'écouter le clic : la logique du panneau (rendu des messages,
+ * appel de la fonction Netlify…) vit dans scripts/chat-widget.ts et n'est
+ * importée qu'à la première ouverture, pour ne rien ajouter au JS initial.
+ */
+export function initChatWidget() {
+  const root = document.querySelector<HTMLElement>('[data-chat-widget]');
+  const toggle = root?.querySelector<HTMLElement>('[data-chat-toggle]');
+  if (!root || !toggle) return;
+
+  let api: { toggle: () => void } | null = null;
+  let loading: Promise<{ toggle: () => void }> | null = null;
+
+  const ensureLoaded = () => {
+    if (api) return Promise.resolve(api);
+    if (!loading) {
+      loading = import('./chat-widget').then(({ mountChatWidget }) => {
+        api = mountChatWidget(root);
+        return api;
+      });
+    }
+    return loading;
+  };
+
+  toggle.addEventListener('click', () => {
+    ensureLoaded().then((widget) => widget.toggle());
+  });
+}

@@ -155,6 +155,19 @@ const sections = defineCollection({
   }),
 });
 
+const chatbot = defineCollection({
+  loader: file('src/content/chatbot.json', singleton('chatbot')),
+  schema: z.object({
+    actif: z.boolean().default(true),
+    // Texte simple (pas de richText) : consommé aussi bien par le widget que
+    // par le prompt système généré côté fonction Netlify — une mise en forme
+    // indépendante n'aurait pas de sens hors du rendu HTML du site.
+    messageAccueil: z.string(),
+    questionsSuggerees: z.array(z.string()).max(3),
+    mentionIA: z.string(),
+  }),
+});
+
 export const collections = {
   settings,
   hero,
@@ -165,4 +178,5 @@ export const collections = {
   contact,
   footer,
   sections,
+  chatbot,
 };

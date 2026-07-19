@@ -255,6 +255,25 @@ collections:
           - { label: "Mention de signature", name: mention, widget: string, hint: "Affichée en bas de page, précédée automatiquement de « © année · »." }
           - { label: "Afficher le filigrane Mont Nimba", name: filigraneNimba, widget: boolean, default: true }
 
+  - name: chatbot
+    label: "Louise (chatbot IA)"
+    icon: chat
+    files:
+      - name: chatbot
+        label: "Louise (chatbot IA)"
+        file: src/content/chatbot.json
+        description: "Base de connaissances synchronisée automatiquement avec les autres collections (à-propos, projets, services, contact) — rien à dupliquer ici."
+        fields:
+          - { label: "Activer Louise", name: actif, widget: boolean, default: true, hint: "Désactive la bulle de chat sur tout le site sans supprimer sa configuration." }
+          - { label: "Message d'accueil", name: messageAccueil, widget: text, hint: "Premier message affiché à l'ouverture du panneau de discussion." }
+          - label: "Questions suggérées"
+            name: questionsSuggerees
+            widget: list
+            max: 3
+            hint: "3 questions cliquables maximum, affichées à l'ouverture."
+            field: { label: Question, name: question, widget: string }
+          - { label: "Mention IA", name: mentionIA, widget: string, hint: "Affichée dans l'en-tête du panneau, ex : « IA — réponses indicatives »." }
+
   - name: sections
     label: "Titres de section"
     icon: title

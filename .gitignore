@@ -1,9 +1,13 @@
 # build output
 dist/
 .astro/
+netlify/functions/chat/knowledge.generated.mjs
 
 # dependencies
 node_modules/
+
+# Netlify CLI (netlify dev)
+.netlify/
 
 # logs
 npm-debug.log*
