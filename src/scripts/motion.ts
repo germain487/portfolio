@@ -534,9 +534,9 @@ const CHAT_SEEN_KEY = 'portfolio-louise-seen';
 /**
  * Animation d'attention sur la bulle de Louise (battement de cœur ± onde
  * radar + badge d'invitation) — cycle de vie géré ici via de simples
- * temporisations (setTimeout/setInterval), jamais via une boucle rAF : le
- * battement lui-même reste un @keyframes CSS pur (voir ChatWidget.astro),
- * on ne fait ici que mettre son animation-play-state en pause/lecture.
+ * temporisations (setTimeout) et l'événement animationend, jamais via une
+ * boucle rAF : le battement lui-même reste un @keyframes CSS pur (voir
+ * ChatWidget.astro), on ne fait ici que poser/retirer la classe de salve.
  * Coupée pour toute la session dès la première ouverture du chat
  * (sessionStorage), et jamais démarrée du tout en prefers-reduced-motion.
  */
@@ -559,43 +559,46 @@ export function initChatAttention() {
   initChatInviteBadge(root, bubble);
 }
 
-/** Salves de 3 battements (≈1,3 s chacun) séparées de 8 s de repos, en boucle. */
+/**
+ * Salves de 3 battements séparées de 8 s de repos, en boucle. Le nombre de
+ * battements par salve est porté par la CSS (animation-iteration-count de
+ * .is-beating) : le JS ne fait que poser la classe et attendre `animationend`
+ * avant de programmer la salve suivante — la coupure tombe donc toujours
+ * exactement en fin de cycle, même si un timer dérive (onglet en arrière-plan).
+ */
 function initChatHeartbeat(root: HTMLElement, bubble: HTMLElement) {
   const radar = root.querySelector<HTMLElement>('[data-chat-radar]');
-  const BEAT_DURATION = 1300;
-  const BEATS_PER_BURST = 3;
-  const BURST_DURATION = BEAT_DURATION * BEATS_PER_BURST;
   const PAUSE_DURATION = 8000;
-  const CYCLE_DURATION = BURST_DURATION + PAUSE_DURATION;
   const START_DELAY = 2100; // laisse le temps à l'entrée de la bulle (1,5 s + 0,5 s) de se terminer
 
-  let burstTimeoutId: number | undefined;
+  let timeoutId: number | undefined;
 
-  const burst = () => {
-    bubble.style.animationPlayState = 'running, running';
-    if (radar) {
-      radar.classList.remove('is-pinging');
-      void radar.offsetWidth; // force le reflow pour permettre de rejouer l'animation
-      radar.classList.add('is-pinging');
-    }
-    burstTimeoutId = window.setTimeout(() => {
-      bubble.style.animationPlayState = 'running, paused';
-    }, BURST_DURATION);
+  const replay = (el: HTMLElement, className: string) => {
+    el.classList.remove(className);
+    void el.offsetWidth; // force le reflow pour permettre de rejouer l'animation
+    el.classList.add(className);
   };
 
-  let intervalId: number | undefined;
-  const startTimeoutId = window.setTimeout(() => {
-    burst();
-    intervalId = window.setInterval(burst, CYCLE_DURATION);
-  }, START_DELAY);
+  const burst = () => {
+    replay(bubble, 'is-beating');
+    if (radar) replay(radar, 'is-pinging');
+  };
+
+  const onBurstEnd = (e: AnimationEvent) => {
+    if (e.target !== bubble || !e.animationName.includes('heartbeat')) return;
+    bubble.classList.remove('is-beating');
+    timeoutId = window.setTimeout(burst, PAUSE_DURATION);
+  };
+
+  bubble.addEventListener('animationend', onBurstEnd);
+  timeoutId = window.setTimeout(burst, START_DELAY);
 
   bubble.addEventListener(
     'click',
     () => {
-      window.clearTimeout(startTimeoutId);
-      window.clearTimeout(burstTimeoutId);
-      if (intervalId) window.clearInterval(intervalId);
-      bubble.style.animationPlayState = 'running, paused';
+      window.clearTimeout(timeoutId);
+      bubble.removeEventListener('animationend', onBurstEnd);
+      bubble.classList.remove('is-beating');
     },
     { once: true }
   );

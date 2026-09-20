@@ -228,7 +228,7 @@ Pour attirer l'œil à l'arrivée sur le site sans devenir agaçante, la bulle d
 - **Survol** : interrompt le battement, laisse place au glow renforcé existant.
 - **`prefers-reduced-motion`** : aucun battement, jamais — la bulle reste statique avec son glow, immédiatement visible.
 - **Badge d'invitation** (indépendant, sa propre case à cocher dans `/admin`) : après 6 s sans ouverture du chat, une pastille de texte apparaît au-dessus de la bulle, puis disparaît seule après 6 s ou dès l'ouverture du chat.
-- Implémentation en CSS pur (`@keyframes` + `animation-play-state`, propriétés `transform`/`box-shadow` uniquement, `will-change: transform`) — le JS ne fait que programmer les temporisations (`setTimeout`/`setInterval`) et lire/écrire `sessionStorage`, sans impact sur le score Lighthouse.
+- Implémentation en CSS pur (`@keyframes`, propriétés `transform`/`box-shadow` uniquement, `will-change: transform`) : chaque salve est une animation à 3 itérations que la CSS arrête d'elle-même en fin de cycle ; le JS ne fait que poser la classe de salve, attendre `animationend` pour programmer la pause (`setTimeout`) et lire/écrire `sessionStorage` — sans impact sur le score Lighthouse.
 
 ---
 

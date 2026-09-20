@@ -21,7 +21,14 @@ const chatbot = chatbotEntry?.data;
       transition:persist="chat-widget"
     >
       {chatbot.animationAttention === 'heartbeat_radar' && (
-        <span data-chat-radar aria-hidden="true" class="chat-radar fixed bottom-6 right-6 z-30 h-14 w-14" />
+        <svg
+          data-chat-radar
+          aria-hidden="true"
+          viewBox="-2 -2 104 104"
+          class="chat-radar fixed bottom-6 right-6 z-30 h-14 w-14"
+        >
+          <polygon points="25,0 75,0 100,50 75,100 25,100 0,50" fill="none" stroke="var(--accent)" stroke-width="3" />
+        </svg>
       )}
 
       <button
@@ -137,10 +144,11 @@ const chatbot = chatbotEntry?.data;
 }
 
 <style>
-  /* Bulle : apparaît 1,5 s après le chargement (chat-bubble-enter), puis le
-     battement de cœur (chat-heartbeat) reste déclaré mais mis en pause dès
-     le départ (animation-play-state) — scripts/motion.ts (initChatAttention)
-     est seul à le faire « running » par salves, jamais la CSS seule. */
+  /* Bulle : apparaît 1,5 s après le chargement (chat-bubble-enter). Le
+     battement de cœur ne joue que sous .is-beating, posée par salves depuis
+     scripts/motion.ts (initChatAttention) : 3 itérations puis la CSS s'arrête
+     seule, exactement en fin de cycle — aucun timer JS n'a à deviner quand
+     couper, donc pas de bulle figée en plein pic si un timer dérive. */
   .chat-bubble {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     background: var(--accent);
@@ -149,10 +157,12 @@ const chatbot = chatbotEntry?.data;
     transform: scale(0.4);
     pointer-events: none;
     will-change: transform;
+    animation: chat-bubble-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s 1 forwards;
+  }
+  .chat-bubble.is-beating {
     animation:
       chat-bubble-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s 1 forwards,
-      chat-heartbeat 1.3s ease-in-out infinite;
-    animation-play-state: running, paused;
+      chat-heartbeat 1.3s ease-in-out 3;
   }
   .chat-bubble:hover {
     animation-play-state: running, paused !important;
@@ -167,8 +177,7 @@ const chatbot = chatbotEntry?.data;
     }
   }
   /* Rythme « lub-dub » (~55 bpm) : deux pulsations rapprochées puis un temps
-     de repos jusqu'à la fin du cycle — le battement/repos par salves de 3
-     (3 cycles puis 8 s de pause) est géré en JS via animation-play-state. */
+     de repos jusqu'à la fin du cycle. */
   @keyframes chat-heartbeat {
     0%, 100% {
       transform: scale(1);
@@ -193,10 +202,10 @@ const chatbot = chatbotEntry?.data;
   }
 
   /* Onde radar : une seule pulsation par salve de battements, déclenchée en
-     JS (classe .is-pinging ajoutée puis retirée à chaque salve). */
+     JS (classe .is-pinging ajoutée puis retirée à chaque salve). Anneau tracé
+     en SVG : un border + clip-path hexagonal ne donnerait que deux barres,
+     le contour d'une boîte ne suivant pas les côtés obliques du polygone. */
   .chat-radar {
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    border: 2px solid var(--accent);
     opacity: 0;
     pointer-events: none;
   }
@@ -264,7 +273,8 @@ const chatbot = chatbotEntry?.data;
      informatif, pas un mouvement, et sa propre transition est déjà neutralisée
      par la règle globale prefers-reduced-motion (src/styles/global.css). */
   @media (prefers-reduced-motion: reduce) {
-    .chat-bubble {
+    .chat-bubble,
+    .chat-bubble.is-beating {
       opacity: 1;
       transform: none;
       animation: none;
