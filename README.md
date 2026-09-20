@@ -251,8 +251,8 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 | Fournisseur OAuth GitHub | Netlify → Project configuration → Access & security → OAuth | à activer (§ Administration) |
 | URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
 | Clé API Groq (Louise) | Netlify → Project configuration → Environment variables → `GROQ_API_KEY` | non renseignée (Louise répond avec son message de repli en attendant) |
-| Email de contact | Admin → Réglages généraux | `contact@germainmonemou.dev` |
-| Numéro WhatsApp | Admin → Réglages généraux | `224600000000` |
+| Email de contact | Admin → Réglages généraux | ✅ `grmnmonemou@gmail.com` (fait) |
+| Numéro WhatsApp | Admin → Réglages généraux | ✅ `224613712573` (fait) |
 | CV (PDF) | Admin → Réglages généraux | non fourni (lien pointe vers un fichier inexistant) |
 | URLs réseaux sociaux | Admin → Réglages généraux | comptes placeholder à corriger |
 | Portrait du hero | Admin → Hero | silhouette SVG de secours (aucune photo) |
