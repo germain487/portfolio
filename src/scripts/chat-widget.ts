@@ -25,6 +25,7 @@ export function mountChatWidget(root: HTMLElement) {
   const iconClose = root.querySelector<HTMLElement>('[data-chat-icon-close]')!;
 
   const greeting = root.dataset.chatGreeting ?? '';
+  const openLabel = toggle.getAttribute('aria-label') ?? '';
   const offlineMessage =
     root.dataset.chatOffline ??
     "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.";
@@ -133,8 +134,8 @@ export function mountChatWidget(root: HTMLElement) {
     panel.classList.remove('is-open');
     panel.hidden = true;
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Ouvrir le chat avec Louise, assistante du site');
-    toggle.title = 'Ouvrir le chat avec Louise, assistante du site';
+    toggle.setAttribute('aria-label', openLabel);
+    toggle.title = openLabel;
     iconOpen.classList.remove('hidden');
     iconClose.classList.add('hidden');
     document.removeEventListener('keydown', onKeydown);

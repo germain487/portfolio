@@ -19,6 +19,20 @@ const settings = settingsEntry!.data;
 
 const { title = settings.titreSEO, description = settings.metaDescription, noindex = false } = Astro.props;
 
+// Couleur d'accent pilotée depuis l'admin : --accent-soft (mélange 50 % blanc,
+// hexagone du portrait), les glows et le voile translucide en sont dérivés ici
+// pour que toutes les déclinaisons restent cohérentes avec la couleur choisie.
+const accent = settings.couleurAccent;
+const [r, g, b] = [1, 3, 5].map((i) => parseInt(accent.slice(i, i + 2), 16));
+const soft = '#' + [r, g, b].map((c) => Math.round((c + 255) / 2).toString(16).padStart(2, '0')).join('');
+const accentStyle = [
+  `--accent: ${accent}`,
+  `--accent-soft: ${soft}`,
+  `--accent-rgb: ${r}, ${g}, ${b}`,
+  `--glow: 0 0 24px rgba(${r}, ${g}, ${b}, 0.35)`,
+  `--glow-strong: 0 0 48px rgba(${r}, ${g}, ${b}, 0.45)`,
+].join('; ');
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 // `|| ` plutôt que `?? ` : une chaîne vide (champ vidé depuis l'admin)
 // doit retomber sur l'image par défaut, pas résoudre une URL vide.
@@ -44,7 +58,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" style={accentStyle}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

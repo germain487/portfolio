@@ -28,5 +28,10 @@
     "alignement": "centre",
     "police": "sans",
     "taille": "base"
-  }
+  },
+  "aProposEyebrow": "// à-propos",
+  "skillsEyebrow": "// compétences",
+  "projetsEyebrow": "// projets",
+  "servicesEyebrow": "// services",
+  "contactEyebrow": "// contact"
 }

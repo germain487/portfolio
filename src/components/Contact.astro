@@ -5,15 +5,17 @@ import StyledText from './StyledText.astro';
 
 const settingsEntry = await getEntry('settings', 'settings');
 const contactEntry = await getEntry('contact', 'contact');
+const sectionsEntry = await getEntry('sections', 'sections');
 const settings = settingsEntry!.data;
 const contact = contactEntry!.data;
+const sections = sectionsEntry!.data;
 
 const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
 ---
 
 <section id="contact" class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
-    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// contact</p>
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{sections.contactEyebrow}</p>
     <StyledText
       as="h1"
       alignement={contact.intro.alignement}
@@ -34,7 +36,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
             <Icon name="mail" size={18} />
           </span>
           <span>
-            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">Email</span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">{contact.carteEmailLabel}</span>
             <span class="block text-sm text-text">{settings.email}</span>
           </span>
         </a>
@@ -49,8 +51,8 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
             <Icon name="message-circle" size={18} />
           </span>
           <span>
-            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">WhatsApp</span>
-            <span class="block text-sm text-text">Discuter directement</span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">{contact.carteWhatsappLabel}</span>
+            <span class="block text-sm text-text">{contact.carteWhatsappTexte}</span>
           </span>
         </a>
 
@@ -59,7 +61,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
             <Icon name="map-pin" size={18} />
           </span>
           <span>
-            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">Localisation</span>
+            <span class="block font-mono text-xs uppercase tracking-wide text-text-muted">{contact.carteLocalisationLabel}</span>
             <span class="block text-sm text-text">{settings.localisation}</span>
           </span>
         </div>
@@ -83,7 +85,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
         <div class="grid gap-5 sm:grid-cols-2">
           <div>
             <label for="nom" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
-              Nom
+              {contact.champNom}
             </label>
             <input
               id="nom"
@@ -96,7 +98,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
           </div>
           <div>
             <label for="email" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
-              Email
+              {contact.champEmail}
             </label>
             <input
               id="email"
@@ -111,7 +113,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
 
         <div>
           <label for="sujet" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
-            Sujet
+            {contact.champSujet}
           </label>
           <select
             id="sujet"
@@ -127,7 +129,7 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
 
         <div>
           <label for="message" class="mb-2 block font-mono text-xs uppercase tracking-wide text-text-muted">
-            Message
+            {contact.champMessage}
           </label>
           <textarea
             id="message"
@@ -141,10 +143,10 @@ const whatsappUrl = `https://wa.me/${settings.whatsapp}`;
         <button
           type="submit"
           data-magnetic
-          class="btn-pill inline-flex items-center justify-center gap-2 rounded-pill bg-accent px-7 py-3.5 font-mono text-sm tracking-wide text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] transition-all duration-300 hover:shadow-[0_0_48px_rgba(0,229,255,0.45)] hover:-translate-y-0.5 disabled:opacity-50"
+          class="btn-pill inline-flex items-center justify-center gap-2 rounded-pill bg-accent px-7 py-3.5 font-mono text-sm tracking-wide text-bg shadow-[var(--glow)] transition-all duration-300 hover:shadow-[var(--glow-strong)] hover:-translate-y-0.5 disabled:opacity-50"
         >
           <Icon name="send" size={15} />
-          Envoyer le message
+          {contact.boutonEnvoyer}
         </button>
 
         <p data-form-success role="status" class="hidden items-center gap-2 font-mono text-sm text-accent">

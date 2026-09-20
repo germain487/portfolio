@@ -128,6 +128,17 @@ const contact = defineCollection({
     sujets: z.array(z.string()).min(1),
     messageSucces: z.string(),
     messageErreur: z.string(),
+    // Intitulés des champs et du bouton du formulaire, libellés des cartes de
+    // coordonnées (la carte WhatsApp est aussi reprise dans le footer).
+    champNom: z.string().default('Nom'),
+    champEmail: z.string().default('Email'),
+    champSujet: z.string().default('Sujet'),
+    champMessage: z.string().default('Message'),
+    boutonEnvoyer: z.string().default('Envoyer le message'),
+    carteEmailLabel: z.string().default('Email'),
+    carteWhatsappLabel: z.string().default('WhatsApp'),
+    carteWhatsappTexte: z.string().default('Discuter directement'),
+    carteLocalisationLabel: z.string().default('Localisation'),
   }),
 });
 
@@ -137,6 +148,63 @@ const footer = defineCollection({
     tagline: richText,
     mention: z.string(),
     filigraneNimba: z.boolean().default(true),
+    titreNavigation: z.string().default('Navigation'),
+    titreContact: z.string().default('Contact'),
+  }),
+});
+
+// Liens de la navigation principale, partagés entre la navbar et le footer.
+// Les routes existantes du site sont les seules cibles valides : le libellé
+// est libre, la cible se choisit dans une liste fermée (admin).
+const navigation = defineCollection({
+  loader: file('src/content/navigation.json', singleton('navigation')),
+  schema: z.object({
+    liens: z
+      .array(
+        z.object({
+          label: z.string(),
+          href: z.enum(['/', '/a-propos', '/projets', '/services', '/contact']),
+        })
+      )
+      .min(1),
+  }),
+});
+
+// Balises <title> et meta description propres à chaque page (l'accueil utilise
+// le titre SEO et la description des réglages généraux).
+const seoPage = z.object({
+  titre: z.string(),
+  description: z.string().max(180),
+});
+const seo = defineCollection({
+  loader: file('src/content/seo.json', singleton('seo')),
+  schema: z.object({
+    aPropos: seoPage,
+    projets: seoPage,
+    services: seoPage,
+    contact: seoPage,
+    // Page de détail d'un projet : « {titre du projet} — {suffixe} » ; la
+    // description reprend la description courte du projet.
+    projetDetailSuffixe: z.string(),
+  }),
+});
+
+// Libellés d'interface (liens, boutons, filtres) auparavant codés en dur.
+const interfaceUi = defineCollection({
+  loader: file('src/content/interface.json', singleton('interface')),
+  schema: z.object({
+    projets: z.object({
+      voirTous: z.string(),
+      decouvrir: z.string(),
+      filtreTous: z.string(),
+      retourListe: z.string(),
+      voirEnLigne: z.string(),
+      precedent: z.string(),
+      suivant: z.string(),
+    }),
+    services: z.object({
+      voirTous: z.string(),
+    }),
   }),
 });
 
@@ -152,6 +220,13 @@ const sections = defineCollection({
     servicesTitre: richText,
     contactCtaTitre: richText,
     contactCtaTexte: richText,
+    // Eyebrows mono au-dessus de chaque section (« // projets »…). Texte
+    // simple : la mise en forme est celle, fixe, de l'eyebrow.
+    aProposEyebrow: z.string().default('// à-propos'),
+    skillsEyebrow: z.string().default('// compétences'),
+    projetsEyebrow: z.string().default('// projets'),
+    servicesEyebrow: z.string().default('// services'),
+    contactEyebrow: z.string().default('// contact'),
   }),
 });
 
@@ -165,6 +240,16 @@ const chatbot = defineCollection({
     messageAccueil: z.string(),
     questionsSuggerees: z.array(z.string()).max(3),
     mentionIA: z.string(),
+    titrePanneau: z.string().default('Louise · Guide du site'),
+    placeholderSaisie: z.string().default('Posez votre question…'),
+    // Repris à l'identique par la fonction Netlify (via build-knowledge.mjs)
+    // quand l'API ne répond pas, et par le widget quand la fonction elle-même
+    // est injoignable.
+    messageIndisponible: z
+      .string()
+      .default('Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.'),
+    // Libellé (accessibilité + infobulle native) du bouton d'ouverture.
+    libelleBouton: z.string().default('Ouvrir le chat avec Louise, assistante du site'),
     // Animation d'attention sur la bulle (battement de cœur ± onde radar) —
     // purement décorative, se coupe définitivement pour la session dès la
     // première ouverture du chat (sessionStorage, voir scripts/motion.ts).
@@ -191,4 +276,7 @@ export const collections = {
   footer,
   sections,
   chatbot,
+  navigation,
+  seo,
+  interface: interfaceUi,
 };

@@ -15,6 +15,14 @@ backend:
 # directement sur le disque local, sans authentification GitHub — pratique
 # pour tester l'admin pendant le développement (README § Administration).
 
+# Habillage de l'interface d'administration (voir aussi public/admin/index.html
+# pour le thème : barre latérale colorée, contenu clair).
+app_title: "Portfolio · Administration"
+logo:
+  src: /admin/logo.svg
+site_url: https://germain-portfolio.netlify.app
+display_url: https://germain-portfolio.netlify.app
+
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
@@ -29,7 +37,7 @@ collections:
         fields:
           - { label: "Nom complet", name: nomComplet, widget: string, hint: "Affiché dans le H1 du hero et les métadonnées SEO." }
           - { label: "Wordmark (logo navbar)", name: wordmark, widget: string, hint: "Texte à côté du monogramme hexagonal dans la navbar." }
-          - { label: "Titre SEO", name: titreSEO, widget: string, hint: "Balise <title> et Open Graph." }
+          - { label: "Titre SEO", name: titreSEO, widget: string, hint: "Titre de l'onglet du navigateur, des résultats de recherche et du partage (Open Graph)." }
           - { label: "Meta description", name: metaDescription, widget: text, hint: "180 caractères maximum, pour les moteurs de recherche." }
           - { label: "Image Open Graph", name: imageOG, widget: image, required: false, hint: "1200×630px recommandé, utilisée lors du partage du lien." }
           - { label: "Couleur d'accent", name: couleurAccent, widget: color, default: "#00E5FF", hint: "Injectée dans tout le site (boutons, liens actifs, halos lumineux)." }
@@ -242,6 +250,15 @@ collections:
             field: { label: Sujet, name: sujet, widget: string }
           - { label: "Message de succès", name: messageSucces, widget: string }
           - { label: "Message d'erreur", name: messageErreur, widget: string }
+          - { label: "Champ — Nom", name: champNom, widget: string, default: "Nom" }
+          - { label: "Champ — Email", name: champEmail, widget: string, default: "Email" }
+          - { label: "Champ — Sujet", name: champSujet, widget: string, default: "Sujet" }
+          - { label: "Champ — Message", name: champMessage, widget: string, default: "Message" }
+          - { label: "Bouton d'envoi", name: boutonEnvoyer, widget: string, default: "Envoyer le message" }
+          - { label: "Carte — Email (libellé)", name: carteEmailLabel, widget: string, default: "Email", hint: "Petit libellé mono au-dessus de l'adresse, colonne de gauche." }
+          - { label: "Carte — WhatsApp (libellé)", name: carteWhatsappLabel, widget: string, default: "WhatsApp", hint: "Repris aussi comme texte du lien WhatsApp du pied de page." }
+          - { label: "Carte — WhatsApp (texte)", name: carteWhatsappTexte, widget: string, default: "Discuter directement" }
+          - { label: "Carte — Localisation (libellé)", name: carteLocalisationLabel, widget: string, default: "Localisation" }
 
   - name: footer
     label: Footer
@@ -254,6 +271,8 @@ collections:
           - { label: "Phrase de positionnement", name: tagline, widget: object, hint: "Une ligne courte, affichée sous le logo dans le pied de page.", fields: *texteMiseEnForme }
           - { label: "Mention de signature", name: mention, widget: string, hint: "Affichée en bas de page, précédée automatiquement de « © année · »." }
           - { label: "Afficher le filigrane Mont Nimba", name: filigraneNimba, widget: boolean, default: true }
+          - { label: "Titre de la colonne Navigation", name: titreNavigation, widget: string, default: "Navigation" }
+          - { label: "Titre de la colonne Contact", name: titreContact, widget: string, default: "Contact" }
 
   - name: chatbot
     label: "Louise (chatbot IA)"
@@ -273,6 +292,10 @@ collections:
             hint: "3 questions cliquables maximum, affichées à l'ouverture."
             field: { label: Question, name: question, widget: string }
           - { label: "Mention IA", name: mentionIA, widget: string, hint: "Affichée dans l'en-tête du panneau, ex : « IA — réponses indicatives »." }
+          - { label: "Titre du panneau", name: titrePanneau, widget: string, default: "Louise · Guide du site" }
+          - { label: "Texte d'invite du champ de saisie", name: placeholderSaisie, widget: string, default: "Posez votre question…" }
+          - { label: "Message d'indisponibilité", name: messageIndisponible, widget: text, default: "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.", hint: "Affiché quand l'IA ne répond pas (clé API absente, quota dépassé, panne). Orientez vers un autre canal de contact." }
+          - { label: "Libellé du bouton d'ouverture", name: libelleBouton, widget: string, default: "Ouvrir le chat avec Louise, assistante du site", hint: "Annoncé par les lecteurs d'écran et affiché en infobulle native au survol de la bulle." }
           - label: "Animation d'attention sur la bulle"
             name: animationAttention
             widget: select
@@ -286,6 +309,72 @@ collections:
           - { label: "Icône de la bulle", name: iconeBulle, widget: string, default: "👩", hint: "Un emoji (ex. 👩, 👩🏾, 🙋🏾‍♀️) ou une simple lettre — affiché dans la bulle et dans l'en-tête du panneau." }
           - { label: "Activer l'infobulle d'invitation", name: badgeInvitationActif, widget: boolean, default: true, hint: "Une infobulle apparaît au-dessus de la bulle après 6 secondes si le chat n'a pas encore été ouvert. Elle reste affichée (et ouvre le chat au clic) jusqu'à ce que le visiteur ouvre Louise ou la ferme — puis plus jamais pour la session." }
           - { label: "Texte de l'infobulle d'invitation", name: badgeInvitationTexte, widget: string, default: "Une question ? Je suis Louise, discutons 👋", hint: "Court — deux lignes maximum, c'est une infobulle, pas un paragraphe." }
+
+  - name: navigation
+    label: Navigation
+    icon: menu
+    files:
+      - name: navigation
+        label: Navigation
+        file: src/content/navigation.json
+        description: "Liens du menu principal (navbar et menu mobile) et de la colonne Navigation du pied de page. Réordonnables par glisser-déposer."
+        fields:
+          - label: Liens
+            name: liens
+            widget: list
+            min: 1
+            fields:
+              - { label: Libellé, name: label, widget: string }
+              - label: Page cible
+                name: href
+                widget: select
+                options:
+                  - { label: "Accueil (/)", value: "/" }
+                  - { label: "À propos (/a-propos)", value: "/a-propos" }
+                  - { label: "Projets (/projets)", value: "/projets" }
+                  - { label: "Services (/services)", value: "/services" }
+                  - { label: "Contact (/contact)", value: "/contact" }
+
+  - name: seo
+    label: "SEO des pages"
+    icon: travel_explore
+    files:
+      - name: seo
+        label: "SEO des pages"
+        file: src/content/seo.json
+        description: "Titre d'onglet du navigateur et description pour les moteurs de recherche, page par page. L'accueil utilise le titre SEO et la meta description des Réglages généraux."
+        fields:
+          - { label: "À propos", name: aPropos, widget: object, fields: &seoPage [ { label: "Titre", name: titre, widget: string }, { label: "Description", name: description, widget: text, hint: "180 caractères maximum." } ] }
+          - { label: "Projets", name: projets, widget: object, fields: *seoPage }
+          - { label: "Services", name: services, widget: object, fields: *seoPage }
+          - { label: "Contact", name: contact, widget: object, fields: *seoPage }
+          - { label: "Fiche projet — suffixe du titre", name: projetDetailSuffixe, widget: string, hint: "Le titre d'une fiche projet est « Titre du projet — {ce suffixe} ». Sa description reprend la description courte du projet." }
+
+  - name: interface
+    label: "Libellés d'interface"
+    icon: label
+    files:
+      - name: interface
+        label: "Libellés d'interface"
+        file: src/content/interface.json
+        description: "Petits textes de liens et de boutons : projets (filtres, cartes, fiche) et services."
+        fields:
+          - label: Projets
+            name: projets
+            widget: object
+            fields:
+              - { label: "Lien « voir tous » (accueil)", name: voirTous, widget: string, default: "Voir tous les projets →" }
+              - { label: "Survol d'une carte", name: decouvrir, widget: string, default: "Découvrir" }
+              - { label: "Filtre « tous »", name: filtreTous, widget: string, default: "Tous", hint: "Les autres filtres reprennent les tags des projets (SaaS, Civic Tech, Data, Web Design)." }
+              - { label: "Fiche — retour à la liste", name: retourListe, widget: string, default: "Tous les projets" }
+              - { label: "Fiche — bouton vers le site du projet", name: voirEnLigne, widget: string, default: "Voir le projet en ligne" }
+              - { label: "Fiche — projet précédent", name: precedent, widget: string, default: "Projet précédent" }
+              - { label: "Fiche — projet suivant", name: suivant, widget: string, default: "Projet suivant" }
+          - label: Services
+            name: services
+            widget: object
+            fields:
+              - { label: "Lien « voir tous » (accueil)", name: voirTous, widget: string, default: "Voir tous les services →" }
 
   - name: sections
     label: "Titres de section"
@@ -301,3 +390,8 @@ collections:
           - { label: "Titre — Services", name: servicesTitre, widget: object, hint: "Utilisé sur /services et sur l'aperçu de l'accueil.", fields: *texteMiseEnForme }
           - { label: "Titre — Bandeau contact (accueil)", name: contactCtaTitre, widget: object, fields: *texteMiseEnForme }
           - { label: "Texte — Bandeau contact (accueil)", name: contactCtaTexte, widget: object, fields: *texteMiseEnForme }
+          - { label: "Eyebrow — À propos", name: aProposEyebrow, widget: string, default: "// à-propos", hint: "Petite ligne mono en cyan au-dessus du titre de section (le « // » fait partie du style, à conserver ou non)." }
+          - { label: "Eyebrow — Compétences", name: skillsEyebrow, widget: string, default: "// compétences" }
+          - { label: "Eyebrow — Projets", name: projetsEyebrow, widget: string, default: "// projets", hint: "Sur /projets et sur l'aperçu de l'accueil." }
+          - { label: "Eyebrow — Services", name: servicesEyebrow, widget: string, default: "// services", hint: "Sur /services et sur l'aperçu de l'accueil." }
+          - { label: "Eyebrow — Contact", name: contactEyebrow, widget: string, default: "// contact", hint: "Sur /contact et sur le bandeau contact de l'accueil." }

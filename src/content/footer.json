@@ -6,5 +6,7 @@
     "taille": "sm"
   },
   "mention": "Conçu et développé par Germain MONEMOU · Conakry 🇬🇳",
-  "filigraneNimba": true
+  "filigraneNimba": true,
+  "titreNavigation": "Navigation",
+  "titreContact": "Contact"
 }

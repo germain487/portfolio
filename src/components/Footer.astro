@@ -5,16 +5,12 @@ import StyledText from './StyledText.astro';
 
 const settingsEntry = await getEntry('settings', 'settings');
 const footerEntry = await getEntry('footer', 'footer');
+const navigationEntry = await getEntry('navigation', 'navigation');
+const contactEntry = await getEntry('contact', 'contact');
 const settings = settingsEntry!.data;
 const footer = footerEntry!.data;
-
-const links = [
-  { label: 'Accueil', href: '/' },
-  { label: 'À propos', href: '/a-propos' },
-  { label: 'Projets', href: '/projets' },
-  { label: 'Services', href: '/services' },
-  { label: 'Contact', href: '/contact' },
-];
+const links = navigationEntry!.data.liens;
+const contact = contactEntry!.data;
 
 const socialIconMap: Record<string, string> = {
   LinkedIn: 'linkedin',
@@ -67,7 +63,7 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">Navigation</p>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{footer.titreNavigation}</p>
         <nav class="mt-4 flex flex-col gap-3" aria-label="Navigation du pied de page">
           {links.map((link) => (
             <a
@@ -81,7 +77,7 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">Contact</p>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{footer.titreContact}</p>
         <div class="mt-4 flex flex-col gap-3">
           <a
             href={`mailto:${settings.email}`}
@@ -95,7 +91,7 @@ const year = new Date().getFullYear();
             rel="noopener noreferrer"
             class="w-fit text-sm text-text-muted transition-colors duration-300 hover:text-accent"
           >
-            WhatsApp
+            {contact.carteWhatsappLabel}
           </a>
         </div>
 
@@ -106,7 +102,7 @@ const year = new Date().getFullYear();
               target="_blank"
               rel="noopener noreferrer"
               aria-label={reseau.plateforme}
-              class="grid h-9 w-9 place-items-center rounded-full border border-surface-2 text-text-muted transition-all duration-300 hover:border-accent hover:bg-accent hover:text-bg hover:shadow-[0_0_24px_rgba(0,229,255,0.35)]"
+              class="grid h-9 w-9 place-items-center rounded-full border border-surface-2 text-text-muted transition-all duration-300 hover:border-accent hover:bg-accent hover:text-bg hover:shadow-[var(--glow)]"
             >
               <Icon name={socialIconMap[reseau.plateforme] ?? 'globe'} size={15} />
             </a>

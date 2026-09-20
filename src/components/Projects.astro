@@ -7,14 +7,20 @@ const allProjects = await getCollection('projets', ({ data }) => !data.brouillon
 const projects = allProjects.sort((a, b) => a.data.ordre - b.data.ordre);
 
 const sectionsEntry = await getEntry('sections', 'sections');
+const uiEntry = await getEntry('interface', 'interface');
 const sections = sectionsEntry!.data;
+const ui = uiEntry!.data;
 
-const filters = ['Tous', 'SaaS', 'Civic Tech', 'Data', 'Web Design'];
+// Valeur « * » = tous les projets (scripts/motion.ts) ; le libellé, lui, est éditable.
+const filters = [
+  { value: '*', label: ui.projets.filtreTous },
+  ...['SaaS', 'Civic Tech', 'Data', 'Web Design'].map((tag) => ({ value: tag, label: tag })),
+];
 ---
 
 <section id="projets" class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
-    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// projets</p>
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{sections.projetsEyebrow}</p>
     <StyledText
       as="h1"
       alignement={sections.projetsTitre.alignement}
@@ -29,13 +35,13 @@ const filters = ['Tous', 'SaaS', 'Civic Tech', 'Data', 'Web Design'];
       {filters.map((filter, i) => (
         <button
           type="button"
-          data-filter={filter}
+          data-filter={filter.value}
           class:list={[
             'filter-chip rounded-pill border px-4 py-2 font-mono text-xs uppercase tracking-wide transition-colors duration-300',
             i === 0 && 'is-active',
           ]}
         >
-          {filter}
+          {filter.label}
         </button>
       ))}
     </div>

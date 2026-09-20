@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import ProjectCover from '../../components/ProjectCover.astro';
@@ -21,7 +21,11 @@ export async function getStaticPaths() {
 const { project, prev, next } = Astro.props;
 const { Content } = await render(project);
 
-const title = `${project.data.titre} — Projets — Germain Monemou`;
+const seoEntry = await getEntry('seo', 'seo');
+const uiEntry = await getEntry('interface', 'interface');
+const ui = uiEntry!.data.projets;
+
+const title = `${project.data.titre} — ${seoEntry!.data.projetDetailSuffixe}`;
 ---
 
 <Base title={title} description={project.data.description}>
@@ -32,7 +36,7 @@ const title = `${project.data.titre} — Projets — Germain Monemou`;
         class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wide text-text-muted transition-colors hover:text-accent"
       >
         <Icon name="arrow-left" size={14} />
-        Tous les projets
+        {ui.retourListe}
       </a>
 
       <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -61,9 +65,9 @@ const title = `${project.data.titre} — Projets — Germain Monemou`;
           href={project.data.lien}
           target="_blank"
           rel="noopener noreferrer"
-          class="btn-pill mt-8 inline-flex items-center gap-2 rounded-pill bg-accent px-6 py-3 font-mono text-sm text-bg shadow-[0_0_24px_rgba(0,229,255,0.35)] transition-all duration-300 hover:shadow-[0_0_48px_rgba(0,229,255,0.45)] hover:-translate-y-0.5"
+          class="btn-pill mt-8 inline-flex items-center gap-2 rounded-pill bg-accent px-6 py-3 font-mono text-sm text-bg shadow-[var(--glow)] transition-all duration-300 hover:shadow-[var(--glow-strong)] hover:-translate-y-0.5"
         >
-          Voir le projet en ligne
+          {ui.voirEnLigne}
           <Icon name="external-link" size={15} />
         </a>
       )}
@@ -96,7 +100,7 @@ const title = `${project.data.titre} — Projets — Germain Monemou`;
           class="rounded-card border border-surface-2 bg-surface p-5 transition-colors duration-300 hover:border-accent/40"
         >
           <span class="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide text-text-muted">
-            <Icon name="arrow-left" size={12} /> Projet précédent
+            <Icon name="arrow-left" size={12} /> {ui.precedent}
           </span>
           <span class="mt-2 block font-display text-base font-medium text-text">{prev.data.titre}</span>
         </a>
@@ -107,7 +111,7 @@ const title = `${project.data.titre} — Projets — Germain Monemou`;
           class="rounded-card border border-surface-2 bg-surface p-5 text-right transition-colors duration-300 hover:border-accent/40"
         >
           <span class="flex items-center justify-end gap-1.5 font-mono text-xs uppercase tracking-wide text-text-muted">
-            Projet suivant <Icon name="arrow-right" size={12} />
+            {ui.suivant} <Icon name="arrow-right" size={12} />
           </span>
           <span class="mt-2 block font-display text-base font-medium text-text">{next.data.titre}</span>
         </a>

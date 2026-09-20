@@ -37,6 +37,7 @@ const skills = readJSON('skills.json');
 const services = readJSON('services.json');
 const contact = readJSON('contact.json');
 const footer = readJSON('footer.json');
+const chatbot = readJSON('chatbot.json');
 
 const projetsDir = join(contentDir, 'projets');
 const projets = readdirSync(projetsDir)
@@ -98,7 +99,7 @@ const knowledgeText = lignes.join('\n');
 mkdirSync(outDir, { recursive: true });
 writeFileSync(
   outFile,
-  `// Fichier généré par scripts/build-knowledge.mjs — ne pas modifier à la main.\nexport const knowledgeText = ${JSON.stringify(knowledgeText)};\n`
+  `// Fichier généré par scripts/build-knowledge.mjs — ne pas modifier à la main.\nexport const knowledgeText = ${JSON.stringify(knowledgeText)};\nexport const fallbackMessage = ${JSON.stringify(chatbot.messageIndisponible)};\n`
 );
 
 console.log(`[build-knowledge] Base de connaissances générée (${knowledgeText.length} caractères) → ${outFile}`);

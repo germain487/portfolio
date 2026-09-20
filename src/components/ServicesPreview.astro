@@ -5,15 +5,17 @@ import StyledText from './StyledText.astro';
 
 const servicesEntry = await getEntry('services', 'services');
 const sectionsEntry = await getEntry('sections', 'sections');
+const uiEntry = await getEntry('interface', 'interface');
 const services = servicesEntry!.data;
 const sections = sectionsEntry!.data;
+const ui = uiEntry!.data;
 ---
 
 <section class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <div>
-        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// services</p>
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{sections.servicesEyebrow}</p>
         <StyledText
           as="h2"
           alignement={sections.servicesTitre.alignement}
@@ -28,7 +30,7 @@ const sections = sectionsEntry!.data;
         href="/services"
         class="inline-flex shrink-0 items-center gap-2 font-mono text-sm text-accent transition-transform duration-300 hover:translate-x-1"
       >
-        Voir tous les services →
+        {ui.services.voirTous}
       </a>
     </div>
 

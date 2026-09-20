@@ -1,4 +1,5 @@
 ---
+import { getEntry } from 'astro:content';
 import ProjectCover from './ProjectCover.astro';
 import Icon from './Icon.astro';
 
@@ -14,6 +15,9 @@ interface Props {
 }
 
 const { slug, titre, description, stack, tags, annee, statut, couverture } = Astro.props;
+
+const uiEntry = await getEntry('interface', 'interface');
+const ui = uiEntry!.data;
 ---
 
 <a
@@ -43,7 +47,7 @@ const { slug, titre, description, stack, tags, annee, statut, couverture } = Ast
       class="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-bg/85 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
     >
       <span class="flex items-center gap-1.5 rounded-pill bg-accent px-4 py-2 font-mono text-xs text-bg">
-        Découvrir
+        {ui.projets.decouvrir}
         <Icon name="arrow-up-right" size={14} />
       </span>
     </div>

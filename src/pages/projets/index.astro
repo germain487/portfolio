@@ -1,10 +1,10 @@
 ---
+import { getEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Projects from '../../components/Projects.astro';
 
-const title = 'Projets — Germain Monemou — Développeur Fullstack · Conakry';
-const description =
-  "SaaS, civic tech, data et sites web : les projets livrés par Germain Monemou pour des écoles, ONG et PME d'Afrique de l'Ouest.";
+const seoEntry = await getEntry('seo', 'seo');
+const { titre: title, description } = seoEntry!.data.projets;
 ---
 
 <Base title={title} description={description}>

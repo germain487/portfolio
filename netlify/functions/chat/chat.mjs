@@ -3,7 +3,7 @@
 // et la base de connaissances générée par scripts/build-knowledge.mjs, puis
 // relaie vers l'API Groq (gratuite, compatible OpenAI). Aucune clé API
 // côté client : GROQ_API_KEY n'existe que dans l'environnement Netlify.
-import { knowledgeText } from './knowledge.generated.mjs';
+import { knowledgeText, fallbackMessage } from './knowledge.generated.mjs';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL = 'llama-3.3-70b-versatile';
@@ -15,8 +15,7 @@ const TEMPERATURE = 0.4;
 const MAX_HISTORY_MESSAGES = 8;
 const MAX_MESSAGE_LENGTH = 500;
 
-const FALLBACK_MESSAGE =
-  "Je rencontre une difficulté technique pour vous répondre. Écrivez directement à Germain sur WhatsApp ou via la page Contact (/contact).";
+const FALLBACK_MESSAGE = fallbackMessage;
 
 const SYSTEM_PROMPT = `Tu es Louise, l'assistante IA du portfolio de Germain, un développeur fullstack et entrepreneur basé à Conakry, Guinée.
 

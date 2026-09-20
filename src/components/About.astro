@@ -3,7 +3,9 @@ import { getEntry } from 'astro:content';
 import StyledText from './StyledText.astro';
 
 const aboutEntry = await getEntry('about', 'about');
+const sectionsEntry = await getEntry('sections', 'sections');
 const about = aboutEntry!.data;
+const sections = sectionsEntry!.data;
 
 const renderBold = (text: string) =>
   text.replace(/\*\*(.+?)\*\*/g, '<strong class="font-medium text-text">$1</strong>');
@@ -11,7 +13,7 @@ const renderBold = (text: string) =>
 
 <section id="a-propos" class="reveal-section py-16 md:py-20">
   <div class="mx-auto max-w-6xl px-6">
-    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">// à-propos</p>
+    <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent">{sections.aProposEyebrow}</p>
     <StyledText
       as="h1"
       alignement={about.titre.alignement}

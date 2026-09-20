@@ -188,7 +188,7 @@ export function initProjectFilters() {
 
     cards.forEach((card) => {
       const tags: string[] = JSON.parse(card.dataset.tags ?? '[]');
-      const show = filter === 'Tous' || tags.includes(filter);
+      const show = filter === '*' || tags.includes(filter);
       // style inline plutôt qu'une classe : garantit de gagner sur les
       // utilitaires Tailwind (ex. .flex) posés sur le même élément, quel
       // que soit l'ordre de bundling des feuilles de style.
@@ -216,7 +216,7 @@ export function initProjectFilters() {
     btn.addEventListener('click', () => {
       buttons.forEach((b) => b.classList.remove('is-active'));
       btn.classList.add('is-active');
-      applyFilter(btn.dataset.filter ?? 'Tous');
+      applyFilter(btn.dataset.filter ?? '*');
     });
   });
 }

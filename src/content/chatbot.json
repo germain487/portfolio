@@ -11,5 +11,9 @@
   "couleurBulle": "#FF3B3B",
   "iconeBulle": "👩",
   "badgeInvitationActif": true,
-  "badgeInvitationTexte": "Une question ? Je suis Louise, discutons 👋"
+  "badgeInvitationTexte": "Une question ? Je suis Louise, discutons 👋",
+  "titrePanneau": "Louise · Guide du site",
+  "placeholderSaisie": "Posez votre question…",
+  "messageIndisponible": "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.",
+  "libelleBouton": "Ouvrir le chat avec Louise, assistante du site"
 }

@@ -5,11 +5,199 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Administration — Germain</title>
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" href="data:," />
+    <link rel="icon" href="/admin/logo.svg" />
+    <style>
+      /* Thème de l'administration — barre latérale bleue, contenu clair en
+         carte arrondie, à la manière d'un tableau de bord. Sveltia CMS ne
+         propose pas d'API de thème : on surcharge ses variables --sui-* et
+         quelques éléments de structure (nav.primary-sidebar, main.wrapper).
+         C'est pour cela que la version du CMS est épinglée ci-dessous : une
+         montée de version se fait volontairement, en revérifiant ce rendu.
+
+         Palette claire forcée quel que soit le réglage système (Sveltia pose
+         data-theme sur <html>) : html:root[...] l'emporte sur ses sélecteurs
+         :root[data-theme] à spécificité égale. */
+      html:root,
+      html:root[data-theme],
+      html:root:not([data-theme]) {
+  --sui-highlight-foreground-color: hsl(210 5% 5%);
+  --sui-primary-foreground-color: hsl(210 5% 25%);
+  --sui-secondary-foreground-color: hsl(210 5% 35%);
+  --sui-tertiary-foreground-color: hsl(210 5% 45%);
+  --sui-disabled-foreground-color: hsl(210 5% 65%);
+  --sui-error-foreground-color: hsl(0 85% 25%);
+  --sui-warning-foreground-color: hsl(40 85% 25%);
+  --sui-info-foreground-color: hsl(210 85% 25%);
+  --sui-success-foreground-color: hsl(100 85% 25%);
+  --sui-hover-background-color: hsl(228 40% 88% / 45%);
+  --sui-selected-background-color: hsl(230 88% 54% / 10%);
+  --sui-active-background-color: hsl(230 88% 54% / 16%);
+  --sui-content-background-color: hsl(210 5% 100%);
+  --sui-code-background-color: hsl(210 5% 95%);
+  --sui-primary-background-color: hsl(228 40% 96%);
+  --sui-primary-background-color-translucent: hsl(228 40% 96% / 85%);
+  --sui-secondary-background-color: hsl(228 34% 93%);
+  --sui-secondary-background-color-translucent: hsl(228 34% 93% / 85%);
+  --sui-tertiary-background-color: hsl(228 30% 90%);
+  --sui-tertiary-background-color-translucent: hsl(228 30% 90% / 85%);
+  --sui-disabled-background-color: hsl(210 5% 92%);
+  --sui-error-background-color: hsl(0 65% 90%);
+  --sui-warning-background-color: hsl(40 65% 90%);
+  --sui-info-background-color: hsl(210 65% 90%);
+  --sui-success-background-color: hsl(100 65% 90%);
+  --sui-focus-ring-color: hsl(230 88% 54% / 55%);
+  --sui-primary-border-color: hsl(228 24% 88%);
+  --sui-secondary-border-color: hsl(228 24% 92%);
+  --sui-error-border-color: hsl(0 48% 68%);
+  --sui-warning-border-color: hsl(40 48% 68%);
+  --sui-info-border-color: hsl(210 48% 68%);
+  --sui-success-border-color: hsl(100 48% 68%);
+  --sui-popup-shadow-color: hsl(230 40% 20% / 25%);
+  --sui-popup-backdrop-color: hsl(230 40% 10% / 45%);
+  --sui-control-border-color: hsl(228 24% 86%);
+  --sui-control-foreground-color: hsl(210 5% 25%);
+  --sui-control-background-color: hsl(228 34% 94%);
+  --sui-button-border-color: hsl(228 24% 86%);
+  --sui-button-background-color: hsl(228 34% 94%);
+  --sui-checkbox-border-color: hsl(210 5% 60%);
+  --sui-checkbox-background-color: hsl(228 34% 94%);
+  --sui-listbox-border-color: hsl(228 24% 86%);
+  --sui-listbox-foreground-color: hsl(210 5% 25%);
+  --sui-listbox-background-color: hsl(210 5% 100%);
+  --sui-tree-border-color: hsl(210 5% 86%);
+  --sui-tree-foreground-color: hsl(210 5% 25%);
+  --sui-tree-background-color: hsl(210 5% 100%);
+  --sui-textbox-border-color: hsl(228 24% 86%);
+  --sui-textbox-foreground-color: hsl(210 5% 25%);
+  --sui-textbox-background-color: hsl(210 5% 100%);
+  --sui-foreground-color-1-hsl: 210 5% 5%;
+  --sui-foreground-color-2-hsl: 210 5% 25%;
+  --sui-foreground-color-3-hsl: 210 5% 35%;
+  --sui-foreground-color-4-hsl: 210 5% 45%;
+  --sui-foreground-color-5-hsl: 210 5% 65%;
+  --sui-background-color-1-hsl: 210 5% 100%;
+  --sui-background-color-2-hsl: 210 5% 98%;
+  --sui-background-color-3-hsl: 210 5% 95%;
+  --sui-background-color-4-hsl: 210 5% 92%;
+  --sui-background-color-5-hsl: 210 5% 84%;
+  --sui-border-color-1-hsl: 210 5% 60%;
+  --sui-border-color-2-hsl: 210 5% 86%;
+  --sui-border-color-3-hsl: 210 5% 90%;
+  --sui-shadow-color: 210 10% 0%;
+  --sui-primary-accent-color-text: hsl(230 88% 50%);
+  --sui-primary-accent-color-light: hsl(230 88% 60%);
+  --sui-primary-accent-color: hsl(230 88% 54%);
+  --sui-primary-accent-color-dark: hsl(230 88% 46%);
+  --sui-primary-accent-color-inverted: hsl(0 0% 100%);
+  --sui-primary-accent-color-translucent: hsl(230 88% 54% / 60%);
+  --sui-primary-accent-color-translucent-light: hsl(230 88% 54% / 40%);
+  --sui-error-color-hue: 0;
+  --sui-warning-color-hue: 40;
+  --sui-info-color-hue: 210;
+  --sui-success-color-hue: 100;
+  --sui-alert-foreground-color-saturation: 85%;
+  --sui-alert-foreground-color-lightness: 25%;
+  --sui-alert-background-color-saturation: 65%;
+  --sui-alert-background-color-lightness: 90%;
+  --sui-alert-border-color-saturation: 48%;
+  --sui-alert-border-color-lightness: 68%;
+        --sui-control-medium-border-radius: 10px;
+        --sui-button-medium-border-radius: 10px;
+        --sui-button-large-border-radius: 12px;
+        --sui-textbox-border-radius: 10px;
+        --sui-option-border-radius: 10px;
+        --sui-listbox-border-radius: 12px;
+        --sui-tree-item-border-radius: 12px;
+        color-scheme: light;
+      }
+
+      /* Barre latérale : bleu plein, coins droits arrondis, section active en
+         blanc (comme l'onglet « Order » de la maquette de référence). */
+      .sui.app-shell nav.primary-sidebar {
+        background: var(--sui-primary-accent-color);
+        color: #fff;
+        padding: 20px 10px 24px;
+        border-radius: 0 28px 28px 0;
+        border-right: none;
+      }
+      .sui.app-shell nav.primary-sidebar .tree {
+        margin-inline: 0;
+        padding-inline: 0;
+      }
+      .sui.app-shell nav.primary-sidebar .option-group > .label {
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 8px 10px 6px;
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem > .row {
+        color: #fff;
+        border-radius: 12px;
+        min-height: 44px;
+        padding-inline: 10px;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 4px;
+        background: transparent;
+      }
+      /* Espace réservé aux chevrons d'arborescence : inutile, les collections
+         n'ont pas de sous-niveaux, et il tronquait les libellés longs. */
+      .sui.app-shell nav.primary-sidebar .treeitem > .row .chevron.placeholder {
+        display: none;
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem > .row .icon {
+        color: rgba(255, 255, 255, 0.88);
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem:not([aria-selected='true']) > .row:hover {
+        background: rgba(255, 255, 255, 0.14);
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem[aria-selected='true'] > .row {
+        background: #fff;
+        color: var(--sui-primary-accent-color);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem[aria-selected='true'] > .row .icon {
+        color: var(--sui-primary-accent-color);
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem .count {
+        display: inline-grid;
+        place-items: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff !important; /* Sveltia force une couleur tertiaire sur le compteur */
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1;
+      }
+      .sui.app-shell nav.primary-sidebar .treeitem[aria-selected='true'] .count {
+        background: var(--sui-selected-background-color);
+        color: var(--sui-primary-accent-color) !important;
+      }
+      .sui.app-shell nav.primary-sidebar :focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      /* Zone de contenu : carte blanche arrondie sur fond bleu-gris clair. */
+      .sui.app-shell main.wrapper {
+        background: var(--sui-content-background-color);
+        border-radius: 24px;
+        margin: 8px 16px 16px 8px;
+        box-shadow: 0 10px 30px rgba(35, 64, 240, 0.06);
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <!-- Sveltia CMS n'est chargé que sur cette page : il n'entre jamais dans
-         le bundle du site public et n'affecte donc aucun budget de perf. -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+         le bundle du site public et n'affecte donc aucun budget de perf.
+         Version épinglée (voir le commentaire du <style> ci-dessus). -->
+    <script src="https://unpkg.com/@sveltia/cms@0.217.0/dist/sveltia-cms.js"></script>
   </body>
 </html>

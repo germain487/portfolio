@@ -1,10 +1,10 @@
 ---
+import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Contact from '../components/Contact.astro';
 
-const title = 'Contact — Germain Monemou — Développeur Fullstack · Conakry';
-const description =
-  'Un projet de SaaS, de site web ou de données à discuter ? Écrivez à Germain Monemou par email, WhatsApp ou via le formulaire — réponse sous 24 h.';
+const seoEntry = await getEntry('seo', 'seo');
+const { titre: title, description } = seoEntry!.data.contact;
 ---
 
 <Base title={title} description={description}>

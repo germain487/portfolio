@@ -75,7 +75,7 @@ portfolio/
 │           └── knowledge.generated.mjs  # généré par scripts/build-knowledge.mjs, jamais commité
 │                                         # (même dossier que chat.mjs : importé, pas exposé comme fonction à part)
 ├── public/
-│   ├── admin/              # Sveltia CMS (index.html + config.yml)
+│   ├── admin/              # Sveltia CMS (index.html avec thème + config.yml + logo.svg)
 │   ├── uploads/             # médias gérés depuis l'admin
 │   ├── og.jpg, favicon.svg
 ├── scripts/
@@ -83,8 +83,9 @@ portfolio/
 ├── src/
 │   ├── content/             # settings.json, hero.json, about.json, skills.json,
 │   │                         # services.json, contact.json, footer.json, sections.json,
-│   │                         # chatbot.json, projets/*.md
-│   ├── content.config.ts    # 10 collections + schémas Zod (garde-fous au build)
+│   │                         # chatbot.json, navigation.json, seo.json, interface.json,
+│   │                         # projets/*.md
+│   ├── content.config.ts    # 13 collections + schémas Zod (garde-fous au build)
 │   ├── layouts/Base.astro   # navbar + footer + curseur + préloader + SEO + <ClientRouter />
 │   ├── components/          # un composant par section + blocs condensés (FeaturedProjects,
 │   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor/ChatWidget…
@@ -130,7 +131,13 @@ Le contenu (fichiers dans `src/content/`) et le mécanisme de sauvegarde restent
 
 `monsite.com/admin` ouvre **Sveltia CMS**, un panneau d'administration Git-based : chaque sauvegarde crée un commit sur le dépôt GitHub, Netlify (ou le workflow cPanel) reconstruit automatiquement le site, la modification est en ligne en 1 à 2 minutes. Aucune base de données, aucun serveur à maintenir — le site reste 100 % statique et les scores de performance ne bougent pas (le CMS n'est chargé que sur `/admin`, jamais dans le bundle du site).
 
-Depuis `/admin`, on peut créer, modifier, réorganiser, masquer et supprimer : textes, rôles du hero, bio, statistiques, compétences, projets (CRUD complet avec brouillon), services, coordonnées, réseaux sociaux, CV, portrait, couvertures de projets, couleur d'accent et réglages SEO — sans jamais toucher au code.
+Depuis `/admin`, on peut créer, modifier, réorganiser, masquer et supprimer : textes, rôles du hero, bio, statistiques, compétences, projets (CRUD complet avec brouillon), services, coordonnées, réseaux sociaux, CV, portrait, couvertures de projets, couleur d'accent, réglages SEO de chaque page, liens du menu, libellés des boutons/liens/filtres/formulaire et textes de Louise — sans jamais toucher au code.
+
+### Apparence de l'administration
+
+L'interface reprend le format d'un tableau de bord classique : barre latérale bleue listant les sections (la section active en blanc), contenu en carte blanche arrondie, palette claire forcée quel que soit le mode sombre/clair du système. Sveltia CMS n'offrant officiellement que le logo (`logo.src`, `public/admin/logo.svg`) et le titre (`app_title`) comme options d'apparence, le reste est un thème CSS dans `public/admin/index.html` qui surcharge ses variables `--sui-*` et quelques éléments de structure (`nav.primary-sidebar`, `main.wrapper`).
+
+**Conséquence : la version de Sveltia CMS est épinglée** dans `public/admin/index.html` (`@sveltia/cms@0.217.0`). Pour la mettre à jour, changer le numéro de version, ouvrir `/admin` et vérifier que la barre latérale et la carte de contenu s'affichent toujours correctement (les noms de classes internes peuvent changer d'une version à l'autre). Sans thème, on pourrait revenir à l'URL non épinglée (`@sveltia/cms/dist/sveltia-cms.js`) pour suivre automatiquement les mises à jour.
 
 ### Mise en service (à faire une fois, par Germain)
 
@@ -158,24 +165,27 @@ C'est le moyen le plus rapide de vérifier une modification de champ ou de teste
 
 `monsite.com/admin` → connexion GitHub (un clic) → modification dans un formulaire en français → **Enregistrer** → commit automatique → rebuild → en ligne en 1 à 2 minutes. Tout est historisé dans Git : rien n'est jamais perdu, tout est réversible (historique/rollback via GitHub).
 
-### Couverture des 10 collections
+### Couverture des 13 collections
 
-Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints) :
+Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints). **Test de couverture (§7.3 du prompt maître)** : aucun texte, image ou réglage visible sur le site n'est codé en dur dans un composant — tout provient de l'une de ces collections. Seules exceptions, volontaires : les libellés d'accessibilité purement techniques (aria-labels de boutons d'icônes comme « Ouvrir le menu », « Fermer la discussion », « Envoyer », le champ anti-robot caché du formulaire), le « © année » généré automatiquement et le lien « Propulsé par Sveltia CMS » de l'écran de connexion de l'admin.
 
 | Collection | Fichier(s) | Champs |
 |---|---|---|
-| Réglages généraux | `settings.json` | identité, SEO, couleur d'accent, CV, réseaux sociaux… |
+| Réglages généraux | `settings.json` | identité, SEO de l'accueil, couleur d'accent (injectée au build : `--accent`, `--accent-soft`, halos et motif hexagonal en sont dérivés), CV, réseaux sociaux… |
 | Hero | `hero.json` | eyebrow, accroche (mise en forme), rôles de la machine à écrire, CTA, portrait |
 | À propos | `about.json` | titre, paragraphes (mise en forme), statistiques animées |
 | Compétences | `skills.json` | domaines (icône + titre en mise en forme + items) |
 | Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, mis en avant (accueil), description longue markdown (page de détail) |
 | Services | `services.json` | cartes (titre + phrase en mise en forme), CTA final |
-| Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur |
-| Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba |
-| Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil |
-| Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA, animation d'attention de la bulle, couleur de la bulle, icône de la bulle (emoji), infobulle d'invitation — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
+| Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur, intitulés des champs et du bouton, libellés des cartes email/WhatsApp/localisation |
+| Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba, titres des colonnes Navigation/Contact |
+| Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil, eyebrows (« // projets »…) de chaque section |
+| Navigation | `navigation.json` | liens du menu principal et du footer (libellé + page cible parmi les routes du site), réordonnables |
+| SEO des pages | `seo.json` | titre d'onglet et meta description de `/a-propos`, `/projets`, `/services`, `/contact` ; suffixe du titre des fiches projet |
+| Libellés d'interface | `interface.json` | projets (« Voir tous les projets → », « Découvrir », filtre « Tous », retour à la liste, « Voir le projet en ligne », précédent/suivant) et services (« Voir tous les services → ») |
+| Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA, animation d'attention de la bulle, couleur de la bulle, icône de la bulle (emoji), infobulle d'invitation, titre du panneau, texte d'invite du champ, message d'indisponibilité (partagé avec la fonction Netlify), libellé du bouton d'ouverture — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
 
-**Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec quatre champs — texte, alignement (gauche / centré / droite), police (limitée aux 3 familles déjà chargées sur le site — Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono — afin de préserver l'identité visuelle) et taille (de très petit à très grand, sur l'échelle Tailwind). Volontairement exclus : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton, les messages système et la mention de copyright du footer.
+**Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec quatre champs — texte, alignement (gauche / centré / droite), police (limitée aux 3 familles déjà chargées sur le site — Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono — afin de préserver l'identité visuelle) et taille (de très petit à très grand, sur l'échelle Tailwind). Volontairement exclus de la mise en forme (mais bien éditables en texte simple) : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton et de lien, les eyebrows, les messages système et la mention de copyright du footer.
 
 ---
 
@@ -249,7 +259,7 @@ Récapitulatif de tous les `[À COMPLÉTER]` du prompt maître. Tout est modifia
 |---|---|---|
 | Dépôt GitHub | `public/admin/config.yml` → `backend.repo` | ✅ `germain487/portfolio` (fait) |
 | Fournisseur OAuth GitHub | Netlify → Project configuration → Access & security → OAuth | à activer (§ Administration) |
-| URL du site | `astro.config.mjs` → `site` | `https://germain-portfolio.netlify.app` |
+| URL du site | `astro.config.mjs` → `site` **et** `public/admin/config.yml` → `site_url` / `display_url` (lien « voir le site » dans l'admin) | `https://germain-portfolio.netlify.app` |
 | Clé API Groq (Louise) | Netlify → Project configuration → Environment variables → `GROQ_API_KEY` | non renseignée (Louise répond avec son message de repli en attendant) |
 | Email de contact | Admin → Réglages généraux | ✅ `grmnmonemou@gmail.com` (fait) |
 | Numéro WhatsApp | Admin → Réglages généraux | ✅ `224613712573` (fait) |
