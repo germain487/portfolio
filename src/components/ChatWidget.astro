@@ -9,12 +9,24 @@ import Icon from './Icon.astro';
 
 const chatbotEntry = await getEntry('chatbot', 'chatbot');
 const chatbot = chatbotEntry?.data;
+
+const bulleStyle = (() => {
+  if (!chatbot) return '';
+  const hex = chatbot.couleurBulle;
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return [
+    `--bulle: ${hex}`,
+    `--bulle-glow: 0 0 24px rgba(${r}, ${g}, ${b}, 0.35)`,
+    `--bulle-glow-strong: 0 0 48px rgba(${r}, ${g}, ${b}, 0.45)`,
+  ].join('; ');
+})();
 ---
 
 {
   chatbot?.actif && (
     <div
       data-chat-widget
+      style={bulleStyle}
       data-chat-greeting={chatbot.messageAccueil}
       data-chat-offline="Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact."
       data-chat-animation={chatbot.animationAttention}
@@ -27,7 +39,7 @@ const chatbot = chatbotEntry?.data;
           viewBox="-2 -2 104 104"
           class="chat-radar fixed bottom-6 right-6 z-30 h-14 w-14"
         >
-          <polygon points="25,0 75,0 100,50 75,100 25,100 0,50" fill="none" stroke="var(--accent)" stroke-width="3" />
+          <polygon points="25,0 75,0 100,50 75,100 25,100 0,50" fill="none" stroke="var(--bulle)" stroke-width="3" />
         </svg>
       )}
 
@@ -41,7 +53,7 @@ const chatbot = chatbotEntry?.data;
         title="Ouvrir le chat avec Louise, assistante du site"
         class="chat-bubble fixed bottom-6 right-6 z-40 grid h-14 w-14 place-items-center text-bg"
       >
-        <span data-chat-icon-open class="grid place-items-center font-display text-xl font-bold">L</span>
+        <span data-chat-icon-open class="grid place-items-center text-2xl leading-none">{chatbot.iconeBulle}</span>
         <span data-chat-icon-close class="hidden place-items-center">
           <Icon name="x" size={20} />
         </span>
@@ -50,11 +62,20 @@ const chatbot = chatbotEntry?.data;
       {chatbot.badgeInvitationActif && (
         <div
           data-chat-badge
-          aria-hidden="true"
           hidden
-          class="chat-badge fixed bottom-24 right-6 z-40 max-w-[14rem] rounded-card border border-surface-2 bg-surface px-4 py-2.5 text-sm text-text"
+          class="chat-badge fixed bottom-24 right-6 z-40 flex max-w-[15rem] items-start gap-1 rounded-card border border-surface-2 bg-surface py-2 pl-4 pr-1.5 text-sm text-text"
         >
-          {chatbot.badgeInvitationTexte}
+          <button type="button" data-chat-badge-open class="py-0.5 text-left leading-snug">
+            {chatbot.badgeInvitationTexte}
+          </button>
+          <button
+            type="button"
+            data-chat-badge-close
+            aria-label="Fermer l’invitation"
+            class="grid h-6 w-6 shrink-0 place-items-center rounded-full text-text-muted transition-colors hover:text-text"
+          >
+            <Icon name="x" size={12} />
+          </button>
         </div>
       )}
 
@@ -69,24 +90,16 @@ const chatbot = chatbotEntry?.data;
       >
         <header class="flex items-center justify-between gap-3 border-b border-surface-2 px-5 py-4">
           <div class="flex items-center gap-3">
-            <span class="grid h-9 w-9 shrink-0 place-items-center" aria-hidden="true">
+            <span class="relative grid h-9 w-9 shrink-0 place-items-center" aria-hidden="true">
               <svg viewBox="0 0 100 100" class="h-full w-full">
                 <polygon
                   points="50,4 91,27 91,73 50,96 9,73 9,27"
                   fill="var(--surface-2)"
-                  stroke="var(--accent)"
+                  stroke="var(--bulle)"
                   stroke-width="5"
                 />
-                <text
-                  x="50"
-                  y="66"
-                  font-family="var(--font-display)"
-                  font-weight="700"
-                  font-size="42"
-                  fill="var(--accent)"
-                  text-anchor="middle">L</text
-                >
               </svg>
+              <span class="absolute inset-0 grid place-items-center text-base leading-none">{chatbot.iconeBulle}</span>
             </span>
             <div>
               <p id="louise-panel-title" class="font-display text-sm font-bold text-text">Louise · Guide du site</p>
@@ -151,8 +164,8 @@ const chatbot = chatbotEntry?.data;
      couper, donc pas de bulle figée en plein pic si un timer dérive. */
   .chat-bubble {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    background: var(--accent);
-    box-shadow: var(--glow);
+    background: var(--bulle);
+    box-shadow: var(--bulle-glow);
     opacity: 0;
     transform: scale(0.4);
     pointer-events: none;
@@ -167,7 +180,7 @@ const chatbot = chatbotEntry?.data;
   .chat-bubble:hover {
     animation-play-state: running, paused !important;
     transform: scale(1.05) !important;
-    box-shadow: var(--glow-strong) !important;
+    box-shadow: var(--bulle-glow-strong) !important;
   }
   @keyframes chat-bubble-enter {
     to {
@@ -181,23 +194,23 @@ const chatbot = chatbotEntry?.data;
   @keyframes chat-heartbeat {
     0%, 100% {
       transform: scale(1);
-      box-shadow: var(--glow);
+      box-shadow: var(--bulle-glow);
     }
     14% {
       transform: scale(1.12);
-      box-shadow: var(--glow-strong);
+      box-shadow: var(--bulle-glow-strong);
     }
     28% {
       transform: scale(1);
-      box-shadow: var(--glow);
+      box-shadow: var(--bulle-glow);
     }
     42% {
       transform: scale(1.14);
-      box-shadow: var(--glow-strong);
+      box-shadow: var(--bulle-glow-strong);
     }
     70% {
       transform: scale(1);
-      box-shadow: var(--glow);
+      box-shadow: var(--bulle-glow);
     }
   }
 
@@ -223,7 +236,8 @@ const chatbot = chatbotEntry?.data;
     }
   }
 
-  /* Badge d'invitation : indépendant du réglage d'animation ci-dessus. */
+  /* Infobulle d'invitation : indépendante du réglage d'animation ci-dessus.
+     Persistante jusqu'à ouverture ou fermeture explicite (scripts/motion.ts). */
   .chat-badge {
     opacity: 0;
     transform: translateY(8px);
@@ -233,6 +247,20 @@ const chatbot = chatbotEntry?.data;
   .chat-badge.is-visible {
     opacity: 1;
     transform: none;
+    pointer-events: auto;
+  }
+  /* Petite flèche vers la bulle, dans la continuité du bord de l'infobulle. */
+  .chat-badge::after {
+    content: '';
+    position: absolute;
+    right: 1.25rem;
+    bottom: -0.4rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: var(--surface);
+    border-right: 1px solid var(--surface-2);
+    border-bottom: 1px solid var(--surface-2);
+    transform: rotate(45deg);
   }
 
   .chat-panel {
@@ -262,8 +290,8 @@ const chatbot = chatbotEntry?.data;
        compacte collée à la bulle plutôt qu'un large bandeau qui recouvrirait
        davantage le contenu de la page en dessous. */
     .chat-badge {
-      max-width: 10rem;
-      padding: 0.5rem 0.75rem;
+      max-width: 12rem;
+      padding: 0.4rem 0.25rem 0.4rem 0.75rem;
       font-size: 0.75rem;
     }
   }
@@ -278,7 +306,7 @@ const chatbot = chatbotEntry?.data;
       opacity: 1;
       transform: none;
       animation: none;
-      box-shadow: var(--glow);
+      box-shadow: var(--bulle-glow);
       pointer-events: auto;
     }
     .chat-radar {

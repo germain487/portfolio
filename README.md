@@ -173,7 +173,7 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 | Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur |
 | Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba |
 | Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil |
-| Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA, animation d'attention de la bulle, badge d'invitation — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
+| Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA, animation d'attention de la bulle, couleur de la bulle, icône de la bulle (emoji), infobulle d'invitation — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
 
 **Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec quatre champs — texte, alignement (gauche / centré / droite), police (limitée aux 3 familles déjà chargées sur le site — Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono — afin de préserver l'identité visuelle) et taille (de très petit à très grand, sur l'échelle Tailwind). Volontairement exclus : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton, les messages système et la mention de copyright du footer.
 
@@ -217,7 +217,7 @@ Nécessite `GROQ_API_KEY` dans un fichier `.env` local (non commité, voir `.git
 
 ### Administration
 
-Collection **Louise (chatbot IA)** dans `/admin` (`src/content/chatbot.json`) : activer/désactiver la bulle, message d'accueil, jusqu'à 3 questions suggérées, mention IA affichée dans l'en-tête du panneau, **animation d'attention de la bulle** (battement de cœur seul / battement + onde radar / aucune) et **badge d'invitation** (activer/désactiver + texte). Le reste de la base de connaissances (bio, projets, services, contact) n'est pas dupliqué ici — il est déjà éditable depuis les autres collections et se synchronise automatiquement.
+Collection **Louise (chatbot IA)** dans `/admin` (`src/content/chatbot.json`) : activer/désactiver la bulle, message d'accueil, jusqu'à 3 questions suggérées, mention IA affichée dans l'en-tête du panneau, **animation d'attention de la bulle** (battement de cœur seul / battement + onde radar / aucune), **couleur de la bulle** (fond, halo, onde radar et monogramme du panneau — indépendante de l'accent du site, glows dérivés automatiquement), **icône de la bulle** (un emoji, ex. 👩 ou 👩🏾, ou une lettre — affiché dans la bulle et dans l'en-tête du panneau) et **infobulle d'invitation** (activer/désactiver + texte). Le reste de la base de connaissances (bio, projets, services, contact) n'est pas dupliqué ici — il est déjà éditable depuis les autres collections et se synchronise automatiquement.
 
 ### Animation d'attention sur la bulle
 
@@ -227,7 +227,7 @@ Pour attirer l'œil à l'arrivée sur le site sans devenir agaçante, la bulle d
 - **Coupure définitive par session** : dès que le visiteur ouvre le chat une première fois, le battement s'arrête pour toute la session (`sessionStorage`) — la bulle reste sobre ensuite, y compris après un rechargement de page. Un nouvel onglet en navigation privée repart avec le battement.
 - **Survol** : interrompt le battement, laisse place au glow renforcé existant.
 - **`prefers-reduced-motion`** : aucun battement, jamais — la bulle reste statique avec son glow, immédiatement visible.
-- **Badge d'invitation** (indépendant, sa propre case à cocher dans `/admin`) : après 6 s sans ouverture du chat, une pastille de texte apparaît au-dessus de la bulle, puis disparaît seule après 6 s ou dès l'ouverture du chat.
+- **Infobulle d'invitation** (indépendante, sa propre case à cocher dans `/admin`) : après 6 s sans ouverture du chat, une infobulle apparaît au-dessus de la bulle avec une petite flèche vers celle-ci. Elle reste affichée et ouvre le chat au clic ; elle disparaît dès l'ouverture de Louise ou si le visiteur la ferme (croix) — dans les deux cas, plus jamais pour la session (`sessionStorage`), et le battement s'arrête aussi.
 - Implémentation en CSS pur (`@keyframes`, propriétés `transform`/`box-shadow` uniquement, `will-change: transform`) : chaque salve est une animation à 3 itérations que la CSS arrête d'elle-même en fin de cycle ; le JS ne fait que poser la classe de salve, attendre `animationend` pour programmer la pause (`setTimeout`) et lire/écrire `sessionStorage` — sans impact sur le score Lighthouse.
 
 ---

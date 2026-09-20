@@ -530,6 +530,7 @@ export function initChatWidget() {
 }
 
 const CHAT_SEEN_KEY = 'portfolio-louise-seen';
+const CHAT_SEEN_EVENT = 'louise:seen';
 
 /**
  * Animation d'attention sur la bulle de Louise (battement de cœur ± onde
@@ -548,7 +549,12 @@ export function initChatAttention() {
   const alreadySeen = sessionStorage.getItem(CHAT_SEEN_KEY) === '1';
   if (alreadySeen) return;
 
-  const markSeen = () => sessionStorage.setItem(CHAT_SEEN_KEY, '1');
+  // « Vu » = ouverture du chat ou fermeture explicite de l'infobulle : un seul
+  // événement interne, écouté par le battement et l'infobulle pour s'arrêter.
+  const markSeen = () => {
+    sessionStorage.setItem(CHAT_SEEN_KEY, '1');
+    root.dispatchEvent(new Event(CHAT_SEEN_EVENT));
+  };
   bubble.addEventListener('click', markSeen, { once: true });
 
   const animationMode = root.dataset.chatAnimation;
@@ -556,7 +562,7 @@ export function initChatAttention() {
     initChatHeartbeat(root, bubble);
   }
 
-  initChatInviteBadge(root, bubble);
+  initChatInviteBadge(root, bubble, markSeen);
 }
 
 /**
@@ -593,8 +599,8 @@ function initChatHeartbeat(root: HTMLElement, bubble: HTMLElement) {
   bubble.addEventListener('animationend', onBurstEnd);
   timeoutId = window.setTimeout(burst, START_DELAY);
 
-  bubble.addEventListener(
-    'click',
+  root.addEventListener(
+    CHAT_SEEN_EVENT,
     () => {
       window.clearTimeout(timeoutId);
       bubble.removeEventListener('animationend', onBurstEnd);
@@ -604,12 +610,17 @@ function initChatHeartbeat(root: HTMLElement, bubble: HTMLElement) {
   );
 }
 
-/** Pastille de texte au-dessus de la bulle après 6 s sans ouverture du chat. */
-function initChatInviteBadge(root: HTMLElement, bubble: HTMLElement) {
+/**
+ * Infobulle d'invitation au-dessus de la bulle après 6 s sans ouverture du
+ * chat. Persistante : elle reste affichée (et ouvre le chat au clic) jusqu'à
+ * ce que le visiteur ouvre Louise ou la ferme explicitement — les deux
+ * comptent comme « vu » pour la session.
+ */
+function initChatInviteBadge(root: HTMLElement, bubble: HTMLElement, markSeen: () => void) {
   const badge = root.querySelector<HTMLElement>('[data-chat-badge]');
   if (!badge) return;
 
-  let hideTimeoutId: number | undefined;
+  const SHOW_DELAY = 6000;
 
   const hide = () => {
     badge.classList.remove('is-visible');
@@ -621,16 +632,26 @@ function initChatInviteBadge(root: HTMLElement, bubble: HTMLElement) {
   const showTimeoutId = window.setTimeout(() => {
     badge.hidden = false;
     requestAnimationFrame(() => badge.classList.add('is-visible'));
-    hideTimeoutId = window.setTimeout(hide, 6000);
-  }, 6000);
+  }, SHOW_DELAY);
 
-  bubble.addEventListener(
-    'click',
-    () => {
-      window.clearTimeout(showTimeoutId);
-      window.clearTimeout(hideTimeoutId);
-      hide();
-    },
-    { once: true }
-  );
+  badge.querySelector('[data-chat-badge-open]')?.addEventListener('click', () => bubble.click());
+  badge.querySelector('[data-chat-badge-close]')?.addEventListener('click', markSeen);
+
+  // Un visiteur qui entre dans un champ de formulaire (contact…) est déjà
+  // engagé : l'infobulle s'efface pour ne pas recouvrir ses champs sur mobile,
+  // sans compter comme « vu » — elle reviendra à une prochaine visite.
+  const onFormFocus = (e: FocusEvent) => {
+    const el = e.target;
+    if (!(el instanceof Element) || el.closest('[data-chat-widget]') || !el.matches('input, textarea, select')) return;
+    dismiss();
+  };
+
+  const dismiss = () => {
+    window.clearTimeout(showTimeoutId);
+    document.removeEventListener('focusin', onFormFocus);
+    hide();
+  };
+
+  document.addEventListener('focusin', onFormFocus);
+  root.addEventListener(CHAT_SEEN_EVENT, dismiss, { once: true });
 }

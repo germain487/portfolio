@@ -282,8 +282,10 @@ collections:
               - { label: "Battement de cœur seul", value: heartbeat }
               - { label: "Battement de cœur + onde radar (recommandé)", value: heartbeat_radar }
               - { label: "Aucune", value: aucune }
-          - { label: "Activer le badge d'invitation", name: badgeInvitationActif, widget: boolean, default: true, hint: "Une petite pastille de texte apparaît au-dessus de la bulle après 6 secondes si le chat n'a pas encore été ouvert, puis disparaît seule." }
-          - { label: "Texte du badge d'invitation", name: badgeInvitationTexte, widget: string, default: "Une question ? Je suis Louise 👋", hint: "Court — c'est une pastille, pas une phrase." }
+          - { label: "Couleur de la bulle", name: couleurBulle, widget: color, default: "#FF3B3B", hint: "Fond de la bulle, son halo lumineux, l'onde radar et le monogramme « L » du panneau. Indépendante de la couleur d'accent du site." }
+          - { label: "Icône de la bulle", name: iconeBulle, widget: string, default: "👩", hint: "Un emoji (ex. 👩, 👩🏾, 🙋🏾‍♀️) ou une simple lettre — affiché dans la bulle et dans l'en-tête du panneau." }
+          - { label: "Activer l'infobulle d'invitation", name: badgeInvitationActif, widget: boolean, default: true, hint: "Une infobulle apparaît au-dessus de la bulle après 6 secondes si le chat n'a pas encore été ouvert. Elle reste affichée (et ouvre le chat au clic) jusqu'à ce que le visiteur ouvre Louise ou la ferme — puis plus jamais pour la session." }
+          - { label: "Texte de l'infobulle d'invitation", name: badgeInvitationTexte, widget: string, default: "Une question ? Je suis Louise, discutons 👋", hint: "Court — deux lignes maximum, c'est une infobulle, pas un paragraphe." }
 
   - name: sections
     label: "Titres de section"

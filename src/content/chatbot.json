@@ -8,6 +8,8 @@
   ],
   "mentionIA": "IA — réponses indicatives",
   "animationAttention": "heartbeat_radar",
+  "couleurBulle": "#FF3B3B",
+  "iconeBulle": "👩",
   "badgeInvitationActif": true,
-  "badgeInvitationTexte": "Une question ? Je suis Louise 👋"
+  "badgeInvitationTexte": "Une question ? Je suis Louise, discutons 👋"
 }

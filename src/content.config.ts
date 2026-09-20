@@ -169,8 +169,14 @@ const chatbot = defineCollection({
     // purement décorative, se coupe définitivement pour la session dès la
     // première ouverture du chat (sessionStorage, voir scripts/motion.ts).
     animationAttention: z.enum(['heartbeat', 'heartbeat_radar', 'aucune']).default('heartbeat_radar'),
+    // Couleur propre à la bulle (fond, halo, onde radar, monogramme du panneau),
+    // indépendante de l'accent du site : glows dérivés au build (ChatWidget.astro).
+    couleurBulle: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#FF3B3B'),
+    // Emoji (ou lettre) affiché dans la bulle et l'en-tête du panneau — max
+    // en unités UTF-16, une séquence emoji avec carnation + ZWJ en compte ~7.
+    iconeBulle: z.string().trim().min(1).max(16).default('👩'),
     badgeInvitationActif: z.boolean().default(true),
-    badgeInvitationTexte: z.string().default('Une question ? Je suis Louise 👋'),
+    badgeInvitationTexte: z.string().default('Une question ? Je suis Louise, discutons 👋'),
   }),
 });
 
