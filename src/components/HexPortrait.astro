@@ -13,7 +13,7 @@ const { src, alt = 'Portrait' } = Astro.props;
 >
   <div class="portrait-halo pointer-events-none absolute -inset-6 -z-10" aria-hidden="true"></div>
 
-  <div class="hex-clip relative h-full w-full overflow-hidden">
+  <div class="portrait-clip relative h-full w-full overflow-hidden">
     {src ? (
       <img
         src={src}
@@ -38,28 +38,14 @@ const { src, alt = 'Portrait' } = Astro.props;
       </svg>
     )}
   </div>
-
-  <svg
-    class="pointer-events-none absolute inset-0 h-full w-full"
-    viewBox="0 0 100 100"
-    aria-hidden="true"
-  >
-    <polygon
-      points="50,1 92,25 92,75 50,99 8,75 8,25"
-      fill="none"
-      stroke="var(--accent)"
-      stroke-width="1.4"
-      opacity="0.9"
-    />
-  </svg>
 </div>
 
 <style>
   .portrait-tilt {
     transform-style: preserve-3d;
   }
-  .hex-clip {
-    clip-path: polygon(50% 0%, 92% 25%, 92% 75%, 50% 100%, 8% 75%, 8% 25%);
+  .portrait-clip {
+    clip-path: circle(50%);
   }
   .portrait-halo {
     background: radial-gradient(circle, var(--accent) 0%, var(--accent-soft) 35%, transparent 72%);
