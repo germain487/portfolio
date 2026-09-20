@@ -15,7 +15,7 @@ backend:
 # directement sur le disque local, sans authentification GitHub — pratique
 # pour tester l'admin pendant le développement (README § Administration).
 
-# Habillage de l'interface d'administration (voir aussi public/admin/index.html
+# Habillage de l'interface d'administration (voir aussi src/pages/admin.astro
 # pour le thème : barre latérale colorée, contenu clair).
 app_title: "Portfolio · Administration"
 logo:
@@ -277,11 +277,11 @@ collections:
   - name: chatbot
     label: "Louise (chatbot IA)"
     icon: chat
+    description: "Base de connaissances synchronisée automatiquement avec les autres collections (à-propos, projets, services, contact) — rien à dupliquer ici."
     files:
       - name: chatbot
         label: "Louise (chatbot IA)"
         file: src/content/chatbot.json
-        description: "Base de connaissances synchronisée automatiquement avec les autres collections (à-propos, projets, services, contact) — rien à dupliquer ici."
         fields:
           - { label: "Activer Louise", name: actif, widget: boolean, default: true, hint: "Désactive la bulle de chat sur tout le site sans supprimer sa configuration." }
           - { label: "Message d'accueil", name: messageAccueil, widget: text, hint: "Premier message affiché à l'ouverture du panneau de discussion." }
@@ -313,11 +313,11 @@ collections:
   - name: navigation
     label: Navigation
     icon: menu
+    description: "Liens du menu principal (navbar et menu mobile) et de la colonne Navigation du pied de page. Réordonnables par glisser-déposer."
     files:
       - name: navigation
         label: Navigation
         file: src/content/navigation.json
-        description: "Liens du menu principal (navbar et menu mobile) et de la colonne Navigation du pied de page. Réordonnables par glisser-déposer."
         fields:
           - label: Liens
             name: liens
@@ -338,11 +338,11 @@ collections:
   - name: seo
     label: "SEO des pages"
     icon: travel_explore
+    description: "Titre d'onglet du navigateur et description pour les moteurs de recherche, page par page. L'accueil utilise le titre SEO et la meta description des Réglages généraux."
     files:
       - name: seo
         label: "SEO des pages"
         file: src/content/seo.json
-        description: "Titre d'onglet du navigateur et description pour les moteurs de recherche, page par page. L'accueil utilise le titre SEO et la meta description des Réglages généraux."
         fields:
           - { label: "À propos", name: aPropos, widget: object, fields: &seoPage [ { label: "Titre", name: titre, widget: string }, { label: "Description", name: description, widget: text, hint: "180 caractères maximum." } ] }
           - { label: "Projets", name: projets, widget: object, fields: *seoPage }
@@ -353,11 +353,11 @@ collections:
   - name: interface
     label: "Libellés d'interface"
     icon: label
+    description: "Petits textes de liens et de boutons : projets (filtres, cartes, fiche) et services."
     files:
       - name: interface
         label: "Libellés d'interface"
         file: src/content/interface.json
-        description: "Petits textes de liens et de boutons : projets (filtres, cartes, fiche) et services."
         fields:
           - label: Projets
             name: projets
@@ -379,11 +379,11 @@ collections:
   - name: sections
     label: "Titres de section"
     icon: title
+    description: "Titres affichés en tête de section — Compétences, Projets et Services (repris à la fois sur leur page complète et sur l'aperçu de l'accueil), et le bandeau Contact de l'accueil."
     files:
       - name: sections
         label: "Titres de section"
         file: src/content/sections.json
-        description: "Titres affichés en tête de section — Compétences, Projets et Services (repris à la fois sur leur page complète et sur l'aperçu de l'accueil), et le bandeau Contact de l'accueil."
         fields:
           - { label: "Titre — Compétences", name: skillsTitre, widget: object, fields: *texteMiseEnForme }
           - { label: "Titre — Projets", name: projetsTitre, widget: object, hint: "Utilisé sur /projets et sur l'aperçu « projets mis en avant » de l'accueil.", fields: *texteMiseEnForme }

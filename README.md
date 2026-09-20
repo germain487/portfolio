@@ -75,7 +75,7 @@ portfolio/
 │           └── knowledge.generated.mjs  # généré par scripts/build-knowledge.mjs, jamais commité
 │                                         # (même dossier que chat.mjs : importé, pas exposé comme fonction à part)
 ├── public/
-│   ├── admin/              # Sveltia CMS (index.html avec thème + config.yml + logo.svg)
+│   ├── admin/              # Sveltia CMS : config.yml + logo.svg (la page /admin est src/pages/admin.astro)
 │   ├── uploads/             # médias gérés depuis l'admin
 │   ├── og.jpg, favicon.svg
 ├── scripts/
@@ -95,6 +95,7 @@ portfolio/
 │   │   └── bootstrap.ts     # point d'entrée unique, ré-exécuté à chaque astro:page-load
 │   └── pages/
 │       ├── index.astro · a-propos.astro · services.astro · contact.astro
+│       ├── admin.astro          # page /admin (Sveltia CMS + thème), hors sitemap, noindex
 │       └── projets/index.astro · projets/[slug].astro
 ├── .github/workflows/deploy-cpanel.yml   # variante cPanel (désactivée par défaut)
 ├── netlify.toml
@@ -135,9 +136,9 @@ Depuis `/admin`, on peut créer, modifier, réorganiser, masquer et supprimer : 
 
 ### Apparence de l'administration
 
-L'interface reprend le format d'un tableau de bord classique : barre latérale bleue listant les sections (la section active en blanc), contenu en carte blanche arrondie, palette claire forcée quel que soit le mode sombre/clair du système. Sveltia CMS n'offrant officiellement que le logo (`logo.src`, `public/admin/logo.svg`) et le titre (`app_title`) comme options d'apparence, le reste est un thème CSS dans `public/admin/index.html` qui surcharge ses variables `--sui-*` et quelques éléments de structure (`nav.primary-sidebar`, `main.wrapper`).
+L'interface reprend le format d'un tableau de bord classique : barre latérale bleue listant les sections (la section active en blanc), contenu en carte blanche arrondie, palette claire forcée quel que soit le mode sombre/clair du système. Sveltia CMS n'offrant officiellement que le logo (`logo.src`, `public/admin/logo.svg`) et le titre (`app_title`) comme options d'apparence, le reste est un thème CSS dans `src/pages/admin.astro` qui surcharge ses variables `--sui-*` et quelques éléments de structure (`nav.primary-sidebar`, `main.wrapper`).
 
-**Conséquence : la version de Sveltia CMS est épinglée** dans `public/admin/index.html` (`@sveltia/cms@0.217.0`). Pour la mettre à jour, changer le numéro de version, ouvrir `/admin` et vérifier que la barre latérale et la carte de contenu s'affichent toujours correctement (les noms de classes internes peuvent changer d'une version à l'autre). Sans thème, on pourrait revenir à l'URL non épinglée (`@sveltia/cms/dist/sveltia-cms.js`) pour suivre automatiquement les mises à jour.
+**Conséquence : la version de Sveltia CMS est épinglée** dans `src/pages/admin.astro` (`@sveltia/cms@0.217.0`). Pour la mettre à jour, changer le numéro de version, ouvrir `/admin` et vérifier que la barre latérale et la carte de contenu s'affichent toujours correctement (les noms de classes internes peuvent changer d'une version à l'autre). Sans thème, on pourrait revenir à l'URL non épinglée (`@sveltia/cms/dist/sveltia-cms.js`) pour suivre automatiquement les mises à jour.
 
 ### Mise en service (à faire une fois, par Germain)
 

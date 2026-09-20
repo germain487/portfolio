@@ -1,4 +1,12 @@
-<!doctype html>
+---
+// Page d'administration (Sveltia CMS) en route Astro plutôt qu'en fichier
+// statique public/admin/index.html : avec trailingSlash « never », le serveur
+// de dev ne résout pas /admin vers un index.html du dossier public (404), alors
+// qu'une route répond à /admin en dev comme en production. Hors sitemap
+// (astro.config.mjs) et en noindex. La configuration et le logo restent dans
+// public/admin/ (chargés par le CMS via /admin/config.yml et /admin/logo.svg).
+---
+
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
@@ -6,7 +14,7 @@
     <title>Administration — Germain</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/admin/logo.svg" />
-    <style>
+    <style is:global>
       /* Thème de l'administration — barre latérale bleue, contenu clair en
          carte arrondie, à la manière d'un tableau de bord. Sveltia CMS ne
          propose pas d'API de thème : on surcharge ses variables --sui-* et
@@ -197,7 +205,7 @@
   <body>
     <!-- Sveltia CMS n'est chargé que sur cette page : il n'entre jamais dans
          le bundle du site public et n'affecte donc aucun budget de perf.
-         Version épinglée (voir le commentaire du <style> ci-dessus). -->
-    <script src="https://unpkg.com/@sveltia/cms@0.217.0/dist/sveltia-cms.js"></script>
+         Version épinglée (voir le commentaire du <style is:global> ci-dessus). -->
+    <script is:inline src="https://unpkg.com/@sveltia/cms@0.217.0/dist/sveltia-cms.js"></script>
   </body>
 </html>
