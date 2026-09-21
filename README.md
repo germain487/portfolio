@@ -156,9 +156,12 @@ Une fois ces étapes faites : ouvrir `monsite.com/admin`, cliquer **Sign In with
 Sveltia CMS propose un mode **« Work with Local Repository »**, visible directement sur l'écran de connexion de `/admin` (nécessite un navigateur à base de Chromium — Chrome, Edge — pour la File System Access API) :
 
 1. Lancer `npm run dev`.
-2. Ouvrir `http://localhost:4321/admin`.
-3. Cliquer **Work with Local Repository**, puis sélectionner le dossier racine du projet dans la fenêtre native qui s'ouvre.
-4. Modifier un champ, enregistrer : le fichier JSON/Markdown correspondant est réécrit directement sur le disque, sans authentification ni commit Git. Un rechargement de `localhost:4321` (le serveur de dev regénère les pages via son *content watcher*) reflète le changement.
+2. Ouvrir `http://localhost:4321/admin` dans **Chrome ou Edge** (Safari et Firefox n'ont pas l'API nécessaire ; Brave la désactive par défaut).
+3. Cliquer **Travailler avec un dépôt local**. Dans la fenêtre macOS qui s'ouvre, **sélectionner le dossier du projet lui-même** (`Portfolio`, celui qui contient `.git`) — cliquer une fois dessus pour le surligner puis « Ouvrir », ou entrer dedans puis « Ouvrir ». Ne pas valider depuis le dossier parent (`Téléchargements`) : Chrome le refuse comme dossier protégé.
+4. Chrome demande alors « Autoriser localhost:4321 à consulter les fichiers ? » → **Afficher les fichiers**. À la première sauvegarde, il demande aussi l'autorisation de **modifier** les fichiers → autoriser.
+5. Modifier un champ, enregistrer : le fichier JSON/Markdown correspondant est réécrit directement sur le disque, sans authentification ni commit Git. Un rechargement de `localhost:4321` (le serveur de dev regénère les pages via son *content watcher*) reflète le changement.
+
+Si l'écran affiche **« Impossible de sélectionner un répertoire racine de dépôt »**, c'est que le sélecteur s'est fermé sans dossier valide (annulation, dossier `Téléchargements` refusé, ou prompt d'accès aux fichiers refusé) : recommencer l'étape 3 en sélectionnant bien `Portfolio`. Vérifier aussi que `chrome://settings/content/filesystem` est sur « Les sites peuvent demander… » et que, pour `localhost:4321` (icône à gauche de l'adresse → Paramètres du site), « Modification de fichiers » n'est pas bloquée. Le message « Le dossier sélectionné n'est pas la racine d'un dépôt » signifie, lui, que le dossier choisi ne contient pas `.git`.
 
 C'est le moyen le plus rapide de vérifier une modification de champ ou de tester l'ajout/la réorganisation/la mise en brouillon/la suppression d'un projet avant de pousser une vraie configuration GitHub.
 
