@@ -1,0 +1,20 @@
+<!-- Glyphe WhatsApp absent de lucide-static (jeu d'icônes sans marques) :
+     composé ici dans le même style de trait — bulle de message-circle, et
+     combiné de phone réduit et recentré à l'intérieur. -->
+<svg
+  class="lucide lucide-whatsapp"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+  <g transform="translate(8.1 7.5) scale(0.355)">
+    <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" stroke-width="5.6" />
+  </g>
+</svg>

@@ -44,15 +44,15 @@ collections:
           - { label: "Email de contact", name: email, widget: string }
           - { label: "Numéro WhatsApp", name: whatsapp, widget: string, hint: "Format international sans + ni espaces, ex : 224600000000" }
           - { label: "Localisation", name: localisation, widget: string }
-          - { label: "Disponible pour de nouveaux projets ?", name: disponible, widget: boolean, default: true }
-          - { label: "Texte du badge de disponibilité", name: badgeTexte, widget: string, hint: "Affiché dans le hero si « Disponible » est activé." }
+          - { label: "Disponible pour de nouveaux projets ?", name: disponible, widget: boolean, default: true, hint: "N'apparaît plus sur le site : sert à Louise, qui répond sur cette base quand un visiteur l'interroge sur la disponibilité." }
+          - { label: "Texte de disponibilité", name: badgeTexte, widget: string, hint: "Repris tel quel par Louise lorsqu'elle annonce la disponibilité de Germain." }
           - { label: "CV (PDF)", name: cv, widget: file, required: false, hint: "Téléchargé via le bouton « Télécharger mon CV » du hero." }
           - label: "Réseaux sociaux"
             name: reseaux
             widget: list
-            hint: "Réordonnables par glisser-déposer."
+            hint: "Réordonnables par glisser-déposer. L'icône WhatsApp est ajoutée automatiquement en fin de rangée à partir du numéro ci-dessus — inutile de l'ajouter ici."
             fields:
-              - { label: "Plateforme", name: plateforme, widget: select, options: ["LinkedIn", "GitHub", "X", "Facebook"] }
+              - { label: "Plateforme", name: plateforme, widget: select, options: ["LinkedIn", "GitHub", "Facebook"] }
               - { label: "URL", name: url, widget: string }
 
   - name: hero

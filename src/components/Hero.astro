@@ -13,9 +13,20 @@ const hero = heroEntry!.data;
 const socialIconMap: Record<string, string> = {
   LinkedIn: 'linkedin',
   GitHub: 'github',
-  X: 'twitter',
   Facebook: 'facebook',
 };
+
+// WhatsApp n'est pas dans la liste des réseaux : son lien est dérivé du
+// numéro des réglages généraux, seule source de vérité — sinon le numéro
+// vivrait à deux endroits et l'un des deux finirait périmé.
+const socials = [
+  ...settings.reseaux.map((reseau) => ({
+    label: reseau.plateforme,
+    href: reseau.url,
+    icone: socialIconMap[reseau.plateforme] ?? 'globe',
+  })),
+  { label: 'WhatsApp', href: `https://wa.me/${settings.whatsapp}`, icone: 'whatsapp' },
+];
 ---
 
 <section
@@ -65,16 +76,6 @@ const socialIconMap: Record<string, string> = {
         {hero.accroche.texte}
       </StyledText>
 
-      {settings.disponible && (
-        <div class="mt-6 inline-flex items-center gap-2 rounded-pill border border-surface-2 px-4 py-2 font-mono text-xs text-text-muted">
-          <span class="relative flex h-2 w-2">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
-          </span>
-          {settings.badgeTexte}
-        </div>
-      )}
-
       <div data-hero-cta class="mt-8 flex flex-wrap items-center gap-4">
         {settings.cv && (
           <MagneticButton href={settings.cv} download variant="primary">
@@ -87,16 +88,16 @@ const socialIconMap: Record<string, string> = {
         </MagneticButton>
       </div>
 
-      <div class="mt-10 flex items-center gap-3">
-        {settings.reseaux.map((reseau) => (
+      <div class="mt-16 flex items-center gap-3">
+        {socials.map((social) => (
           <a
-            href={reseau.url}
+            href={social.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={reseau.plateforme}
+            aria-label={social.label}
             class="grid h-10 w-10 place-items-center rounded-full border border-surface-2 text-text-muted transition-all duration-300 hover:border-accent hover:bg-accent hover:text-bg hover:shadow-[var(--glow)]"
           >
-            <Icon name={socialIconMap[reseau.plateforme] ?? 'globe'} size={17} />
+            <Icon name={social.icone} size={17} />
           </a>
         ))}
       </div>
