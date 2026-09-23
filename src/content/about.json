@@ -9,7 +9,7 @@
     {
       "texte": "Développeur fullstack basé à Conakry, je conçois des produits web qui tiennent compte du terrain : connexions instables, usage massivement mobile, paiements par Mobile Money.",
       "alignement": "gauche",
-      "police": "sans",
+      "police": "display",
       "taille": "base"
     },
     {
@@ -26,9 +26,25 @@
     }
   ],
   "stats": [
-    { "valeur": 4, "suffixe": "+", "label": "années d'expérience" },
-    { "valeur": 15, "suffixe": "+", "label": "projets livrés" },
-    { "valeur": 2, "suffixe": "", "label": "SaaS EdTech conçus" },
-    { "valeur": 1869, "suffixe": "", "label": "OSC cartographiées" }
+    {
+      "valeur": 4,
+      "suffixe": "+",
+      "label": "années d'expérience"
+    },
+    {
+      "valeur": 15,
+      "suffixe": "+",
+      "label": "projets livrés"
+    },
+    {
+      "valeur": 2,
+      "suffixe": "",
+      "label": "SaaS EdTech conçus"
+    },
+    {
+      "valeur": 1869,
+      "suffixe": "",
+      "label": "OSC cartographiées"
+    }
   ]
 }
