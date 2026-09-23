@@ -56,12 +56,14 @@ npm run dev:functions  # astro + fonctions Netlify (dont /api de Louise) en loca
 
 | Route | Contenu |
 |---|---|
-| `/` | Hero seul — projets, services et contact ont chacun leur page, atteignable par la navigation |
+| `/` | Hero seul, tenant dans l'écran sans défilement sur grand écran — projets, services et contact ont chacun leur page, atteignable par la navigation |
 | `/a-propos` | Bio complète, statistiques à compteurs animés, compétences + bandeau technologies |
 | `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
 | `/projets/[slug]` | Détail d'un projet : description longue, stack, lien live, navigation précédent/suivant |
 | `/services` | Les 4 services détaillés + CTA contact |
 | `/contact` | Formulaire Netlify + WhatsApp + coordonnées |
+
+Le `body` est une colonne flex (`min-height: 100svh`) : le pied de page se cale toujours en bas, même sur une page courte. L'accueil s'appuie dessus pour **tenir dans l'écran sans défilement au-delà de 1024×760 px** — le hero occupe la place laissée par le pied de page et le portrait se plafonne à la hauteur disponible plutôt que de déborder. En deçà de 760 px de haut, le défilement normal revient : la colonne de texte n'y rentre pas, et mieux vaut défiler que tout comprimer.
 
 Navbar et footer sont communs à toutes les pages (rendus depuis `Base.astro`) ; le lien actif de la navbar suit la page courante. Les transitions entre pages sont gérées par `<ClientRouter />` (View Transitions natives d'Astro) : navbar, curseur personnalisé et défilement fluide (Lenis) restent continus d'une page à l'autre, tandis que le hero, les compteurs, les filtres et le formulaire sont ré-initialisés à chaque navigation (`scripts/bootstrap.ts`, sur l'événement `astro:page-load`). Le préloader ne s'affiche qu'à la toute première visite de la session.
 

@@ -52,10 +52,20 @@
   }
 
   body {
+    /* Colonne flex : le pied de page se cale en bas et le contenu occupe le
+       reste — c'est ce qui permet au hero de se dimensionner sans connaître
+       la hauteur du pied de page. */
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
     background-color: var(--bg);
     color: var(--text);
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  main {
+    flex: 1 0 auto;
   }
 
   h1, h2, h3, h4 {
@@ -220,6 +230,34 @@
   height: 116%;
   margin-top: -8%;
   will-change: transform;
+}
+
+/* Accueil tenant dans l'écran, sans défilement — seulement quand la place
+   le permet réellement : en deçà de 760 px de haut, la colonne de texte ne
+   rentre pas et mieux vaut laisser défiler que tout comprimer.
+   `main:has(> .hero)` limite la portée à l'accueil : le hero n'existe que là,
+   et les autres pages gardent leur flux normal. */
+@media (min-width: 1024px) and (min-height: 760px) {
+  main:has(> .hero) {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero.hero {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    /* De quoi dégager la navbar fixe (69 px) sans le vide d'origine. */
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+  }
+  .hero.hero > div {
+    width: 100%;
+  }
+  /* Le portrait est ce qui impose la hauteur : on le plafonne par la place
+     réellement disponible, pour qu'il rétrécisse au lieu de faire défiler. */
+  .hero .portrait-tilt {
+    max-width: min(500px, calc(100svh - 21rem));
+  }
 }
 
 /* Bouton « me contacter » sous le portrait : une onde de lumière balaie le
