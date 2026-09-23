@@ -7,7 +7,13 @@
     "Comment le contacter ?"
   ],
   "mentionIA": "IA — réponses indicatives",
+  "titrePanneau": "Louise · Guide du site",
+  "placeholderSaisie": "Posez votre question…",
+  "messageIndisponible": "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.",
+  "libelleBouton": "Ouvrir le chat avec Louise, assistante du site",
   "animationAttention": "heartbeat_radar",
+  "couleurBulle": "#fefbfb",
+  "iconeBulle": "👩",
   "badgeInvitationActif": true,
   "badgeInvitationTexte": "Une question ? Je suis Louise 👋"
 }
