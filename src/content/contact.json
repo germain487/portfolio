@@ -5,7 +5,22 @@
     "police": "display",
     "taille": "4xl"
   },
-  "sujets": ["Projet SaaS", "Site web", "Data", "Autre"],
+  "sujets": [
+    "Application Mobile",
+    "Projet SaaS",
+    "Site web",
+    "Data",
+    "Autre"
+  ],
   "messageSucces": "Message envoyé — je vous réponds sous 24 h.",
-  "messageErreur": "L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à contact@germainmonemou.dev."
+  "messageErreur": "L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à contact@germainmonemou.dev.",
+  "champNom": "Nom",
+  "champEmail": "Email",
+  "champSujet": "Sujet",
+  "champMessage": "Message",
+  "boutonEnvoyer": "Envoyer le message",
+  "carteEmailLabel": "Email",
+  "carteWhatsappLabel": "WhatsApp",
+  "carteWhatsappTexte": "Discuter directement",
+  "carteLocalisationLabel": "Localisation"
 }
