@@ -183,7 +183,7 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 | Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, description longue markdown (page de détail) |
 | Services | `services.json` | cartes (titre + phrase en mise en forme), CTA final |
 | Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur, intitulés des champs et du bouton, libellés des cartes email/WhatsApp/localisation |
-| Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba, titres des colonnes Navigation/Contact |
+| Footer | `footer.json` | mention de signature — seul texte du pied de page, centré |
 | Titres de section | `sections.json` | titres Compétences / Projets / Services et eyebrows (« // projets »…) de chaque section |
 | Navigation | `navigation.json` | liens du menu principal et du footer (libellé + page cible parmi les routes du site), réordonnables |
 | SEO des pages | `seo.json` | titre d'onglet et meta description de `/a-propos`, `/projets`, `/services`, `/contact` ; suffixe du titre des fiches projet |
