@@ -1,8 +1,10 @@
 ---
 // Aperçu des services sur l'accueil, rendu en galerie horizontale.
-// Le même balisage sert les trois rendus (grille en reduced-motion, carrousel
-// natif à accroche sur mobile, piste épinglée pilotée par ScrollTrigger sur
-// grand écran) : c'est la CSS (global.css, .hscroll-*) et scripts/motion.ts
+// Le défilement latéral est toujours disponible, y compris en
+// prefers-reduced-motion : il est déclenché par le visiteur, pas subi. Seule
+// la course pilotée (section épinglée, piste translatée au fil du scroll) est
+// réservée à ceux qui acceptent le mouvement. Un seul balisage pour les deux :
+// c'est la CSS (global.css, .hscroll-*) et scripts/motion.ts
 // (initHorizontalGallery) qui décident, jamais un second balisage.
 import { getEntry } from 'astro:content';
 import Icon from './Icon.astro';
@@ -44,7 +46,16 @@ const ui = uiEntry!.data;
       </div>
 
       <div class="mt-10 lg:mt-14">
-        <div data-hscroll-track class="hscroll-track">
+        <!-- tabindex : une zone qui défile doit être atteignable au clavier (flèches).
+             Le JS le retire quand la piste est épinglée — elle ne défile plus
+             alors, et ce serait un arrêt de tabulation sans effet. -->
+        <div
+          data-hscroll-track
+          class="hscroll-track"
+          role="group"
+          aria-label="Services — faire défiler horizontalement"
+          tabindex="0"
+        >
           {services.cartes.map((carte, i) => (
             <article
               data-project-tilt

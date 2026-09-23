@@ -222,27 +222,49 @@
   will-change: transform;
 }
 
-/* Galerie horizontale (services de l'accueil) — trois rendus :
-   1. par défaut (mobile, tactile) : carrousel natif à accroche CSS ;
-   2. .is-pinned (posée en JS ≥1024px) : piste déplacée par ScrollTrigger ;
-   3. prefers-reduced-motion : grille statique, voir plus bas. */
+/* Galerie horizontale (services de l'accueil). Le défilement latéral est
+   toujours présent — y compris en prefers-reduced-motion, car il est déclenché
+   par le visiteur et non subi. Seule la *course pilotée* (section épinglée,
+   piste translatée au fil du scroll vertical) est réservée aux visiteurs qui
+   acceptent le mouvement :
+   1. par défaut : carrousel natif à accroche CSS, barre de défilement visible ;
+   2. .is-pinned (posée en JS ≥1024 px, hors reduced-motion) : piste déplacée
+      par ScrollTrigger, la barre native laissant place au repère de progression. */
 .hscroll-track {
   display: flex;
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  scrollbar-width: none;
+  /* Affordance : sans épinglage, la barre est le seul indice qu'on peut
+     faire défiler. Fine et discrète plutôt que masquée. */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
   /* Le doigt garde la main : on n'entrave jamais le geste horizontal. */
   overscroll-behavior-x: contain;
   padding-inline: 1.5rem;
 }
 .hscroll-track::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+.hscroll-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hscroll-track::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 999px;
 }
 .hscroll-panel {
   flex: 0 0 min(82%, 22rem);
   scroll-snap-align: center;
 }
+/* Grand écran sans épinglage (reduced-motion) : des panneaux assez larges
+   pour que la piste déborde nettement — sinon le défilement ne se voit pas. */
+@media (min-width: 1024px) {
+  [data-hscroll]:not(.is-pinned) .hscroll-panel {
+    flex: 0 0 26rem;
+  }
+}
+
 .hscroll-progress {
   transform: scaleX(0);
   transform-origin: left;
@@ -258,6 +280,7 @@
    est translatée ; la section devient une scène de la hauteur de l'écran. */
 .is-pinned .hscroll-track {
   overflow: visible;
+  scrollbar-width: none;
   scroll-snap-type: none;
   width: max-content;
   /* Le premier panneau démarre aligné sur la colonne de texte (max-w-6xl
@@ -288,17 +311,11 @@
     scroll-behavior: auto;
   }
 
-  /* Galerie horizontale : aucun défilement latéral imposé, tout est lisible
-     d'un coup dans une grille classique. */
+  /* La galerie reste horizontale : le défilement est déclenché par le
+     visiteur, jamais joué tout seul. On neutralise seulement l'accroche, qui
+     déplacerait la piste sans qu'il l'ait demandé. */
   .hscroll-track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    overflow-x: visible;
     scroll-snap-type: none;
-    padding-inline: 0;
-  }
-  .hscroll-panel {
-    flex: none;
   }
   .parallax-media {
     height: 100%;

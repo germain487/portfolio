@@ -558,9 +558,10 @@ let horizontalContext: gsap.MatchMedia | null = null;
  * la molette garde exactement son rythme et sa réversibilité, seul l'axe du
  * mouvement change, et la section se quitte normalement par le haut ou le bas.
  *
- * Grand écran uniquement : en dessous de 1024 px et sur tactile, la galerie
- * reste un carrousel natif à accroche CSS (aucun JS), et en reduced-motion une
- * simple grille — les trois rendus vivent dans ServicesPreview.astro.
+ * Grand écran uniquement, et seulement si le visiteur accepte le mouvement.
+ * Partout ailleurs — petit écran, tactile, prefers-reduced-motion — la galerie
+ * reste un carrousel natif à accroche CSS, sans aucun JS : le défilement
+ * latéral demeure donc accessible à tous, seule la course pilotée disparaît.
  */
 export function initHorizontalGallery() {
   const section = document.querySelector<HTMLElement>('[data-hscroll]');
@@ -574,6 +575,9 @@ export function initHorizontalGallery() {
   horizontalContext = gsap.matchMedia();
   horizontalContext.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
     section.classList.add('is-pinned');
+    // Épinglée, la piste ne défile plus : son arrêt de tabulation n'aurait
+    // plus d'effet (le clavier la parcourt alors par le scroll vertical).
+    track.removeAttribute('tabindex');
     // La piste est en `width: max-content` : sa largeur propre vaut sa largeur
     // de contenu (scrollWidth === clientWidth). La course utile se mesure donc
     // par rapport à la largeur de l'écran, pas à celle de la piste.
@@ -599,6 +603,7 @@ export function initHorizontalGallery() {
 
     return () => {
       section.classList.remove('is-pinned');
+      track.setAttribute('tabindex', '0');
       gsap.set(track, { clearProps: 'transform' });
       if (progress) progress.style.transform = '';
     };
