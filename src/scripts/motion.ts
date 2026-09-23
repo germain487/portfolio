@@ -416,11 +416,6 @@ export function initSmoothScroll() {
 
 /** Détruit les ScrollTrigger de la page quittée avant qu'une transition ne remplace le DOM. */
 export function cleanupScrollTriggers() {
-  // Le contexte matchMedia de la galerie horizontale porte un pin : le révoquer
-  // d'abord rend son pin-spacer au DOM sortant, sinon l'espace réservé reste
-  // compté dans la hauteur de la page suivante.
-  horizontalContext?.revert();
-  horizontalContext = null;
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 }
 
@@ -545,68 +540,6 @@ export function initParallaxMedia() {
         scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
       }
     );
-  });
-}
-
-// Contexte responsive de la galerie horizontale — conservé pour pouvoir le
-// révoquer avant une transition de page (voir cleanupScrollTriggers).
-let horizontalContext: gsap.MatchMedia | null = null;
-
-/**
- * Galerie horizontale épinglée : le défilement vertical est traduit en
- * déplacement horizontal. Ce n'est pas du scrolljacking (interdit §13.6) —
- * la molette garde exactement son rythme et sa réversibilité, seul l'axe du
- * mouvement change, et la section se quitte normalement par le haut ou le bas.
- *
- * Grand écran uniquement, et seulement si le visiteur accepte le mouvement.
- * Partout ailleurs — petit écran, tactile, prefers-reduced-motion — la galerie
- * reste un carrousel natif à accroche CSS, sans aucun JS : le défilement
- * latéral demeure donc accessible à tous, seule la course pilotée disparaît.
- */
-export function initHorizontalGallery() {
-  const section = document.querySelector<HTMLElement>('[data-hscroll]');
-  const track = section?.querySelector<HTMLElement>('[data-hscroll-track]');
-  if (!section || !track) return;
-
-  const progress = section.querySelector<HTMLElement>('[data-hscroll-progress]');
-
-  // gsap.matchMedia : le pin se monte et se démonte tout seul au franchissement
-  // du point de rupture ou si le visiteur active « réduire les animations ».
-  horizontalContext = gsap.matchMedia();
-  horizontalContext.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-    section.classList.add('is-pinned');
-    // Épinglée, la piste ne défile plus : son arrêt de tabulation n'aurait
-    // plus d'effet (le clavier la parcourt alors par le scroll vertical).
-    track.removeAttribute('tabindex');
-    // La piste est en `width: max-content` : sa largeur propre vaut sa largeur
-    // de contenu (scrollWidth === clientWidth). La course utile se mesure donc
-    // par rapport à la largeur de l'écran, pas à celle de la piste.
-    const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
-
-    gsap.to(track, {
-      x: () => -distance(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${distance()}`,
-        pin: true,
-        // Léger lissage : le mouvement suit le scroll sans le devancer.
-        scrub: 0.8,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: ({ progress: p }) => {
-          if (progress) progress.style.transform = `scaleX(${p})`;
-        },
-      },
-    });
-
-    return () => {
-      section.classList.remove('is-pinned');
-      track.setAttribute('tabindex', '0');
-      gsap.set(track, { clearProps: 'transform' });
-      if (progress) progress.style.transform = '';
-    };
   });
 }
 

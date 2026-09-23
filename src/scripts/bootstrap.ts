@@ -17,7 +17,6 @@ import {
   initChatAttention,
   initHeadingReveals,
   initParallaxMedia,
-  initHorizontalGallery,
   initScrollProgress,
   initHexSpotlight,
 } from './motion';
@@ -59,7 +58,6 @@ function initPageContent() {
   initScrollReveals();
   initHeadingReveals();
   initParallaxMedia();
-  initHorizontalGallery();
   initMagneticButtons();
 }
 

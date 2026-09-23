@@ -251,24 +251,7 @@ Pour attirer l'œil à l'arrivée sur le site sans devenir agaçante, la bulle d
 
 Toute la couche animation vit dans `src/scripts/motion.ts` et est (ré)initialisée par `src/scripts/bootstrap.ts` à chaque `astro:page-load`. **Règle commune : `prefers-reduced-motion` désactive tout**, et le site reste complet et lisible sans la moindre animation.
 
-### Galerie horizontale
-
-> **Actuellement non montée.** Elle vivait dans l'aperçu des services de l'accueil, retiré depuis (l'accueil se limite au hero). Le mécanisme est conservé — `initHorizontalGallery` dans `motion.ts`, styles `.hscroll-*` dans `global.css` — et se réactive en posant `data-hscroll` / `data-hscroll-track` sur une section ; le composant supprimé reste récupérable dans l'historique Git.
-
-La galerie se parcourt latéralement. **Le défilement horizontal reste disponible en `prefers-reduced-motion`** : il est déclenché par le visiteur, jamais joué tout seul, et ne relève donc pas du mouvement que ce réglage vise à supprimer. Seule la *course pilotée* — section épinglée, piste translatée au fil du défilement vertical — est réservée à ceux qui acceptent le mouvement.
-
-Deux rendus pour un seul balisage (`ServicesPreview.astro`), choisis par la CSS et `initHorizontalGallery` :
-
-| Contexte | Rendu |
-|---|---|
-| ≥ 1024 px, animations acceptées | Section épinglée, la piste se déplace horizontalement au fil du défilement (GSAP ScrollTrigger, `pin` + `scrub`), avec un repère de progression sous les cartes |
-| Partout ailleurs — petit écran, tactile, `prefers-reduced-motion` | Carrousel natif, aucun JavaScript |
-
-**Accessibilité du carrousel** : la piste est atteignable au clavier (`tabindex="0"`, `role="group"`, `aria-label`) et défile aux flèches. Le dernier panneau dépasse volontairement du cadre — c'est l'indice qu'il reste du contenu, les barres de défilement étant masquées par défaut sous macOS. Le `tabindex` est retiré quand la piste est épinglée : elle ne défile plus par elle-même, ce serait un arrêt de tabulation sans effet. En `prefers-reduced-motion`, l'accroche (`scroll-snap`) est neutralisée, elle déplacerait la piste sans demande.
-
-**Ce n'est pas du scrolljacking** (interdit §13.6 du prompt maître) : la molette garde exactement son rythme et sa réversibilité, seul l'axe du mouvement change, et la section se quitte normalement par le haut ou par le bas. Le montage et le démontage du pin sont confiés à `gsap.matchMedia()`, de sorte qu'un redimensionnement ou l'activation de « réduire les animations » en cours de visite rebascule proprement sur le bon rendu.
-
-### Autres effets
+### Effets
 
 - **Révélation des titres ligne par ligne** (`data-split`) : le titre est découpé en lignes réelles (telles que le navigateur les a cassées), chacune montant derrière un masque. Le balisage d'origine est **restauré en fin d'animation**, donc aucun regroupement de lignes figé ne gêne un redimensionnement ultérieur. Réservé au texte simple — jamais aux paragraphes rendus en `set:html`.
 - **Parallaxe de profondeur** (`data-parallax`) sur les couvertures de projets : le visuel est volontairement plus haut que son cadre (`.parallax-media`), il glisse donc sans jamais découvrir de vide.

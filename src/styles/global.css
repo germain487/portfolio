@@ -222,101 +222,11 @@
   will-change: transform;
 }
 
-/* Galerie horizontale (services de l'accueil). Le défilement latéral est
-   toujours présent — y compris en prefers-reduced-motion, car il est déclenché
-   par le visiteur et non subi. Seule la *course pilotée* (section épinglée,
-   piste translatée au fil du scroll vertical) est réservée aux visiteurs qui
-   acceptent le mouvement :
-   1. par défaut : carrousel natif à accroche CSS, barre de défilement visible ;
-   2. .is-pinned (posée en JS ≥1024 px, hors reduced-motion) : piste déplacée
-      par ScrollTrigger, la barre native laissant place au repère de progression. */
-.hscroll-track {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  /* Affordance : sans épinglage, la barre est le seul indice qu'on peut
-     faire défiler. Fine et discrète plutôt que masquée. */
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
-  /* Le doigt garde la main : on n'entrave jamais le geste horizontal. */
-  overscroll-behavior-x: contain;
-  padding-inline: 1.5rem;
-}
-.hscroll-track::-webkit-scrollbar {
-  height: 6px;
-}
-.hscroll-track::-webkit-scrollbar-track {
-  background: transparent;
-}
-.hscroll-track::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--accent) 45%, transparent);
-  border-radius: 999px;
-}
-.hscroll-panel {
-  flex: 0 0 min(82%, 22rem);
-  scroll-snap-align: center;
-}
-/* Grand écran sans épinglage (reduced-motion) : des panneaux assez larges
-   pour que la piste déborde nettement — sinon le défilement ne se voit pas. */
-@media (min-width: 1024px) {
-  [data-hscroll]:not(.is-pinned) .hscroll-panel {
-    flex: 0 0 26rem;
-  }
-}
-
-.hscroll-progress {
-  transform: scaleX(0);
-  transform-origin: left;
-}
-/* Le repère de progression n'a de sens que pendant le parcours horizontal :
-   invisible en grille (reduced-motion) comme en carrousel tactile, qui ont
-   tous deux leurs propres repères natifs. */
-.is-pinned [data-hscroll-rail] {
-  display: block;
-}
-
-/* Reprise par ScrollTrigger : la piste n'est plus défilable nativement, elle
-   est translatée ; la section devient une scène de la hauteur de l'écran. */
-.is-pinned .hscroll-track {
-  overflow: visible;
-  scrollbar-width: none;
-  scroll-snap-type: none;
-  width: max-content;
-  /* Le premier panneau démarre aligné sur la colonne de texte (max-w-6xl
-     centré, gouttière de 1,5rem), le dernier garde la même respiration. */
-  padding-inline: max(1.5rem, calc((100vw - 72rem) / 2));
-}
-.is-pinned .hscroll-panel {
-  /* Assez large pour que la piste dépasse franchement l'écran : c'est cette
-     marge qui donne sa course au déplacement horizontal. */
-  flex: 0 0 clamp(20rem, 32vw, 30rem);
-}
-.is-pinned .hscroll-viewport {
-  display: flex;
-  align-items: center;
-  min-height: 100svh;
-  overflow: hidden;
-}
-/* Pendant l'épinglage, la scène doit faire exactement la hauteur de l'écran :
-   le rythme vertical de section (py-16/py-20) ferait déborder le contenu et
-   le titre remonterait hors champ en fin de course. Sélecteur doublé pour
-   passer devant les utilitaires Tailwind. */
-.is-pinned.reveal-section {
-  padding-block: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  /* La galerie reste horizontale : le défilement est déclenché par le
-     visiteur, jamais joué tout seul. On neutralise seulement l'accroche, qui
-     déplacerait la piste sans qu'il l'ait demandé. */
-  .hscroll-track {
-    scroll-snap-type: none;
-  }
   .parallax-media {
     height: 100%;
     margin-top: 0;
