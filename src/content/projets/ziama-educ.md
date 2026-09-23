@@ -7,7 +7,6 @@ annee: 2026
 statut: "En cours"
 ordre: 1
 brouillon: false
-misEnAvant: true
 ---
 
 ## Le contexte

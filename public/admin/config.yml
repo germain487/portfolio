@@ -215,7 +215,6 @@ collections:
       - { label: "Lien externe", name: lien, widget: string, required: false }
       - { label: "Ordre d'affichage", name: ordre, widget: number, value_type: int, default: 0, hint: "Les projets s'affichent du plus petit au plus grand." }
       - { label: "Brouillon", name: brouillon, widget: boolean, default: false, hint: "Masque le projet du site public sans le supprimer." }
-      - { label: "Mis en avant sur l'accueil", name: misEnAvant, widget: boolean, default: false, hint: "Les 3 premiers projets mis en avant (par ordre d'affichage) apparaissent sur la page d'accueil." }
       - { label: "Description longue", name: body, widget: markdown, required: false, hint: "Affichée sur la page de détail du projet (/projets/…). Titres, listes et gras pris en charge." }
 
   - name: services
@@ -353,7 +352,7 @@ collections:
   - name: interface
     label: "Libellés d'interface"
     icon: label
-    description: "Petits textes de liens et de boutons : projets (filtres, cartes, fiche) et services."
+    description: "Petits textes de liens et de boutons de la rubrique projets : filtre, survol des cartes et fiche projet."
     files:
       - name: interface
         label: "Libellés d'interface"
@@ -363,35 +362,27 @@ collections:
             name: projets
             widget: object
             fields:
-              - { label: "Lien « voir tous » (accueil)", name: voirTous, widget: string, default: "Voir tous les projets →" }
               - { label: "Survol d'une carte", name: decouvrir, widget: string, default: "Découvrir" }
               - { label: "Filtre « tous »", name: filtreTous, widget: string, default: "Tous", hint: "Les autres filtres reprennent les tags des projets (SaaS, Civic Tech, Data, Web Design)." }
               - { label: "Fiche — retour à la liste", name: retourListe, widget: string, default: "Tous les projets" }
               - { label: "Fiche — bouton vers le site du projet", name: voirEnLigne, widget: string, default: "Voir le projet en ligne" }
               - { label: "Fiche — projet précédent", name: precedent, widget: string, default: "Projet précédent" }
               - { label: "Fiche — projet suivant", name: suivant, widget: string, default: "Projet suivant" }
-          - label: Services
-            name: services
-            widget: object
-            fields:
-              - { label: "Lien « voir tous » (accueil)", name: voirTous, widget: string, default: "Voir tous les services →" }
 
   - name: sections
     label: "Titres de section"
     icon: title
-    description: "Titres affichés en tête de section — Compétences, Projets et Services (repris à la fois sur leur page complète et sur l'aperçu de l'accueil), et le bandeau Contact de l'accueil."
+    description: "Titres et eyebrows affichés en tête des sections Compétences, Projets et Services."
     files:
       - name: sections
         label: "Titres de section"
         file: src/content/sections.json
         fields:
           - { label: "Titre — Compétences", name: skillsTitre, widget: object, fields: *texteMiseEnForme }
-          - { label: "Titre — Projets", name: projetsTitre, widget: object, hint: "Utilisé sur /projets et sur l'aperçu « projets mis en avant » de l'accueil.", fields: *texteMiseEnForme }
-          - { label: "Titre — Services", name: servicesTitre, widget: object, hint: "Utilisé sur /services et sur l'aperçu de l'accueil.", fields: *texteMiseEnForme }
-          - { label: "Titre — Bandeau contact (accueil)", name: contactCtaTitre, widget: object, fields: *texteMiseEnForme }
-          - { label: "Texte — Bandeau contact (accueil)", name: contactCtaTexte, widget: object, fields: *texteMiseEnForme }
+          - { label: "Titre — Projets", name: projetsTitre, widget: object, fields: *texteMiseEnForme }
+          - { label: "Titre — Services", name: servicesTitre, widget: object, fields: *texteMiseEnForme }
           - { label: "Eyebrow — À propos", name: aProposEyebrow, widget: string, default: "// à-propos", hint: "Petite ligne mono en cyan au-dessus du titre de section (le « // » fait partie du style, à conserver ou non)." }
           - { label: "Eyebrow — Compétences", name: skillsEyebrow, widget: string, default: "// compétences" }
-          - { label: "Eyebrow — Projets", name: projetsEyebrow, widget: string, default: "// projets", hint: "Sur /projets et sur l'aperçu de l'accueil." }
-          - { label: "Eyebrow — Services", name: servicesEyebrow, widget: string, default: "// services", hint: "Sur /services et sur l'aperçu de l'accueil." }
-          - { label: "Eyebrow — Contact", name: contactEyebrow, widget: string, default: "// contact", hint: "Sur /contact et sur le bandeau contact de l'accueil." }
+          - { label: "Eyebrow — Projets", name: projetsEyebrow, widget: string, default: "// projets", hint: "Affiché sur la page /projets." }
+          - { label: "Eyebrow — Services", name: servicesEyebrow, widget: string, default: "// services", hint: "Affiché sur la page /services." }
+          - { label: "Eyebrow — Contact", name: contactEyebrow, widget: string, default: "// contact", hint: "Affiché sur la page /contact." }

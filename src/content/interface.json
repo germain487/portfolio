@@ -1,14 +1,10 @@
 {
   "projets": {
-    "voirTous": "Voir tous les projets →",
     "decouvrir": "Découvrir",
     "filtreTous": "Tous",
     "retourListe": "Tous les projets",
     "voirEnLigne": "Voir le projet en ligne",
     "precedent": "Projet précédent",
     "suivant": "Projet suivant"
-  },
-  "services": {
-    "voirTous": "Voir tous les services →"
   }
 }

@@ -7,7 +7,6 @@ annee: 2024
 statut: "En ligne"
 ordre: 3
 brouillon: false
-misEnAvant: true
 ---
 
 ## Le contexte

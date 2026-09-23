@@ -103,7 +103,6 @@ const projets = defineCollection({
     couverture: z.string().optional(),
     ordre: z.number().int().default(0),
     brouillon: z.boolean().default(false),
-    misEnAvant: z.boolean().default(false),
   }),
 });
 
@@ -194,16 +193,12 @@ const interfaceUi = defineCollection({
   loader: file('src/content/interface.json', singleton('interface')),
   schema: z.object({
     projets: z.object({
-      voirTous: z.string(),
       decouvrir: z.string(),
       filtreTous: z.string(),
       retourListe: z.string(),
       voirEnLigne: z.string(),
       precedent: z.string(),
       suivant: z.string(),
-    }),
-    services: z.object({
-      voirTous: z.string(),
     }),
   }),
 });
@@ -218,8 +213,6 @@ const sections = defineCollection({
     skillsTitre: richText,
     projetsTitre: richText,
     servicesTitre: richText,
-    contactCtaTitre: richText,
-    contactCtaTexte: richText,
     // Eyebrows mono au-dessus de chaque section (« // projets »…). Texte
     // simple : la mise en forme est celle, fixe, de l'eyebrow.
     aProposEyebrow: z.string().default('// à-propos'),

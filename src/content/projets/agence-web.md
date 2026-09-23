@@ -13,7 +13,6 @@ statut: En ligne
 lien: ''
 ordre: 5
 brouillon: false
-misEnAvant: false
 ---
 
 ## Le contexte

@@ -56,7 +56,7 @@ npm run dev:functions  # astro + fonctions Netlify (dont /api de Louise) en loca
 
 | Route | Contenu |
 |---|---|
-| `/` | Hero complet + à-propos condensé + 3 projets mis en avant + aperçu des services + CTA contact |
+| `/` | Hero seul — projets, services et contact ont chacun leur page, atteignable par la navigation |
 | `/a-propos` | Bio complète, statistiques à compteurs animés, compétences + bandeau technologies |
 | `/projets` | Grille complète filtrable (Tous · SaaS · Civic Tech · Data · Web Design) |
 | `/projets/[slug]` | Détail d'un projet : description longue, stack, lien live, navigation précédent/suivant |
@@ -88,8 +88,7 @@ portfolio/
 │   │                         # projets/*.md
 │   ├── content.config.ts    # 13 collections + schémas Zod (garde-fous au build)
 │   ├── layouts/Base.astro   # navbar + footer + curseur + préloader + SEO + <ClientRouter />
-│   ├── components/          # un composant par section + blocs condensés (FeaturedProjects,
-│   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor/ChatWidget…
+│   ├── components/          # un composant par section + StyledText/Icon/Cursor/ChatWidget…
 │   ├── scripts/
 │   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme,
 │   │   │                     # galerie horizontale, parallaxe, révélation des titres…
@@ -173,7 +172,7 @@ C'est le moyen le plus rapide de vérifier une modification de champ ou de teste
 
 ### Couverture des 13 collections
 
-Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints). **Test de couverture (§7.3 du prompt maître)** : aucun texte, image ou réglage visible sur le site n'est codé en dur dans un composant — tout provient de l'une de ces collections. Seules exceptions, volontaires : les libellés d'accessibilité purement techniques (aria-labels de boutons d'icônes comme « Ouvrir le menu », « Fermer la discussion », « Envoyer », le champ anti-robot caché du formulaire), le « © année » généré automatiquement et le lien « Propulsé par Sveltia CMS » de l'écran de connexion de l'admin.
+Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints). **Test de couverture (§7.3 du prompt maître)**, vérifié dans les deux sens : aucun texte, image ou réglage visible sur le site n'est codé en dur dans un composant — tout provient de l'une de ces collections ; et réciproquement, aucun champ de `/admin` ne pilote plus rien (un réglage sans effet ferait douter Germain de ses modifications). Seules exceptions, volontaires : les libellés d'accessibilité purement techniques (aria-labels de boutons d'icônes comme « Ouvrir le menu », « Fermer la discussion », « Envoyer », le champ anti-robot caché du formulaire), le « © année » généré automatiquement et le lien « Propulsé par Sveltia CMS » de l'écran de connexion de l'admin.
 
 | Collection | Fichier(s) | Champs |
 |---|---|---|
@@ -181,14 +180,14 @@ Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admi
 | Hero | `hero.json` | eyebrow, accroche (mise en forme), rôles de la machine à écrire, CTA, portrait |
 | À propos | `about.json` | titre, paragraphes (mise en forme), statistiques animées |
 | Compétences | `skills.json` | domaines (icône + titre en mise en forme + items) |
-| Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, mis en avant (accueil), description longue markdown (page de détail) |
+| Projets | `projets/*.md` | CRUD complet, tags, ordre, brouillon, description longue markdown (page de détail) |
 | Services | `services.json` | cartes (titre + phrase en mise en forme), CTA final |
 | Contact | `contact.json` | intro (mise en forme), sujets du formulaire, microcopies succès/erreur, intitulés des champs et du bouton, libellés des cartes email/WhatsApp/localisation |
 | Footer | `footer.json` | phrase de positionnement (mise en forme), mention de signature, filigrane Mont Nimba, titres des colonnes Navigation/Contact |
-| Titres de section | `sections.json` | titres Compétences / Projets / Services (partagés page complète + aperçu accueil), titre et texte du bandeau contact de l'accueil, eyebrows (« // projets »…) de chaque section |
+| Titres de section | `sections.json` | titres Compétences / Projets / Services et eyebrows (« // projets »…) de chaque section |
 | Navigation | `navigation.json` | liens du menu principal et du footer (libellé + page cible parmi les routes du site), réordonnables |
 | SEO des pages | `seo.json` | titre d'onglet et meta description de `/a-propos`, `/projets`, `/services`, `/contact` ; suffixe du titre des fiches projet |
-| Libellés d'interface | `interface.json` | projets (« Voir tous les projets → », « Découvrir », filtre « Tous », retour à la liste, « Voir le projet en ligne », précédent/suivant) et services (« Voir tous les services → ») |
+| Libellés d'interface | `interface.json` | rubrique projets : « Découvrir » au survol, filtre « Tous », retour à la liste, « Voir le projet en ligne », précédent/suivant |
 | Louise (chatbot IA) | `chatbot.json` | activer/désactiver, message d'accueil, questions suggérées, mention IA, animation d'attention de la bulle, couleur de la bulle, icône de la bulle (emoji), infobulle d'invitation, titre du panneau, texte d'invite du champ, message d'indisponibilité (partagé avec la fonction Netlify), libellé du bouton d'ouverture — voir [Louise (chatbot IA)](#louise-chatbot-ia) |
 
 **Mise en forme du texte** : les titres et paragraphes de prose ci-dessus (« mise en forme ») s'éditent avec quatre champs — texte, alignement (gauche / centré / droite), police (limitée aux 3 familles déjà chargées sur le site — Space Grotesk pour les titres, Inter pour le texte courant, JetBrains Mono — afin de préserver l'identité visuelle) et taille (de très petit à très grand, sur l'échelle Tailwind). Volontairement exclus de la mise en forme (mais bien éditables en texte simple) : titre/description des projets (réutilisés comme texte alternatif, initiale de la couverture générée et balise `<title>` — les rendre éditables indépendamment aurait cassé le SEO), les libellés de bouton et de lien, les eyebrows, les messages système et la mention de copyright du footer.
@@ -252,9 +251,11 @@ Pour attirer l'œil à l'arrivée sur le site sans devenir agaçante, la bulle d
 
 Toute la couche animation vit dans `src/scripts/motion.ts` et est (ré)initialisée par `src/scripts/bootstrap.ts` à chaque `astro:page-load`. **Règle commune : `prefers-reduced-motion` désactive tout**, et le site reste complet et lisible sans la moindre animation.
 
-### Galerie horizontale (services, accueil)
+### Galerie horizontale
 
-La section services de l'accueil se parcourt latéralement. **Le défilement horizontal reste disponible en `prefers-reduced-motion`** : il est déclenché par le visiteur, jamais joué tout seul, et ne relève donc pas du mouvement que ce réglage vise à supprimer. Seule la *course pilotée* — section épinglée, piste translatée au fil du défilement vertical — est réservée à ceux qui acceptent le mouvement.
+> **Actuellement non montée.** Elle vivait dans l'aperçu des services de l'accueil, retiré depuis (l'accueil se limite au hero). Le mécanisme est conservé — `initHorizontalGallery` dans `motion.ts`, styles `.hscroll-*` dans `global.css` — et se réactive en posant `data-hscroll` / `data-hscroll-track` sur une section ; le composant supprimé reste récupérable dans l'historique Git.
+
+La galerie se parcourt latéralement. **Le défilement horizontal reste disponible en `prefers-reduced-motion`** : il est déclenché par le visiteur, jamais joué tout seul, et ne relève donc pas du mouvement que ce réglage vise à supprimer. Seule la *course pilotée* — section épinglée, piste translatée au fil du défilement vertical — est réservée à ceux qui acceptent le mouvement.
 
 Deux rendus pour un seul balisage (`ServicesPreview.astro`), choisis par la CSS et `initHorizontalGallery` :
 

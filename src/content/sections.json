@@ -17,18 +17,6 @@
     "police": "display",
     "taille": "4xl"
   },
-  "contactCtaTitre": {
-    "texte": "Un projet, une question ?",
-    "alignement": "centre",
-    "police": "display",
-    "taille": "4xl"
-  },
-  "contactCtaTexte": {
-    "texte": "Écrivez-moi — je réponds sous 24 h.",
-    "alignement": "centre",
-    "police": "sans",
-    "taille": "base"
-  },
   "aProposEyebrow": "// à-propos",
   "skillsEyebrow": "// compétences",
   "projetsEyebrow": "// projets",
