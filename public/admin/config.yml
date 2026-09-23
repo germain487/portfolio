@@ -44,6 +44,9 @@ collections:
           - { label: "Email de contact", name: email, widget: string }
           - { label: "Numéro WhatsApp", name: whatsapp, widget: string, hint: "Format international sans + ni espaces, ex : 224600000000" }
           - { label: "Localisation", name: localisation, widget: string }
+          - { label: "Titre professionnel", name: titreProfessionnel, widget: string, hint: "Lu par Google et les réseaux sociaux pour décrire Germain (balisage structuré) — n'apparaît pas sur la page." }
+          - { label: "Ville (référencement)", name: villeSEO, widget: string, hint: "Ville seule, telle que la comprennent les moteurs de recherche. Ex : Conakry." }
+          - { label: "Code pays (référencement)", name: paysCodeSEO, widget: string, pattern: ['^[A-Z]{2}$', "Deux lettres majuscules (GN pour la Guinée, FR pour la France…)"], hint: "Code pays à 2 lettres. GN = Guinée." }
           - { label: "Disponible pour de nouveaux projets ?", name: disponible, widget: boolean, default: true, hint: "N'apparaît plus sur le site : sert à Louise, qui répond sur cette base quand un visiteur l'interroge sur la disponibilité." }
           - { label: "Texte de disponibilité", name: badgeTexte, widget: string, hint: "Repris tel quel par Louise lorsqu'elle annonce la disponibilité de Germain." }
           - { label: "CV (PDF)", name: cv, widget: file, required: false, hint: "Téléchargé via le bouton « Télécharger mon CV » du hero." }

@@ -12,9 +12,13 @@ const sections = sectionsEntry!.data;
 const ui = uiEntry!.data;
 
 // Valeur « * » = tous les projets (scripts/motion.ts) ; le libellé, lui, est éditable.
+// Les autres filtres se déduisent des tags réellement portés par les projets,
+// dans leur ordre d'apparition : ajouter ou retirer un tag depuis l'admin
+// suffit à faire apparaître ou disparaître son filtre, sans toucher au code.
+const tagsUtilises = [...new Set(projects.flatMap((projet) => projet.data.tags))];
 const filters = [
   { value: '*', label: ui.projets.filtreTous },
-  ...['SaaS', 'Civic Tech', 'Data', 'Web Design'].map((tag) => ({ value: tag, label: tag })),
+  ...tagsUtilises.map((tag) => ({ value: tag, label: tag })),
 ];
 ---
 

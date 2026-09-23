@@ -26,9 +26,9 @@ export function mountChatWidget(root: HTMLElement) {
 
   const greeting = root.dataset.chatGreeting ?? '';
   const openLabel = toggle.getAttribute('aria-label') ?? '';
-  const offlineMessage =
-    root.dataset.chatOffline ??
-    "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.";
+  // Toujours posé par ChatWidget.astro depuis la collection Louise : pas de
+  // copie de repli ici, elle finirait par diverger du texte de l'admin.
+  const offlineMessage = root.dataset.chatOffline ?? '';
 
   const history: Message[] = [];
   let isOpen = false;

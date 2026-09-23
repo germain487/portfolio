@@ -38,6 +38,13 @@ const settings = defineCollection({
     email: z.string().email(),
     whatsapp: z.string(),
     localisation: z.string(),
+    // Balisage structuré Person (JSON-LD) : ce que Google et les réseaux
+    // sociaux lisent pour décrire Germain. Invisible sur la page elle-même.
+    titreProfessionnel: z.string(),
+    villeSEO: z.string(),
+    // Code ISO à 2 lettres — validé au build : une faute casserait
+    // silencieusement le balisage structuré.
+    paysCodeSEO: z.string().regex(/^[A-Z]{2}$/, 'Code pays ISO à 2 lettres majuscules, ex : GN'),
     disponible: z.boolean().default(true),
     badgeTexte: z.string(),
     cv: z.string().optional(),

@@ -174,11 +174,15 @@ C'est le moyen le plus rapide de vérifier une modification de champ ou de teste
 
 ### Couverture des 13 collections
 
-Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints). **Test de couverture (§7.3 du prompt maître)**, vérifié dans les deux sens : aucun texte, image ou réglage visible sur le site n'est codé en dur dans un composant — tout provient de l'une de ces collections ; et réciproquement, aucun champ de `/admin` ne pilote plus rien (un réglage sans effet ferait douter Germain de ses modifications). Seules exceptions, volontaires : les libellés d'accessibilité purement techniques (aria-labels de boutons d'icônes comme « Ouvrir le menu », « Fermer la discussion », « Envoyer », le champ anti-robot caché du formulaire), le « © année » généré automatiquement et le lien « Propulsé par Sveltia CMS » de l'écran de connexion de l'admin.
+Chaque collection de `src/content.config.ts` a un miroir exact dans `public/admin/config.yml` (mêmes champs, en français, avec hints). **Test de couverture (§7.3 du prompt maître)**, vérifié dans les deux sens : aucun texte, image ou réglage visible sur le site n'est codé en dur dans un composant — tout provient de l'une de ces collections ; et réciproquement, aucun champ de `/admin` ne pilote plus rien (un réglage sans effet ferait douter Germain de ses modifications). Seules exceptions, volontaires :
+
+- les libellés d'accessibilité purement techniques — aria-labels de boutons d'icônes (« Ouvrir le menu », « Fermer la discussion », « Envoyer », « Louise écrit… »), intitulé lecteur d'écran du champ de chat, et le champ anti-robot caché du formulaire ;
+- le « © année » généré automatiquement, et le lien « Propulsé par Sveltia CMS » de l'écran de connexion de l'admin ;
+- les **tags de projets** (SaaS / Civic Tech / Data / Web Design), qui forment un vocabulaire fermé validé par Zod : ils se choisissent par projet depuis l'admin, et les filtres de `/projets` se déduisent des tags réellement utilisés — ajouter ou retirer un tag sur un projet fait donc apparaître ou disparaître son filtre, sans toucher au code. Renommer une catégorie reste en revanche une modification de schéma, volontairement : un tag libre laisserait passer les fautes de frappe et créerait des filtres fantômes.
 
 | Collection | Fichier(s) | Champs |
 |---|---|---|
-| Réglages généraux | `settings.json` | identité, SEO de l'accueil, couleur d'accent (injectée au build : `--accent`, `--accent-soft`, halos et motif hexagonal en sont dérivés), CV, réseaux sociaux… |
+| Réglages généraux | `settings.json` | identité, SEO de l'accueil, balisage structuré Person (titre professionnel, ville, code pays), couleur d'accent (injectée au build : `--accent`, `--accent-soft`, halos et motif hexagonal en sont dérivés), CV, réseaux sociaux… |
 | Hero | `hero.json` | eyebrow, accroche (mise en forme), rôles de la machine à écrire, CTA, portrait |
 | À propos | `about.json` | titre, paragraphes (mise en forme), statistiques animées |
 | Compétences | `skills.json` | domaines (icône + titre en mise en forme + items) |
