@@ -222,9 +222,51 @@
   will-change: transform;
 }
 
+/* Bouton « me contacter » sous le portrait : une onde de lumière balaie le
+   fond au survol et au focus clavier, et la flèche avance d'un cran. Rien ne
+   bouge au repos (§8 : rien d'animé en permanence hors halo du portrait) —
+   l'effet est entièrement lié à l'interaction. */
+.btn-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.btn-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Bande étroite et franche : sur un fond cyan saturé, un voile large et
+     pâle ne se verrait pas — il faut un éclat net qui traverse. */
+  background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, 0.8) 50%, transparent 62%);
+  transform: translateX(-130%);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-sweep:hover::after,
+.btn-sweep:focus-visible::after {
+  transform: translateX(130%);
+}
+.btn-sweep-icon {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-sweep:hover .btn-sweep-icon,
+.btn-sweep:focus-visible .btn-sweep-icon {
+  transform: translateX(4px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* Le bouton garde son relief (fond, halo, contraste) mais plus rien ne
+     glisse : ni l'onde, ni la flèche. */
+  .btn-sweep::after {
+    display: none;
+  }
+  .btn-sweep:hover .btn-sweep-icon,
+  .btn-sweep:focus-visible .btn-sweep-icon {
+    transform: none;
   }
 
   .parallax-media {

@@ -53,6 +53,8 @@ const hero = defineCollection({
     roles: z.array(z.string()).min(1),
     ctaPrimaireLabel: z.string(),
     ctaSecondaireLabel: z.string(),
+    // Bouton sous le portrait, renvoyant vers /contact.
+    ctaContactLabel: z.string().default('Me contacter'),
     portrait: z.string().optional(),
   }),
 });

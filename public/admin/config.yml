@@ -113,6 +113,7 @@ collections:
             field: { label: Rôle, name: role, widget: string }
           - { label: "Libellé du CTA principal", name: ctaPrimaireLabel, widget: string }
           - { label: "Libellé du CTA secondaire", name: ctaSecondaireLabel, widget: string }
+          - { label: "Libellé du bouton contact", name: ctaContactLabel, widget: string, default: "Me contacter", hint: "Bouton affiché sous le portrait, il renvoie vers la page Contact." }
           - { label: Portrait, name: portrait, widget: image, required: false, hint: "Tant qu'aucune photo n'est envoyée, une silhouette hexagonale s'affiche automatiquement." }
 
   - name: about

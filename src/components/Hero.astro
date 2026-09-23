@@ -104,6 +104,16 @@ const socialIconMap: Record<string, string> = {
 
     <div class="order-1 md:order-2" data-hero-hex-glow style="opacity:0;">
       <HexPortrait src={hero.portrait} alt={`Portrait de ${settings.nomComplet}`} />
+
+      <div class="mt-8 flex justify-center">
+        <MagneticButton href="/contact" class="btn-sweep">
+          {/* Au-dessus de l'onde de lumière, qui balaie le fond du bouton. */}
+          <span class="relative z-[2] inline-flex items-center gap-2">
+            {hero.ctaContactLabel}
+            <span class="btn-sweep-icon grid place-items-center"><Icon name="arrow-right" size={15} /></span>
+          </span>
+        </MagneticButton>
+      </div>
     </div>
   </div>
 </section>
