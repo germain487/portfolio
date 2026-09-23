@@ -1,14 +1,11 @@
 ---
+// L'accueil se limite volontairement au hero : les projets, les services et le
+// contact ont chacun leur page, atteignable par la navigation. Pas d'aperçu
+// condensé ici, donc pas de contenu dupliqué entre l'accueil et ces pages.
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import FeaturedProjects from '../components/FeaturedProjects.astro';
-import ServicesPreview from '../components/ServicesPreview.astro';
-import ContactCTA from '../components/ContactCTA.astro';
 ---
 
 <Base>
   <Hero />
-  <FeaturedProjects />
-  <ServicesPreview />
-  <ContactCTA />
 </Base>
