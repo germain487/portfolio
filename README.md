@@ -254,13 +254,16 @@ Toute la couche animation vit dans `src/scripts/motion.ts` et est (ré)initialis
 
 ### Galerie horizontale (services, accueil)
 
-La section services de l'accueil se parcourt latéralement. Trois rendus pour un seul balisage (`ServicesPreview.astro`), choisis par la CSS et `initHorizontalGallery` :
+La section services de l'accueil se parcourt latéralement. **Le défilement horizontal reste disponible en `prefers-reduced-motion`** : il est déclenché par le visiteur, jamais joué tout seul, et ne relève donc pas du mouvement que ce réglage vise à supprimer. Seule la *course pilotée* — section épinglée, piste translatée au fil du défilement vertical — est réservée à ceux qui acceptent le mouvement.
+
+Deux rendus pour un seul balisage (`ServicesPreview.astro`), choisis par la CSS et `initHorizontalGallery` :
 
 | Contexte | Rendu |
 |---|---|
-| ≥ 1024 px, animations autorisées | Section épinglée, la piste se déplace horizontalement au fil du défilement (GSAP ScrollTrigger, `pin` + `scrub`), avec un repère de progression sous les cartes |
-| < 1024 px / tactile | Carrousel natif à accroche CSS (`scroll-snap`), aucun JavaScript |
-| `prefers-reduced-motion` | Grille statique classique, tout est lisible d'un coup |
+| ≥ 1024 px, animations acceptées | Section épinglée, la piste se déplace horizontalement au fil du défilement (GSAP ScrollTrigger, `pin` + `scrub`), avec un repère de progression sous les cartes |
+| Partout ailleurs — petit écran, tactile, `prefers-reduced-motion` | Carrousel natif, aucun JavaScript |
+
+**Accessibilité du carrousel** : la piste est atteignable au clavier (`tabindex="0"`, `role="group"`, `aria-label`) et défile aux flèches. Le dernier panneau dépasse volontairement du cadre — c'est l'indice qu'il reste du contenu, les barres de défilement étant masquées par défaut sous macOS. Le `tabindex` est retiré quand la piste est épinglée : elle ne défile plus par elle-même, ce serait un arrêt de tabulation sans effet. En `prefers-reduced-motion`, l'accroche (`scroll-snap`) est neutralisée, elle déplacerait la piste sans demande.
 
 **Ce n'est pas du scrolljacking** (interdit §13.6 du prompt maître) : la molette garde exactement son rythme et sa réversibilité, seul l'axe du mouvement change, et la section se quitte normalement par le haut ou par le bas. Le montage et le démontage du pin sont confiés à `gsap.matchMedia()`, de sorte qu'un redimensionnement ou l'activation de « réduire les animations » en cours de visite rebascule proprement sur le bon rendu.
 
@@ -269,6 +272,19 @@ La section services de l'accueil se parcourt latéralement. Trois rendus pour un
 - **Révélation des titres ligne par ligne** (`data-split`) : le titre est découpé en lignes réelles (telles que le navigateur les a cassées), chacune montant derrière un masque. Le balisage d'origine est **restauré en fin d'animation**, donc aucun regroupement de lignes figé ne gêne un redimensionnement ultérieur. Réservé au texte simple — jamais aux paragraphes rendus en `set:html`.
 - **Parallaxe de profondeur** (`data-parallax`) sur les couvertures de projets : le visuel est volontairement plus haut que son cadre (`.parallax-media`), il glisse donc sans jamais découvrir de vide.
 - **Progression de lecture** : un filet fin sous la navbar. Volontairement hors ScrollTrigger — la navbar étant persistée entre les pages (`transition:persist`), rien ici ne doit être « revert » pendant une transition. Animé en `scaleX` seul (composité par le GPU, aucun recalcul de mise en page) et limité par `requestAnimationFrame`.
+- **Halo hexagonal au curseur** : la trame hexagonale du fond ne s'allume qu'autour du pointeur (intersection de deux masques CSS, sous `@supports` — sans `mask-composite`, la trame entière s'allumerait). Le JS ne publie que la position du pointeur en variables CSS, une écriture par frame. Bureau et pointeur fin uniquement.
+- **Transition de page en iris hexagonal** : la page entrante se découvre à travers un hexagone qui s'ouvre depuis le centre, en CSS pure sur les pseudo-éléments de l'API View Transitions. L'animation de groupe par défaut du navigateur doit être neutralisée (`::view-transition-group(root) { animation: none }`) — elle redimensionne l'instantané et rend le découpage sans effet.
+
+### Mesures
+
+Lighthouse sur le build de production (`npm run build`, puis `npm run preview`) :
+
+| | Performance | Accessibilité | Bonnes pratiques | SEO |
+|---|---|---|---|---|
+| Bureau | 100 | 100 | 100 | 100 |
+| Mobile | 97 | 100 | 100 | 100 |
+
+`CLS = 0` malgré la section épinglée : le `pin-spacer` de ScrollTrigger réserve la place à l'avance, aucun décalage de mise en page. JS initial ≈ **58 Ko gzip** pour un plafond de 130 Ko (§9) — GSAP et ScrollTrigger étaient déjà embarqués, les ajouts ne pèsent rien.
 
 Le tout n'ajoute rien au budget de performance : GSAP et ScrollTrigger étaient déjà embarqués, et le JS initial reste à **≈58 Ko gzip** pour un plafond de 130 Ko (§9).
 
