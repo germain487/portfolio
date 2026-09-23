@@ -27,8 +27,11 @@ const ui = uiEntry!.data;
   data-tags={JSON.stringify(tags)}
   class="project-card group relative flex flex-col overflow-hidden rounded-card border border-surface-2 bg-surface transition-colors duration-300 hover:border-accent/40"
 >
-  <div class="relative aspect-[16/10] overflow-hidden">
-    <div class="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105">
+  <div class="parallax-frame relative aspect-[16/10] overflow-hidden">
+    <div
+      data-parallax
+      class="parallax-media w-full transition-transform duration-500 ease-out group-hover:scale-105"
+    >
       {couverture ? (
         <img
           src={couverture}

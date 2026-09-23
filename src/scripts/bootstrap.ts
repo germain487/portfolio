@@ -15,6 +15,10 @@ import {
   initContactForm,
   initChatWidget,
   initChatAttention,
+  initHeadingReveals,
+  initParallaxMedia,
+  initHorizontalGallery,
+  initScrollProgress,
 } from './motion';
 
 /**
@@ -52,6 +56,9 @@ function initPageContent() {
   if (document.querySelector('[data-contact-form]')) initContactForm();
 
   initScrollReveals();
+  initHeadingReveals();
+  initParallaxMedia();
+  initHorizontalGallery();
   initMagneticButtons();
 }
 
@@ -61,6 +68,7 @@ export function initPageLifecycle() {
     initNavbarChrome();
     initCustomCursor();
     initSmoothScroll();
+    initScrollProgress();
     initChatWidget();
     initChatAttention();
   }

@@ -125,9 +125,109 @@
   }
 }
 
+/* Révélation ligne par ligne (motion.ts → splitIntoLines) : structure posée
+   puis retirée par le JS, jamais présente dans le HTML livré. */
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+.split-line-inner {
+  display: block;
+  will-change: transform;
+}
+
+/* Visuel en parallaxe : plus haut que son cadre pour pouvoir glisser sans
+   jamais découvrir de vide en haut ou en bas. */
+.parallax-frame {
+  overflow: hidden;
+}
+.parallax-media {
+  height: 116%;
+  margin-top: -8%;
+  will-change: transform;
+}
+
+/* Galerie horizontale (services de l'accueil) — trois rendus :
+   1. par défaut (mobile, tactile) : carrousel natif à accroche CSS ;
+   2. .is-pinned (posée en JS ≥1024px) : piste déplacée par ScrollTrigger ;
+   3. prefers-reduced-motion : grille statique, voir plus bas. */
+.hscroll-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* Le doigt garde la main : on n'entrave jamais le geste horizontal. */
+  overscroll-behavior-x: contain;
+  padding-inline: 1.5rem;
+}
+.hscroll-track::-webkit-scrollbar {
+  display: none;
+}
+.hscroll-panel {
+  flex: 0 0 min(82%, 22rem);
+  scroll-snap-align: center;
+}
+.hscroll-progress {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+/* Le repère de progression n'a de sens que pendant le parcours horizontal :
+   invisible en grille (reduced-motion) comme en carrousel tactile, qui ont
+   tous deux leurs propres repères natifs. */
+.is-pinned [data-hscroll-rail] {
+  display: block;
+}
+
+/* Reprise par ScrollTrigger : la piste n'est plus défilable nativement, elle
+   est translatée ; la section devient une scène de la hauteur de l'écran. */
+.is-pinned .hscroll-track {
+  overflow: visible;
+  scroll-snap-type: none;
+  width: max-content;
+  /* Le premier panneau démarre aligné sur la colonne de texte (max-w-6xl
+     centré, gouttière de 1,5rem), le dernier garde la même respiration. */
+  padding-inline: max(1.5rem, calc((100vw - 72rem) / 2));
+}
+.is-pinned .hscroll-panel {
+  /* Assez large pour que la piste dépasse franchement l'écran : c'est cette
+     marge qui donne sa course au déplacement horizontal. */
+  flex: 0 0 clamp(20rem, 32vw, 30rem);
+}
+.is-pinned .hscroll-viewport {
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+}
+/* Pendant l'épinglage, la scène doit faire exactement la hauteur de l'écran :
+   le rythme vertical de section (py-16/py-20) ferait déborder le contenu et
+   le titre remonterait hors champ en fin de course. Sélecteur doublé pour
+   passer devant les utilitaires Tailwind. */
+.is-pinned.reveal-section {
+  padding-block: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* Galerie horizontale : aucun défilement latéral imposé, tout est lisible
+     d'un coup dans une grille classique. */
+  .hscroll-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding-inline: 0;
+  }
+  .hscroll-panel {
+    flex: none;
+  }
+  .parallax-media {
+    height: 100%;
+    margin-top: 0;
   }
 
   *, *::before, *::after {

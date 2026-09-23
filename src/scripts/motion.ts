@@ -416,6 +416,11 @@ export function initSmoothScroll() {
 
 /** Détruit les ScrollTrigger de la page quittée avant qu'une transition ne remplace le DOM. */
 export function cleanupScrollTriggers() {
+  // Le contexte matchMedia de la galerie horizontale porte un pin : le révoquer
+  // d'abord rend son pin-spacer au DOM sortant, sinon l'espace réservé reste
+  // compté dans la hauteur de la page suivante.
+  horizontalContext?.revert();
+  horizontalContext = null;
   ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
 }
 
@@ -437,6 +442,198 @@ export function initScrollReveals() {
       },
     });
   });
+}
+
+/**
+ * Découpe un titre en lignes réelles (telles que le navigateur les a cassées)
+ * pour les révéler l'une après l'autre derrière un masque. Réservé au texte
+ * simple : aucun paragraphe rendu en `set:html` ne porte `data-split`.
+ *
+ * Le balisage d'origine est restauré en fin d'animation (`restore`) : plus
+ * aucun regroupement de lignes figé ne traîne, donc un redimensionnement
+ * ultérieur reflue le texte normalement.
+ */
+function splitIntoLines(el: HTMLElement) {
+  const original = el.innerHTML;
+  const words = (el.textContent ?? '').split(/\s+/).filter(Boolean);
+  if (words.length === 0) return null;
+
+  const spans = words.map((word) => {
+    const span = document.createElement('span');
+    span.textContent = word;
+    span.style.display = 'inline-block';
+    return span;
+  });
+
+  // Mesure : on rend les mots une première fois pour lire leur ordonnée.
+  el.replaceChildren(...spans.flatMap((span, i) => (i ? [document.createTextNode(' '), span] : [span])));
+
+  const groups: HTMLElement[][] = [];
+  let lastTop: number | null = null;
+  spans.forEach((span) => {
+    const top = Math.round(span.offsetTop);
+    // Tolérance de 2 px : absorbe les sous-pixels sans fusionner deux lignes.
+    if (lastTop === null || Math.abs(top - lastTop) > 2) {
+      groups.push([]);
+      lastTop = top;
+    }
+    groups[groups.length - 1].push(span);
+  });
+
+  const inners = groups.map((group) => {
+    const mask = document.createElement('span');
+    mask.className = 'split-line';
+    const inner = document.createElement('span');
+    inner.className = 'split-line-inner';
+    group.forEach((span, i) => {
+      if (i) inner.appendChild(document.createTextNode(' '));
+      inner.appendChild(span);
+    });
+    mask.appendChild(inner);
+    return { mask, inner };
+  });
+
+  el.replaceChildren(...inners.map(({ mask }) => mask));
+
+  return {
+    lines: inners.map(({ inner }) => inner),
+    restore: () => {
+      el.innerHTML = original;
+    },
+  };
+}
+
+/** Révélation ligne par ligne des grands titres portant `data-split`. */
+export function initHeadingReveals() {
+  if (prefersReducedMotion()) return;
+
+  document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+      onEnter: () => {
+        const split = splitIntoLines(el);
+        if (!split) return;
+        gsap.from(split.lines, {
+          yPercent: 115,
+          duration: 0.9,
+          stagger: 0.09,
+          ease: 'power4.out',
+          onComplete: split.restore,
+        });
+      },
+    });
+  });
+}
+
+/**
+ * Parallaxe de profondeur sur les visuels portant `data-parallax`. L'élément
+ * est volontairement plus haut que son cadre (voir .parallax-media dans
+ * global.css) : il peut donc glisser sans jamais laisser de vide.
+ */
+export function initParallaxMedia() {
+  if (prefersReducedMotion()) return;
+
+  document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+    gsap.fromTo(
+      el,
+      { yPercent: -6 },
+      {
+        yPercent: 6,
+        ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+      }
+    );
+  });
+}
+
+// Contexte responsive de la galerie horizontale — conservé pour pouvoir le
+// révoquer avant une transition de page (voir cleanupScrollTriggers).
+let horizontalContext: gsap.MatchMedia | null = null;
+
+/**
+ * Galerie horizontale épinglée : le défilement vertical est traduit en
+ * déplacement horizontal. Ce n'est pas du scrolljacking (interdit §13.6) —
+ * la molette garde exactement son rythme et sa réversibilité, seul l'axe du
+ * mouvement change, et la section se quitte normalement par le haut ou le bas.
+ *
+ * Grand écran uniquement : en dessous de 1024 px et sur tactile, la galerie
+ * reste un carrousel natif à accroche CSS (aucun JS), et en reduced-motion une
+ * simple grille — les trois rendus vivent dans ServicesPreview.astro.
+ */
+export function initHorizontalGallery() {
+  const section = document.querySelector<HTMLElement>('[data-hscroll]');
+  const track = section?.querySelector<HTMLElement>('[data-hscroll-track]');
+  if (!section || !track) return;
+
+  const progress = section.querySelector<HTMLElement>('[data-hscroll-progress]');
+
+  // gsap.matchMedia : le pin se monte et se démonte tout seul au franchissement
+  // du point de rupture ou si le visiteur active « réduire les animations ».
+  horizontalContext = gsap.matchMedia();
+  horizontalContext.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    section.classList.add('is-pinned');
+    // La piste est en `width: max-content` : sa largeur propre vaut sa largeur
+    // de contenu (scrollWidth === clientWidth). La course utile se mesure donc
+    // par rapport à la largeur de l'écran, pas à celle de la piste.
+    const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+    gsap.to(track, {
+      x: () => -distance(),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${distance()}`,
+        pin: true,
+        // Léger lissage : le mouvement suit le scroll sans le devancer.
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: ({ progress: p }) => {
+          if (progress) progress.style.transform = `scaleX(${p})`;
+        },
+      },
+    });
+
+    return () => {
+      section.classList.remove('is-pinned');
+      gsap.set(track, { clearProps: 'transform' });
+      if (progress) progress.style.transform = '';
+    };
+  });
+}
+
+/**
+ * Barre de progression de lecture dans la navbar. Délibérément hors
+ * ScrollTrigger : la navbar est persistée entre les pages
+ * (`transition:persist`), donc rien ici ne doit être « revert » au moment
+ * d'une transition. Initialisée une fois pour toute la session, comme le
+ * reste du chrome.
+ */
+export function initScrollProgress() {
+  const bar = document.querySelector<HTMLElement>('[data-scroll-progress]');
+  if (!bar) return;
+
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    // scaleX seul : composité par le GPU, aucun recalcul de mise en page.
+    bar.style.transform = `scaleX(${ratio})`;
+  };
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(update);
+  };
+
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+  document.addEventListener('astro:page-load', update);
+  update();
 }
 
 /**

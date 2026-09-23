@@ -12,6 +12,7 @@ Site multi-pages statique (Astro 5 + Tailwind 4), transitions de page fluides (`
 - [Variante cPanel](#variante-cpanel)
 - [Administration (`/admin`)](#administration-admin)
 - [Louise (chatbot IA)](#louise-chatbot-ia)
+- [Animations](#animations)
 - [Décisions prises en autonomie](#décisions-prises-en-autonomie)
 - [Champs à compléter avant mise en ligne](#champs-à-compléter-avant-mise-en-ligne)
 
@@ -90,7 +91,8 @@ portfolio/
 │   ├── components/          # un composant par section + blocs condensés (FeaturedProjects,
 │   │                         # ServicesPreview, ContactCTA) + StyledText/Icon/Cursor/ChatWidget…
 │   ├── scripts/
-│   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme…
+│   │   ├── motion.ts        # GSAP, Lenis, compteurs, filtres, curseur, magnétisme,
+│   │   │                     # galerie horizontale, parallaxe, révélation des titres…
 │   │   ├── chat-widget.ts   # logique du panneau de Louise, importée dynamiquement à l'ouverture
 │   │   └── bootstrap.ts     # point d'entrée unique, ré-exécuté à chaque astro:page-load
 │   └── pages/
@@ -243,6 +245,32 @@ Pour attirer l'œil à l'arrivée sur le site sans devenir agaçante, la bulle d
 - **`prefers-reduced-motion`** : aucun battement, jamais — la bulle reste statique avec son glow, immédiatement visible.
 - **Infobulle d'invitation** (indépendante, sa propre case à cocher dans `/admin`) : après 6 s sans ouverture du chat, une infobulle apparaît au-dessus de la bulle avec une petite flèche vers celle-ci. Elle reste affichée et ouvre le chat au clic ; elle disparaît dès l'ouverture de Louise ou si le visiteur la ferme (croix) — dans les deux cas, plus jamais pour la session (`sessionStorage`), et le battement s'arrête aussi.
 - Implémentation en CSS pur (`@keyframes`, propriétés `transform`/`box-shadow` uniquement, `will-change: transform`) : chaque salve est une animation à 3 itérations que la CSS arrête d'elle-même en fin de cycle ; le JS ne fait que poser la classe de salve, attendre `animationend` pour programmer la pause (`setTimeout`) et lire/écrire `sessionStorage` — sans impact sur le score Lighthouse.
+
+---
+
+## Animations
+
+Toute la couche animation vit dans `src/scripts/motion.ts` et est (ré)initialisée par `src/scripts/bootstrap.ts` à chaque `astro:page-load`. **Règle commune : `prefers-reduced-motion` désactive tout**, et le site reste complet et lisible sans la moindre animation.
+
+### Galerie horizontale (services, accueil)
+
+La section services de l'accueil se parcourt latéralement. Trois rendus pour un seul balisage (`ServicesPreview.astro`), choisis par la CSS et `initHorizontalGallery` :
+
+| Contexte | Rendu |
+|---|---|
+| ≥ 1024 px, animations autorisées | Section épinglée, la piste se déplace horizontalement au fil du défilement (GSAP ScrollTrigger, `pin` + `scrub`), avec un repère de progression sous les cartes |
+| < 1024 px / tactile | Carrousel natif à accroche CSS (`scroll-snap`), aucun JavaScript |
+| `prefers-reduced-motion` | Grille statique classique, tout est lisible d'un coup |
+
+**Ce n'est pas du scrolljacking** (interdit §13.6 du prompt maître) : la molette garde exactement son rythme et sa réversibilité, seul l'axe du mouvement change, et la section se quitte normalement par le haut ou par le bas. Le montage et le démontage du pin sont confiés à `gsap.matchMedia()`, de sorte qu'un redimensionnement ou l'activation de « réduire les animations » en cours de visite rebascule proprement sur le bon rendu.
+
+### Autres effets
+
+- **Révélation des titres ligne par ligne** (`data-split`) : le titre est découpé en lignes réelles (telles que le navigateur les a cassées), chacune montant derrière un masque. Le balisage d'origine est **restauré en fin d'animation**, donc aucun regroupement de lignes figé ne gêne un redimensionnement ultérieur. Réservé au texte simple — jamais aux paragraphes rendus en `set:html`.
+- **Parallaxe de profondeur** (`data-parallax`) sur les couvertures de projets : le visuel est volontairement plus haut que son cadre (`.parallax-media`), il glisse donc sans jamais découvrir de vide.
+- **Progression de lecture** : un filet fin sous la navbar. Volontairement hors ScrollTrigger — la navbar étant persistée entre les pages (`transition:persist`), rien ici ne doit être « revert » pendant une transition. Animé en `scaleX` seul (composité par le GPU, aucun recalcul de mise en page) et limité par `requestAnimationFrame`.
+
+Le tout n'ajoute rien au budget de performance : GSAP et ScrollTrigger étaient déjà embarqués, et le JS initial reste à **≈58 Ko gzip** pour un plafond de 130 Ko (§9).
 
 ---
 
