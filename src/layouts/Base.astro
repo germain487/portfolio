@@ -104,6 +104,9 @@ const jsonLd = {
   </head>
   <body>
     <div class="hex-grid-bg" aria-hidden="true"></div>
+    <!-- Halo hexagonal suivant le curseur : persisté entre les pages comme le
+         reste du chrome, pour n'attacher ses écouteurs qu'une seule fois. -->
+    <div data-hex-spotlight class="hex-grid-spot" aria-hidden="true" transition:persist="hex-spotlight"></div>
     <Preloader />
     <Navbar />
     <Cursor />

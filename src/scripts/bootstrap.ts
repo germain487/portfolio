@@ -19,6 +19,7 @@ import {
   initParallaxMedia,
   initHorizontalGallery,
   initScrollProgress,
+  initHexSpotlight,
 } from './motion';
 
 /**
@@ -69,6 +70,7 @@ export function initPageLifecycle() {
     initCustomCursor();
     initSmoothScroll();
     initScrollProgress();
+    initHexSpotlight();
     initChatWidget();
     initChatAttention();
   }

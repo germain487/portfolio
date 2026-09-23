@@ -606,6 +606,46 @@ export function initHorizontalGallery() {
 }
 
 /**
+ * Halo hexagonal suivant le curseur (voir .hex-grid-spot dans global.css).
+ * Le JS ne fait que publier la position du pointeur en variables CSS, limité
+ * à une écriture par frame : tout le rendu reste au compositeur.
+ *
+ * Bureau et pointeur fin uniquement — sur tactile il n'y a pas de curseur à
+ * suivre, et en prefers-reduced-motion le fond reste celui d'avant.
+ */
+export function initHexSpotlight() {
+  const layer = document.querySelector<HTMLElement>('[data-hex-spotlight]');
+  if (!layer || prefersReducedMotion() || !pointerIsFine()) return;
+
+  let x = 0;
+  let y = 0;
+  let queued = false;
+
+  const paint = () => {
+    queued = false;
+    layer.style.setProperty('--spot-x', `${x}px`);
+    layer.style.setProperty('--spot-y', `${y}px`);
+  };
+
+  window.addEventListener(
+    'pointermove',
+    (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      // Le halo n'existe qu'à partir du premier mouvement réel du visiteur.
+      if (!layer.classList.contains('is-live')) layer.classList.add('is-live');
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    },
+    { passive: true }
+  );
+
+  // Sortie de fenêtre : on éteint plutôt que de laisser un halo figé.
+  document.addEventListener('mouseleave', () => layer.classList.remove('is-live'));
+}
+
+/**
  * Barre de progression de lecture dans la navbar. Délibérément hors
  * ScrollTrigger : la navbar est persistée entre les pages
  * (`transition:persist`), donc rien ici ne doit être « revert » au moment

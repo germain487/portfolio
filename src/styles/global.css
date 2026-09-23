@@ -103,6 +103,81 @@
   mask-size: 56px 100px;
 }
 
+/* ------------------------------------------------------------------
+   Halo hexagonal suivant le curseur — l'hexagone « langage graphique »
+   (§3) porté au fond de page : la trame ne s'allume qu'autour du pointeur.
+   Deux masques intersectés (trame + dégradé radial centré sur le curseur) :
+   sans `mask-composite`, la trame entière s'allumerait, d'où le @supports.
+   Bureau et pointeur fin uniquement (scripts/motion.ts), jamais en
+   prefers-reduced-motion — le fond reste alors strictement celui d'avant.
+   ------------------------------------------------------------------ */
+@supports (mask-composite: intersect) or (-webkit-mask-composite: source-in) {
+  .hex-grid-spot {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    background-color: var(--accent);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 0L56 16.6V50L28 66.6L0 50V16.6L28 0zM28 33.3L56 50V83.3L28 100L0 83.3V50L28 33.3z' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E"),
+      radial-gradient(circle 260px at var(--spot-x, -100%) var(--spot-y, -100%), #000 0%, rgba(0, 0, 0, 0.45) 45%, transparent 72%);
+    mask-size: 56px 100px, 100% 100%;
+    mask-repeat: repeat, no-repeat;
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+    transition: opacity 0.5s ease;
+  }
+  /* Posée par le JS au premier mouvement : jamais d'apparition avant que le
+     visiteur n'ait bougé la souris. */
+  .hex-grid-spot.is-live {
+    opacity: 0.5;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Transition de page en iris hexagonal — la page entrante se découvre à
+   travers un hexagone qui s'ouvre depuis le centre. Purement déclaratif
+   (pseudo-éléments de l'API View Transitions pilotée par <ClientRouter />) :
+   aucun JS, et les navigateurs sans l'API gardent la bascule instantanée.
+   ------------------------------------------------------------------ */
+@keyframes hex-iris-open {
+  from {
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
+  }
+  to {
+    clip-path: polygon(50% -100%, 180% -25%, 180% 125%, 50% 200%, -80% 125%, -80% -25%);
+  }
+}
+@keyframes hex-iris-fade {
+  to {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+/* L'animation de groupe par défaut du navigateur redimensionne l'instantané
+   et neutralise le découpage : on la désactive pour reprendre la main. */
+::view-transition-group(root) {
+  animation: none;
+}
+::view-transition-old(root) {
+  animation: hex-iris-fade 0.42s cubic-bezier(0.4, 0, 1, 1) both;
+}
+::view-transition-new(root) {
+  /* Le découpage s'applique à l'instantané de la page entrante, posée
+     au-dessus de la sortante : c'est l'hexagone qui la dévoile. */
+  animation: hex-iris-open 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 1;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* Indicateur de frappe de Louise (chat-widget.ts) — bulles créées côté
    client, donc en dehors de la portée du <style> scopé de ChatWidget.astro. */
 .typing-dot {
