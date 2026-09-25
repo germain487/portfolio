@@ -4,11 +4,11 @@
   "titreSEO": "Germain Monemou — Développeur Fullstack & Fondateur SKYDEV",
   "metaDescription": "Développeur fullstack et entrepreneur basé à Conakry. Fondateur de ZIAMA Educ, acteur de la civic tech guinéenne.",
   "imageOG": "",
-  "couleurAccent": "#d9eb37",
+  "couleurAccent": "#0433ff",
   "email": "grmnmonemou@gmail.com",
-  "whatsapp": "224613712573",
+  "whatsapp": "+224 613712573",
   "localisation": "Lambanyi, Conakry, Guinée",
-  "titreProfessionnel": "Développeur Fullstack",
+  "titreProfessionnel": "Developpeur Fullstack",
   "villeSEO": "Conakry",
   "paysCodeSEO": "GN",
   "disponible": true,
@@ -22,6 +22,10 @@
     {
       "plateforme": "GitHub",
       "url": "https://github.com/germain-monemou"
+    },
+    {
+      "plateforme": "X",
+      "url": "https://x.com/germainmonemou"
     },
     {
       "plateforme": "Facebook",
