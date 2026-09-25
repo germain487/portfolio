@@ -13,13 +13,13 @@
       "taille": "base"
     },
     {
-      "texte": "J'ai fondé **Nimba Educ** puis **Ziama Educ**, deux SaaS de gestion scolaire pensés pour les écoles guinéennes — de la modélisation des données (70+ modèles) à la synchronisation online/offline.",
+      "texte": "J'ai fondé **Ziama Educ** un SaaS de gestion scolaire pensés pour les écoles guinéennes — de la modélisation des données (70+ modèles) à la synchronisation online/offline.",
       "alignement": "gauche",
       "police": "sans",
       "taille": "base"
     },
     {
-      "texte": "Côté civic tech, je travaille avec l'ONG Ouvrir Les Horizons sur l'**Atlas des OSC de Guinée** (1 869 organisations cartographiées) et j'ai créé **Wonmafé**, plateforme de datavisualisation des inégalités territoriales.",
+      "texte": "Côté civic tech, je travaille avec l'ONG Ouvrir Les Horizons sur l'**Atlas des OSC de Guinée** (1 869 Organisations Cartographiées).",
       "alignement": "gauche",
       "police": "sans",
       "taille": "base"
@@ -32,14 +32,14 @@
       "label": "années d'expérience"
     },
     {
-      "valeur": 15,
+      "valeur": 5,
       "suffixe": "+",
       "label": "projets livrés"
     },
     {
-      "valeur": 2,
+      "valeur": 1,
       "suffixe": "",
-      "label": "SaaS EdTech conçus"
+      "label": "SaaS SKYDEV conçus"
     },
     {
       "valeur": 1869,
