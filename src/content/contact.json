@@ -1,18 +1,19 @@
 {
   "intro": {
-    "texte": "Un projet, une question ? Écrivez-moi — je réponds sous 24 h.",
+    "texte": "Un projet, une question ? Écrivez-moi — je réponds sous 24H.",
     "alignement": "gauche",
     "police": "display",
     "taille": "4xl"
   },
   "sujets": [
-    "Application Mobile",
+    "Application Web/Mobile",
     "Projet SaaS",
     "Site web",
     "Data",
+    "Gestion des comptes",
     "Autre"
   ],
-  "messageSucces": "Message envoyé — je vous réponds sous 24 h.",
+  "messageSucces": "Message envoyé — je vous réponds sous 24H.",
   "messageErreur": "L'envoi a échoué. Écrivez-moi directement sur WhatsApp ou à grmnmonemou@gmail.com.",
   "champNom": "Nom",
   "champEmail": "Email",
