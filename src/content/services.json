@@ -17,7 +17,12 @@
     },
     {
       "icone": "layout-template",
-      "titre": { "texte": "Créer votre site web", "alignement": "gauche", "police": "display", "taille": "base" },
+      "titre": {
+        "texte": "Créer votre site web",
+        "alignement": "gauche",
+        "police": "display",
+        "taille": "base"
+      },
       "phrase": {
         "texte": "Vitrine ou e-commerce, avec maintenance et hébergement inclus.",
         "alignement": "gauche",
@@ -27,7 +32,12 @@
     },
     {
       "icone": "database",
-      "titre": { "texte": "Structurer vos données", "alignement": "gauche", "police": "display", "taille": "base" },
+      "titre": {
+        "texte": "Structurer vos données",
+        "alignement": "gauche",
+        "police": "display",
+        "taille": "base"
+      },
       "phrase": {
         "texte": "Consolidation, nettoyage, dédoublonnage et cartographie de vos jeux de données.",
         "alignement": "gauche",
@@ -37,12 +47,32 @@
     },
     {
       "icone": "smartphone",
-      "titre": { "texte": "Intégrer le Mobile Money", "alignement": "gauche", "police": "display", "taille": "base" },
+      "titre": {
+        "texte": "Mode de Paiement Intégrer",
+        "alignement": "gauche",
+        "police": "display",
+        "taille": "base"
+      },
       "phrase": {
         "texte": "Orange Money, MTN MoMo : des paiements fluides directement dans votre produit.",
         "alignement": "gauche",
         "police": "sans",
         "taille": "sm"
+      }
+    },
+    {
+      "icone": "Ordinateur",
+      "titre": {
+        "texte": "Gestion des Comptes / Réseaux Sociaux",
+        "alignement": "gauche",
+        "police": "sans",
+        "taille": "base"
+      },
+      "phrase": {
+        "texte": "Facebook ; Instagram ; TikTok ; LinkedIn ; YouTube ; X ; WhatsApp Business.",
+        "alignement": "gauche",
+        "police": "sans",
+        "taille": "base"
       }
     }
   ],
