@@ -6,16 +6,17 @@
     "taille": "base"
   },
   "accroche": {
-    "texte": "Je conçois des SaaS et des Solutions Web/Mobiles : mobile-first, résilients hors-ligne, intégrés au Mobile Money/OM/Visa.",
+    "texte": "Je conçois des SaaS et des Solutions Web/Mobiles : mobile-first, résilients hors-ligne, intégrés au Mobile Money/Orange Money/Carte_Visa.",
     "alignement": "centre",
     "police": "sans",
     "taille": "base"
   },
   "roles": [
     "Développeur Fullstack",
-    "Fondateur EdTech",
+    "Fondateur SKYDEV",
     "Ingénieur Data Civic Tech",
-    "Bâtisseur du web ouest-africain"
+    "Bâtisseur du web ouest-africain",
+    "Community Manager"
   ],
   "ctaPrimaireLabel": "Télécharger mon CV",
   "ctaSecondaireLabel": "Voir mes projets",
