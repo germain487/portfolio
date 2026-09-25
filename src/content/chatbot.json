@@ -4,16 +4,16 @@
   "questionsSuggerees": [
     "Quels services propose Germain ?",
     "Parlez-moi de Ziama Educ",
-    "Comment le contacter ?"
+    "Comment contacter Germain ?"
   ],
   "mentionIA": "IA — réponses indicatives",
-  "animationAttention": "heartbeat_radar",
-  "couleurBulle": "#fefbfb",
-  "iconeBulle": "👩",
-  "badgeInvitationActif": true,
-  "badgeInvitationTexte": "Une question ? Je suis Louise, discutons 👋",
   "titrePanneau": "Louise · Guide du site",
   "placeholderSaisie": "Posez votre question…",
   "messageIndisponible": "Louise est indisponible pour le moment. Écrivez directement à Germain sur WhatsApp ou via la page Contact.",
-  "libelleBouton": "Ouvrir le chat avec Louise, assistante du site"
+  "libelleBouton": "Ouvrir le chat avec Louise, assistante du site",
+  "animationAttention": "heartbeat_radar",
+  "couleurBulle": "#fefbfb",
+  "iconeBulle": "🦹🏽‍♀️",
+  "badgeInvitationActif": true,
+  "badgeInvitationTexte": "Une question ? Je suis Louise, discutons 👋"
 }
