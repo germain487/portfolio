@@ -1,10 +1,17 @@
 ---
-titre: "Atlas des OSC de Guinée"
+titre: Atlas des OSC de Guinée
+couverture: ''
 description: "Cartographie de la société civile guinéenne : 1 869 OSC recensées, consolidées et validées (dédoublonnage flou, contrôle GPS), avec l'ONG Ouvrir Les Horizons."
-stack: ["Laravel", "Livewire", "KoboToolbox"]
-tags: ["Civic Tech", "Data"]
+stack:
+  - Laravel
+  - Livewire
+  - KoboToolbox
+tags:
+  - Civic Tech
+  - Data
 annee: 2024
-statut: "En ligne"
+statut: En ligne
+lien: atlasdesoscgn.com
 ordre: 3
 brouillon: false
 ---
@@ -23,4 +30,4 @@ La collecte terrain s'est appuyée sur KoboToolbox, avec des enquêteurs déploy
 - Un outil de référence utilisé par l'ONG et ses partenaires pour orienter leurs actions de renforcement de la société civile.
 - Une méthodologie de nettoyage de données réutilisée depuis sur d'autres projets de cartographie.
 
-*L'Atlas est un outil interne à l'ONG Ouvrir Les Horizons et n'a pas d'accès public — pas de lien de démonstration pour cette fiche.*
+_L'Atlas est un outil interne à l'ONG Ouvrir Les Horizons et n'a pas d'accès public — pas de lien de démonstration pour cette fiche._
